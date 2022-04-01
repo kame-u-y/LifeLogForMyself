@@ -14,6 +14,7 @@ public class LoadedSaveData
     public Dictionary<string, DayData> dailyDictionary;
 }
 
+
 [System.Serializable]
 public class DayData
 {
@@ -39,22 +40,6 @@ public class ProjectData
     public int totalSec;
 }
 
-//[System.Serializable]
-//public class SaveData
-//{
-//    public List<ProjectData> projects;
-//}
-
-//[System.Serializable]
-//public class ProjectData
-//{
-//    public int id;
-//    public string name;
-//    public ColorData pieColor;
-//    public int totalSec;
-//    public List<WorkData> works;
-//}
-
 [System.Serializable]
 public class ColorData
 {
@@ -63,16 +48,8 @@ public class ColorData
     public float b;
 }
 
-//[System.Serializable]
-//public class WorkData
-//{
-//    public int id;
-//    public int startUnixSec;
-//    public int endUnixSec;
-//}
 
-
-
+#region TestDataClass
 [System.Serializable]
 public class TestParent
 {
@@ -84,3 +61,4 @@ public class TestChild
 {
     public string ch;
 }
+#endregion

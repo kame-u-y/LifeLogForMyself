@@ -20,7 +20,8 @@ public class DatabaseDirector : MonoBehaviour
     {
         ImportSaveData();
 
-        print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
+        //print(saveData.dailyDictionary);
+        //print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
 
         //SaveSampleData();
     }
@@ -28,25 +29,25 @@ public class DatabaseDirector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ImportSaveData()
     {
-        if (File.Exists(filePath))
-        {
-            StreamReader streamReader = new StreamReader(filePath);
-            string json = streamReader.ReadToEnd();
-            streamReader.Close();
+        if (!File.Exists(filePath))
+            return;
 
-            var jsonSaveData = JsonUtility.FromJson<JsonSaveData>(json);
-            saveData = new LoadedSaveData()
-            {
-                dailyDictionary = jsonSaveData.dailyDictionary.Dictionary
-            };
-        }
+        StreamReader streamReader = new StreamReader(filePath);
+        string json = streamReader.ReadToEnd();
+        streamReader.Close();
+
+        var jsonSaveData = JsonUtility.FromJson<JsonSaveData>(json);
+        saveData = new LoadedSaveData()
+        {
+            dailyDictionary = jsonSaveData.dailyDictionary.Dictionary
+        };
     }
-    
+
     public void ExportSaveData()
     {
         // JsonèoóÕópÇ…JsonSaveDataÇê∂ê¨
@@ -54,6 +55,7 @@ public class DatabaseDirector : MonoBehaviour
         {
             dailyDictionary = new JsonDictionary<string, DayData>(saveData.dailyDictionary)
         };
+        //jsonSaveData.dailyDictionary.Dictionary()
         string json = JsonUtility.ToJson(jsonSaveData);
 
         StreamWriter streamWriter = new StreamWriter(filePath);
@@ -62,98 +64,73 @@ public class DatabaseDirector : MonoBehaviour
         streamWriter.Close();
     }
 
+    public void AddEndedWork(WorkData _work)
+    {
+        string today = DateTime.Now.ToString("yyyyMMdd");
+
+        ProjectData newProject = new ProjectData()
+        {
+            id = 0,
+            name = _work.projectName,
+            pieColor = new ColorData()
+            {
+                r = 255.0f,
+                g = 0.0f,
+                b = 0.0f
+            },
+            totalSec = 1000
+        };
+
+        if (saveData.dailyDictionary == null)
+        {
+            saveData.dailyDictionary = new Dictionary<string, DayData>();
+        }
+
+        if (!saveData.dailyDictionary.ContainsKey(today))
+        {
+            saveData.dailyDictionary[today] = new DayData()
+            {
+                works = new List<WorkData>(),
+                projects = new List<ProjectData>()
+            };
+        }
+
+        saveData.dailyDictionary[today].works.Add(_work);
+
+        if (!IsProjectDataExist(today, newProject.name))
+        {
+            saveData.dailyDictionary[today].projects.Add(newProject);
+        }
+
+
+        ExportSaveData();
+    }
+
+    private bool IsProjectDataExist(string _day, string _name)
+        => saveData.dailyDictionary[_day].projects.Exists(v => v.name == _name);
+
 
     public void SaveSampleData()
     {
-        //saveData = new SaveData()
-        //{
-        //    projects = new List<ProjectData>{
-        //        new ProjectData() {
-        //            id = 0,
-        //            name = "çÏã∆",
-        //            pieColor = new ColorData() {
-        //                r = 255.0f,
-        //                g = 0.0f,
-        //                b = 0.0f },
-        //            totalSec = 300,
-        //            works = new List<WorkData>()
-        //            {
-        //                new WorkData()
-        //                {
-        //                    id = 0,
-        //                    startUnixSec = 115,
-        //                    endUnixSec = 237
-        //                }
-        //            }
-        //        }
-        //    }
-        //};
-
-        saveData = new LoadedSaveData()
+        WorkData newWork = new WorkData()
         {
-            dailyDictionary = new Dictionary<string, DayData>
-            {
-                ["20220401"] = new DayData()
-                {
-                    works = new List<WorkData>()
-                    {
-                        new WorkData()
-                        {
-                            id = 0,
-                            startUnixSec = 100,
-                            endUnixSec = 335,
-                            projectName = "çÏã∆"
-                        }
-                    },
-                    projects = new List<ProjectData>()
-                    {
-                        new ProjectData() {
-                            id = 0,
-                            name = "çÏã∆",
-                            pieColor = new ColorData()
-                            {
-                                r = 255.0f,
-                                g = 0.0f,
-                                b = 0.0f
-                            },
-                            totalSec = 1000
-                        }
-                    }
-                }
-            }
+            id = 0,
+            startUnixSec = 100,
+            endUnixSec = 335,
+            projectName = "çÏã∆"
         };
 
-        ExportSaveData();
+        AddEndedWork(newWork);
     }
 
-    public void AddEndedWork(WorkData _work)
+
+    public DayData FetchDayData(string _day)
     {
-        //int projectId = -1;
-        //for (int i=0; i<saveData.projects.Count; i++)
-        //{
-        //    print(saveData.projects[i].name);
-        //    if (saveData.projects[i].name == _projectName)
-        //    {
-        //        print("data project detected");
-        //        projectId = i;
-        //        break;
-        //    }
-        //}
-        //if (projectId == -1)
-        //{
+        print(_day);
+        return saveData.dailyDictionary[_day];
 
-        //} 
-        //else
-        //{
-        //    print("new data added");
-        //    saveData.projects[projectId].works.Add(_work);
-        //}
-
-        DateTime dt = DateTime.Now;
-        string today = dt.ToString("yyyyMMdd");
-        saveData.dailyDictionary[today].works.Add(_work);
-        ExportSaveData();
     }
+
 
     //public List<WorkData> FetchTodayWorks()
     //{

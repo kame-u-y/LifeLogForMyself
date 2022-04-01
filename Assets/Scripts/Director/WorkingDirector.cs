@@ -20,19 +20,19 @@ public class WorkingDirector : MonoBehaviour
 
     void Awake()
     {
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        databaseDirector 
+            = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        // 再生中を検出出来たら面白そうだけど、まあアカウント作らんとならんくなるな
         isWorking = false;
         playEndImage.ChangeButtonImage(isWorking);
 
-        //databaseDirector.
-
-
-        //pieChartController.DisplayTodayPieChart();
+        DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        pieChartController.DisplayTodayPieChart(dayData);
     }
 
     // Update is called once per frame

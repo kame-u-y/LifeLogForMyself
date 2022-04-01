@@ -8,13 +8,13 @@ public class PieChartController : MonoBehaviour
     [SerializeField]
     private GameObject CircleImage;
 
-    private DatabaseDirector databaseDirector;
+    //private DatabaseDirector databaseDirector;
 
-    private GameObject currentNeedle;
+    //private GameObject currentNeedle;
 
     private void Awake()
     {
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
     }
 
     private void Start()
@@ -27,9 +27,23 @@ public class PieChartController : MonoBehaviour
 
     }
 
-    public void DisplayTodayPieChart()
+    public void DisplayTodayPieChart(DayData _dayData)
     {
         ResetCircle();
+
+        // パイチャートを作るよ
+        // とりあえず今日の分
+        //print("pre Sorted");
+        //_dayData.works.ForEach(v =>
+        //{
+        //    print(v.startUnixSec);
+        //});
+        _dayData.works.Sort((a, b) => a.startUnixSec - b.startUnixSec);
+        //print("Sorted");
+        //_dayData.works.ForEach(v =>
+        //{
+        //    print(v.startUnixSec);
+        //});
 
 
     }
