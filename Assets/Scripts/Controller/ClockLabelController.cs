@@ -30,7 +30,7 @@ public class ClockLabelController : MonoBehaviour
 
     public void ChangeClockLabels()
     {
-        if (gameDirector.IsClock12h)
+        if (gameDirector.isClock12h)
         {
             labelE.text = "3";
             labelS.text = "6";

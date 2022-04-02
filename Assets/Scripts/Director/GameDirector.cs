@@ -5,21 +5,14 @@ using Candlelight;
 
 public class GameDirector : MonoBehaviour
 {
-    [SerializeField, PropertyBackingField("IsClock12h")]
-    private bool isClock12h = false;
-    public bool IsClock12h
-    {
-        get => isClock12h;
-        set
-        {
-            isClock12h = value;
-            OnIsClockModeChanged();
-        }
-    }
+    [HideInInspector]
+    public bool isClock12h = false;
 
     private WorkingDirector workingDirector;
     [SerializeField]
     ClockLabelController clockLabelController;
+    [SerializeField]
+    ClockModeButtonController clockModeButtonController;
 
 
     private void Awake()
@@ -39,10 +32,13 @@ public class GameDirector : MonoBehaviour
         
     }
 
-    private void OnIsClockModeChanged()
+    public void ChangeClockMode()
     {
+        isClock12h = !isClock12h;
+
         workingDirector.CallForNeedDisplayTodayPieChart();
         workingDirector.CallForNeedUpdateCurrentWorkPiece();
         clockLabelController.ChangeClockLabels();
+        clockModeButtonController.ChangeButtonColor();
     }
 }

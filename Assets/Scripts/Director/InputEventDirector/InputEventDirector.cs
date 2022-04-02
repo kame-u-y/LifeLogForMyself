@@ -7,9 +7,14 @@ using UnityEngine.UI;
 public class InputEventDirector : MonoBehaviour
 {
     public MyInputActions myInputActions;
+    
     [SerializeField]
     Button playEndButton;
+    [SerializeField]
+    Button toggleClockModeButton;
+    
     WorkingDirector workingDirector;
+    GameDirector gameDirector;
 
     private void Awake()
     {
@@ -17,12 +22,14 @@ public class InputEventDirector : MonoBehaviour
         InitializeActionMap(myInputActions.UI);
 
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
         playEndButton.onClick.AddListener(workingDirector.ToggleWork);
+        toggleClockModeButton.onClick.AddListener(gameDirector.ChangeClockMode);
     }
 
     // Update is called once per frame
