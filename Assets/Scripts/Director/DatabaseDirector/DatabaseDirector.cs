@@ -165,6 +165,9 @@ public class DatabaseDirector : MonoBehaviour
     public List<ProjectData> FetchProjectList()
         => saveData.projects;
 
+    public ProjectData FindProject(string _name)
+        => saveData.projects.Find(v => v.name == _name);
+
 
     //public List<WorkData> FetchTodayWorks()
     //{

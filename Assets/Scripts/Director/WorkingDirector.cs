@@ -58,6 +58,7 @@ public class WorkingDirector : MonoBehaviour
         //nowUnixSec = GetNowTotalSeconds();
         currentWork.endUnixSec = GetNowTotalSeconds();
         // todo: UpdateDisplay
+        pieChartController.UpdateCurrentWorkPiece(currentWork);
         print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
     }
 
@@ -81,10 +82,10 @@ public class WorkingDirector : MonoBehaviour
             endUnixSec = GetNowTotalSeconds(),
             projectName = "çÏã∆"
         };
-        //currentProject = databaseDirector.
+        currentProject = databaseDirector.FindProject(currentWork.projectName);
 
-        //playEndImage.ChangeButtonImage(isWorking);
-        //pieChartController.CreateCurrentWorkPiece();
+        playEndImage.ChangeButtonImage(isWorking);
+        pieChartController.CreateCurrentWorkPiece(currentWork, currentProject);
 
         time = 0;
     }

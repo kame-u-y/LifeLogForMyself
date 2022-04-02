@@ -10,15 +10,17 @@ public class PieChartController : MonoBehaviour
     private GameObject CircleImage;
 
     private List<GameObject> workPiePieces;
+    private int currentWorkPieceId;
 
-    //private DatabaseDirector databaseDirector;
+    private GameDirector gameDirector;
 
-    //private GameObject currentNeedle;
 
     private void Awake()
     {
         //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
         workPiePieces = new List<GameObject>();
+
+        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
     }
 
     private void Start()
@@ -30,6 +32,11 @@ public class PieChartController : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// ソートしてるので注意 参照かな？saveDataに影響があるかも
+    /// </summary>
+    /// <param name="_dayData"></param>
+    /// <param name="_projects"></param>
     public void DisplayTodayPieChart(DayData _dayData, List<ProjectData> _projects)
     {
         ResetCircle();
@@ -49,9 +56,21 @@ public class PieChartController : MonoBehaviour
 
     }
 
-    public void CreateCurrentWorkPiece(int _startSec, int _nowSec)
+    public void CreateCurrentWorkPiece(WorkData _work, ProjectData _project)
     {
-        //CreatePiePiece()
+        CreatePiePiece(_work, _project);
+        currentWorkPieceId = workPiePieces.Count - 1;
+    }
+
+    public void UpdateCurrentWorkPiece(WorkData _work)
+    {
+        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
+        int todayStartSec = GetSecondOfToday(0, 0, 0);
+        int todayEndSec = GetSecondOfToday(23, 59, 59);
+
+        // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
+        workPiePieces[currentWorkPieceId].GetComponent<Image>().fillAmount
+            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
     }
 
     //private void SetPieChartAnimation()
@@ -80,7 +99,7 @@ public class PieChartController : MonoBehaviour
         int todayEndSec = GetSecondOfToday(23, 59, 59);
 
         blank.GetComponent<Image>().fillAmount
-            = (float) (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
+            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
         blank.SetActive(true);
         workPiePieces.Add(blank);
     }
@@ -98,7 +117,7 @@ public class PieChartController : MonoBehaviour
 
         // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
         newPiePiece.GetComponent<Image>().fillAmount
-            = (float) (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
+            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
         newPiePiece.SetActive(true);
         workPiePieces.Add(newPiePiece);
     }
