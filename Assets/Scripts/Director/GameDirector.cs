@@ -1,16 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Candlelight;
 
 public class GameDirector : MonoBehaviour
 {
+    [SerializeField, PropertyBackingField("IsClock12h")]
+    private bool isClock12h = false;
+    public bool IsClock12h
+    {
+        get => isClock12h;
+        set
+        {
+            isClock12h = value;
+            OnIsClockModeChanged();
+        }
+    }
+
+    private WorkingDirector workingDirector;
     [SerializeField]
-    public bool isClock12h = false;
+    ClockLabelController clockLabelController;
 
 
     private void Awake()
     {
-        
+        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
     }
 
     // Start is called before the first frame update
@@ -23,5 +37,11 @@ public class GameDirector : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnIsClockModeChanged()
+    {
+        workingDirector.CallUpdatePieForNeed();
+        clockLabelController.ChangeClockLabels();
     }
 }

@@ -62,6 +62,16 @@ public class WorkingDirector : MonoBehaviour
         print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
     }
 
+    /// <summary>
+    /// 外部から描画の更新が必要な場合に呼ばれる
+    /// isClock12hの変更通知
+    /// </summary>
+    public void CallUpdatePieForNeed()
+    {
+        if (!isWorking) return;
+        pieChartController.UpdateCurrentWorkPiece(currentWork);
+    }
+
     public void ToggleWork()
     {
         if (isWorking)

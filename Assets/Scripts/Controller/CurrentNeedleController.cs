@@ -33,7 +33,7 @@ public class CurrentNeedleController : MonoBehaviour
     void DrawCurrentNeedle()
     {
         DateTime dt = DateTime.Now;
-        float angle = (gameDirector.isClock12h ? 2 : 1) * 360.0f * (dt.Hour * 60.0f + dt.Minute) / (24.0f * 60.0f);
+        float angle = (gameDirector.IsClock12h ? 2 : 1) * 360.0f * (dt.Hour * 60.0f + dt.Minute) / (24.0f * 60.0f);
         this.transform.rotation = Quaternion.Euler(0, 0, -angle);
     }
 }

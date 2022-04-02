@@ -16,17 +16,12 @@ public class InputEventDirector : MonoBehaviour
         myInputActions = new MyInputActions();
         InitializeActionMap(myInputActions.UI);
 
-
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
-        //myInputActions.Player.Interact.performed += PlayerInteract;
     }
 
     // Start is called before the first frame update
     private void Start()
     {
-        // Talking
-        //talkingDirector = gameDirector.transform.Find("TalkingDirector").GetComponent<TalkingDirector>();
-        //myInputActions.Talking.Progress.performed += TalkingProgress;
         playEndButton.onClick.AddListener(workingDirector.ToggleWork);
     }
 
@@ -34,10 +29,6 @@ public class InputEventDirector : MonoBehaviour
     private void Update()
     {
     }
-
-    //private void PlayerInteract(InputAction.CallbackContext _context)
-    //{ 
-    //}
 
     #region SwitchMap
     //public void SwitchBackToPlayer()

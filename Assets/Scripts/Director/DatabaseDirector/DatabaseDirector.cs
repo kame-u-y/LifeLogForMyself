@@ -23,8 +23,8 @@ public class DatabaseDirector : MonoBehaviour
         //print(saveData.dailyDictionary);
         //print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
 
-        SaveSampleWorkData();
-        SaveSampleProjectData();
+        //SaveSampleWorkData();
+        //SaveSampleProjectData();
     }
 
     // Update is called once per frame

@@ -70,7 +70,7 @@ public class PieChartController : MonoBehaviour
 
         // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
         workPiePieces[currentWorkPieceId].GetComponent<Image>().fillAmount
-            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
+            = (float) (gameDirector.IsClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
     }
 
     //private void SetPieChartAnimation()
@@ -99,7 +99,7 @@ public class PieChartController : MonoBehaviour
         int todayEndSec = GetSecondOfToday(23, 59, 59);
 
         blank.GetComponent<Image>().fillAmount
-            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
+            = (float) (gameDirector.IsClock12h ? 2.0f : 1.0f) * (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
         blank.SetActive(true);
         workPiePieces.Add(blank);
     }
@@ -117,7 +117,7 @@ public class PieChartController : MonoBehaviour
 
         // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
         newPiePiece.GetComponent<Image>().fillAmount
-            = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
+            = (float) (gameDirector.IsClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
         newPiePiece.SetActive(true);
         workPiePieces.Add(newPiePiece);
     }
