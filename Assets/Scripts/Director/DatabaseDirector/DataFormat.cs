@@ -7,11 +7,13 @@ using UnityEngine;
 public class JsonSaveData
 {
     public JsonDictionary<string, DayData> dailyDictionary;
+    public List<ProjectData> projects;
 }
 
 public class LoadedSaveData
 {
     public Dictionary<string, DayData> dailyDictionary;
+    public List<ProjectData> projects;
 }
 
 
@@ -19,7 +21,7 @@ public class LoadedSaveData
 public class DayData
 {
     public List<WorkData> works;
-    public List<ProjectData> projects;
+    //public List<ProjectData> projects;
 }
 
 [System.Serializable]

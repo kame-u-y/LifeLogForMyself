@@ -6,8 +6,10 @@ using UnityEngine;
 public class WorkingDirector : MonoBehaviour
 {
     private bool isWorking = false;
-    private int startUnixSec;
-    private int nowUnixSec;
+    //private int startUnixSec;
+    //private int nowUnixSec;
+    private WorkData currentWork;
+    private ProjectData currentProject;
     private float time;
 
     [SerializeField]
@@ -32,7 +34,8 @@ public class WorkingDirector : MonoBehaviour
         playEndImage.ChangeButtonImage(isWorking);
 
         DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
-        pieChartController.DisplayTodayPieChart(dayData);
+        List<ProjectData> project = databaseDirector.FetchProjectList();
+        pieChartController.DisplayTodayPieChart(dayData, project);
     }
 
     // Update is called once per frame
@@ -52,9 +55,10 @@ public class WorkingDirector : MonoBehaviour
 
     private void UpdateWorkTime()
     {
-        nowUnixSec = GetNowTotalSeconds();
+        //nowUnixSec = GetNowTotalSeconds();
+        currentWork.endUnixSec = GetNowTotalSeconds();
         // todo: UpdateDisplay
-        print("now:" + (nowUnixSec - startUnixSec));
+        print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
     }
 
     public void ToggleWork()
@@ -68,9 +72,20 @@ public class WorkingDirector : MonoBehaviour
     private void StartWork()
     {
         isWorking = true;
-        startUnixSec = GetNowTotalSeconds();
-        nowUnixSec = startUnixSec;
-        playEndImage.ChangeButtonImage(isWorking);
+        //startUnixSec = GetNowTotalSeconds();
+        //nowUnixSec = startUnixSec;
+        currentWork = new WorkData()
+        {
+            id = 0,
+            startUnixSec = GetNowTotalSeconds(),
+            endUnixSec = GetNowTotalSeconds(),
+            projectName = "作業"
+        };
+        //currentProject = databaseDirector.
+
+        //playEndImage.ChangeButtonImage(isWorking);
+        //pieChartController.CreateCurrentWorkPiece();
+
         time = 0;
     }
 
@@ -78,14 +93,7 @@ public class WorkingDirector : MonoBehaviour
     {
         isWorking = false;
         // todo: データを記録
-        databaseDirector.AddEndedWork(
-            new WorkData()
-            {
-                id = 1,
-                startUnixSec = this.startUnixSec,
-                endUnixSec = this.nowUnixSec,
-                projectName = "作業"
-            });
+        databaseDirector.AddEndedWork(currentWork);
 
         playEndImage.ChangeButtonImage(isWorking);
         time = 0;

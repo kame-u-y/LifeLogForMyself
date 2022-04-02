@@ -23,7 +23,8 @@ public class DatabaseDirector : MonoBehaviour
         //print(saveData.dailyDictionary);
         //print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
 
-        //SaveSampleData();
+        SaveSampleWorkData();
+        SaveSampleProjectData();
     }
 
     // Update is called once per frame
@@ -44,7 +45,8 @@ public class DatabaseDirector : MonoBehaviour
         var jsonSaveData = JsonUtility.FromJson<JsonSaveData>(json);
         saveData = new LoadedSaveData()
         {
-            dailyDictionary = jsonSaveData.dailyDictionary.Dictionary
+            dailyDictionary = jsonSaveData.dailyDictionary.Dictionary,
+            projects = jsonSaveData.projects
         };
     }
 
@@ -53,10 +55,11 @@ public class DatabaseDirector : MonoBehaviour
         // JsonèoóÕópÇ…JsonSaveDataÇê∂ê¨
         var jsonSaveData = new JsonSaveData()
         {
-            dailyDictionary = new JsonDictionary<string, DayData>(saveData.dailyDictionary)
+            dailyDictionary = new JsonDictionary<string, DayData>(saveData.dailyDictionary),
+            projects = saveData.projects
         };
         //jsonSaveData.dailyDictionary.Dictionary()
-        string json = JsonUtility.ToJson(jsonSaveData);
+        string json = JsonUtility.ToJson(jsonSaveData, true);
 
         StreamWriter streamWriter = new StreamWriter(filePath);
         streamWriter.Write(json);
@@ -68,18 +71,7 @@ public class DatabaseDirector : MonoBehaviour
     {
         string today = DateTime.Now.ToString("yyyyMMdd");
 
-        ProjectData newProject = new ProjectData()
-        {
-            id = 0,
-            name = _work.projectName,
-            pieColor = new ColorData()
-            {
-                r = 255.0f,
-                g = 0.0f,
-                b = 0.0f
-            },
-            totalSec = 1000
-        };
+        
 
         if (saveData.dailyDictionary == null)
         {
@@ -90,27 +82,52 @@ public class DatabaseDirector : MonoBehaviour
         {
             saveData.dailyDictionary[today] = new DayData()
             {
-                works = new List<WorkData>(),
-                projects = new List<ProjectData>()
+                works = new List<WorkData>()
+                //projects = new List<ProjectData>()
             };
         }
 
         saveData.dailyDictionary[today].works.Add(_work);
 
-        if (!IsProjectDataExist(today, newProject.name))
-        {
-            saveData.dailyDictionary[today].projects.Add(newProject);
-        }
+        //ProjectData newProject = new ProjectData()
+        //{
+        //    id = 0,
+        //    name = _work.projectName,
+        //    pieColor = new ColorData()
+        //    {
+        //        r = 255.0f,
+        //        g = 0.0f,
+        //        b = 0.0f
+        //    },
+        //    totalSec = 1000
+        //};
 
+        //if (!IsProjectDataExist(today, newProject.name))
+        //{
+        //    saveData.dailyDictionary[today].projects.Add(newProject);
+        //}
 
         ExportSaveData();
     }
 
-    private bool IsProjectDataExist(string _day, string _name)
-        => saveData.dailyDictionary[_day].projects.Exists(v => v.name == _name);
+    public void AddProject(ProjectData _project)
+    {
+        print(saveData.projects);
+        print(_project);
+        if (_project == null) 
+            return;
+        if (saveData.projects.Exists(v => v.name == _project.name))
+            return;
+
+        saveData.projects.Add(_project);
+        ExportSaveData();
+    }
+
+    //private bool IsProjectDataExist(string _day, string _name)
+    //    => saveData.dailyDictionary[_day].projects.Exists(v => v.name == _name);
 
 
-    public void SaveSampleData()
+    private void SaveSampleWorkData()
     {
         WorkData newWork = new WorkData()
         {
@@ -123,13 +140,30 @@ public class DatabaseDirector : MonoBehaviour
         AddEndedWork(newWork);
     }
 
+    private void SaveSampleProjectData()
+    {
+        ProjectData newProject = new ProjectData()
+        {
+            id = 0,
+            name = "çÏã∆",
+            pieColor = new ColorData()
+            {
+                r = 255.0f,
+                g = 255.0f,
+                b = 0.0f
+            },
+            totalSec = 10000
+        };
+
+        AddProject(newProject);
+    }
+
 
     public DayData FetchDayData(string _day)
-    {
-        print(_day);
-        return saveData.dailyDictionary[_day];
+        => saveData.dailyDictionary[_day];
 
-    }
+    public List<ProjectData> FetchProjectList()
+        => saveData.projects;
 
 
     //public List<WorkData> FetchTodayWorks()

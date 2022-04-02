@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,8 @@ public class PieChartController : MonoBehaviour
     [SerializeField]
     private GameObject CircleImage;
 
+    private List<GameObject> workPiePieces;
+
     //private DatabaseDirector databaseDirector;
 
     //private GameObject currentNeedle;
@@ -15,11 +18,11 @@ public class PieChartController : MonoBehaviour
     private void Awake()
     {
         //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        workPiePieces = new List<GameObject>();
     }
 
     private void Start()
     {
-        
     }
 
     private void Update()
@@ -27,40 +30,84 @@ public class PieChartController : MonoBehaviour
 
     }
 
-    public void DisplayTodayPieChart(DayData _dayData)
+    public void DisplayTodayPieChart(DayData _dayData, List<ProjectData> _projects)
     {
         ResetCircle();
 
         // パイチャートを作るよ
         // とりあえず今日の分
-        //print("pre Sorted");
-        //_dayData.works.ForEach(v =>
-        //{
-        //    print(v.startUnixSec);
-        //});
         _dayData.works.Sort((a, b) => a.startUnixSec - b.startUnixSec);
-        //print("Sorted");
-        //_dayData.works.ForEach(v =>
-        //{
-        //    print(v.startUnixSec);
-        //});
 
+        for (int i = _dayData.works.Count-1; i >= 0; i--)
+        {
+            ProjectData p = _projects.Find(v => v.name == _dayData.works[i].projectName);
+            CreatePiePiece(_dayData.works[i], p);
+            CreateBlankPiece(_dayData.works[i].startUnixSec - 1);
+        }
+
+        // パイチャートの幅は基本的にはendUnixSecで決定する
 
     }
 
-    private void SetPieChartAnimation()
+    public void CreateCurrentWorkPiece(int _startSec, int _nowSec)
     {
-        //ResetCircle();
-        //databaseDirector.FetchTodayWorks();
+        //CreatePiePiece()
     }
+
+    //private void SetPieChartAnimation()
+    //{
+    //    //ResetCircle();
+    //    //databaseDirector.FetchTodayWorks();
+    //}
 
     private void ResetCircle()
     {
-        for (int i=0; i<this.transform.childCount; i++)
+        for (int i = 0; i < this.transform.childCount; i++)
         {
             Destroy(this.transform.GetChild(i).gameObject);
         }
     }
+
+
+    private void CreateBlankPiece(int _endSec)
+    {
+        GameObject blank = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform);
+        blank.transform.localPosition = new Vector3(0, 0, 0);
+        //blank.GetComponent<Image>().color = new Color(170.0f / 255.0f, 170.0f / 255.0f, 170.0f / 255.0f);
+
+        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
+        int todayStartSec = GetSecondOfToday(0, 0, 0);
+        int todayEndSec = GetSecondOfToday(23, 59, 59);
+
+        blank.GetComponent<Image>().fillAmount
+            = (float) (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
+        blank.SetActive(true);
+        workPiePieces.Add(blank);
+    }
+
+    private void CreatePiePiece(WorkData _work, ProjectData _project)
+    {
+        GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform);
+        newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
+        newPiePiece.GetComponent<Image>().color
+            = new Color(_project.pieColor.r, _project.pieColor.g, _project.pieColor.b);
+
+        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
+        int todayStartSec = GetSecondOfToday(0, 0, 0);
+        int todayEndSec = GetSecondOfToday(23, 59, 59);
+
+        // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
+        newPiePiece.GetComponent<Image>().fillAmount
+            = (float) (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
+        newPiePiece.SetActive(true);
+        workPiePieces.Add(newPiePiece);
+    }
+
+
+    private int GetSecondOfToday(int _h, int _m, int _s)
+        => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
+            .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
 
     //private void CreatePieceOfPie(GameObject _obj, )
     //{
