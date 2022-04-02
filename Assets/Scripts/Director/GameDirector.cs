@@ -41,7 +41,8 @@ public class GameDirector : MonoBehaviour
 
     private void OnIsClockModeChanged()
     {
-        workingDirector.CallUpdatePieForNeed();
+        workingDirector.CallForNeedDisplayTodayPieChart();
+        workingDirector.CallForNeedUpdateCurrentWorkPiece();
         clockLabelController.ChangeClockLabels();
     }
 }

@@ -122,7 +122,6 @@ public class PieChartController : MonoBehaviour
         workPiePieces.Add(newPiePiece);
     }
 
-
     private int GetSecondOfToday(int _h, int _m, int _s)
         => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
             .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;

@@ -66,10 +66,17 @@ public class WorkingDirector : MonoBehaviour
     /// 外部から描画の更新が必要な場合に呼ばれる
     /// isClock12hの変更通知
     /// </summary>
-    public void CallUpdatePieForNeed()
+    public void CallForNeedUpdateCurrentWorkPiece()
     {
         if (!isWorking) return;
         pieChartController.UpdateCurrentWorkPiece(currentWork);
+    }
+
+    public void CallForNeedDisplayTodayPieChart()
+    {
+        DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        List<ProjectData> project = databaseDirector.FetchProjectList();
+        pieChartController.DisplayTodayPieChart(dayData, project);
     }
 
     public void ToggleWork()
