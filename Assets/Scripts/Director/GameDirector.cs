@@ -17,13 +17,16 @@ public class GameDirector : MonoBehaviour
 
     private void Awake()
     {
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        workingDirector.CallForNeedDisplayTodayPieChart();
+        workingDirector.CallForNeedUpdateCurrentWorkPiece();
+        clockLabelController.ChangeClockLabels(isClock12h);
+        clockModeButtonController.ChangeButtonColor(isClock12h);
     }
 
     // Update is called once per frame
@@ -38,7 +41,7 @@ public class GameDirector : MonoBehaviour
 
         workingDirector.CallForNeedDisplayTodayPieChart();
         workingDirector.CallForNeedUpdateCurrentWorkPiece();
-        clockLabelController.ChangeClockLabels();
-        clockModeButtonController.ChangeButtonColor();
+        clockLabelController.ChangeClockLabels(isClock12h);
+        clockModeButtonController.ChangeButtonColor(isClock12h);
     }
 }

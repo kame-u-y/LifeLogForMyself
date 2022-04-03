@@ -13,12 +13,13 @@ public class DatabaseDirector : MonoBehaviour
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         saveData = new LoadedSaveData();
+
+        ImportSaveData();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        ImportSaveData();
 
         //print(saveData.dailyDictionary);
         //print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
@@ -71,7 +72,7 @@ public class DatabaseDirector : MonoBehaviour
     {
         string today = DateTime.Now.ToString("yyyyMMdd");
 
-        
+
 
         if (saveData.dailyDictionary == null)
         {
@@ -114,7 +115,7 @@ public class DatabaseDirector : MonoBehaviour
     {
         print(saveData.projects);
         print(_project);
-        if (_project == null) 
+        if (_project == null)
             return;
         if (saveData.projects.Exists(v => v.name == _project.name))
             return;
@@ -160,7 +161,12 @@ public class DatabaseDirector : MonoBehaviour
 
 
     public DayData FetchDayData(string _day)
-        => saveData.dailyDictionary[_day];
+    {
+        Debug.Log(saveData.dailyDictionary);
+        return saveData.dailyDictionary.ContainsKey(_day)
+           ? saveData.dailyDictionary[_day]
+           : null;
+    }
 
     public List<ProjectData> FetchProjectList()
         => saveData.projects;

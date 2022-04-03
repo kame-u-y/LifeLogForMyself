@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class ClockModeButtonController : MonoBehaviour
 {
 
-    private GameDirector gameDirector;
+    //private GameDirector gameDirector;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();    
+        //gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();    
     }
 
     // Update is called once per frame
@@ -20,12 +20,12 @@ public class ClockModeButtonController : MonoBehaviour
         
     }
 
-    public void ChangeButtonColor()
+    public void ChangeButtonColor(bool _isClock12h)
     {
-        if (gameDirector.isClock12h)
+        if (_isClock12h)
         {
             this.GetComponent<Image>().color 
-                = new Color(160 / 255.0f, 120 / 255.0f, 64 / 255.0f);
+                = new Color(115 / 255.0f, 100 / 255.0f, 80 / 255.0f);
         }
         else
         {
