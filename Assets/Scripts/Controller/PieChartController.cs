@@ -163,6 +163,11 @@ public class PieChartController : MonoBehaviour
             = (float)(gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - _work.startUnixSec) / (todayEndSec - todayStartSec);
     }
 
+    public void ChangeCurrentColor(Color _color)
+    {
+        currentWorkPiece.GetComponent<Image>().color = _color;
+    }
+
 
     private int GetSecondOfToday(int _h, int _m, int _s)
         => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)

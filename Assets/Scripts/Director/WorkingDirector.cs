@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorkingDirector : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class WorkingDirector : MonoBehaviour
 
     [SerializeField]
     PieChartController pieChartController;
+
+    [SerializeField]
+    Dropdown projectDropdown;
 
     DatabaseDirector databaseDirector;
 
@@ -64,6 +68,8 @@ public class WorkingDirector : MonoBehaviour
         print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
     }
 
+
+
     /// <summary>
     /// 外部から描画の更新が必要な場合に呼ばれる
     /// isClock12hの変更通知
@@ -82,6 +88,19 @@ public class WorkingDirector : MonoBehaviour
         List<ProjectData> project = databaseDirector.FetchProjectList();
         pieChartController.DisplayTodayPieChart(dayData, project);
     }
+
+    public void ChangeProjectOfCurrentWork()
+    {
+        if (!isWorking) return;
+        currentWork.projectName = projectDropdown.captionText.text;
+        currentProject = databaseDirector.FindProject(currentWork.projectName);
+        Color c = new Color(currentProject.pieColor.r, currentProject.pieColor.g, currentProject.pieColor.b);
+        print(currentProject.name);
+        pieChartController.ChangeCurrentColor(c);
+
+    }
+
+
 
     public void ToggleWork()
     {

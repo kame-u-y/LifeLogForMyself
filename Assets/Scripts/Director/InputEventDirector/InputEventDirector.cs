@@ -7,12 +7,14 @@ using UnityEngine.UI;
 public class InputEventDirector : MonoBehaviour
 {
     public MyInputActions myInputActions;
-    
+
     [SerializeField]
     Button playEndButton;
     [SerializeField]
     Button toggleClockModeButton;
-    
+    [SerializeField]
+    Dropdown projectDropdown;
+
     WorkingDirector workingDirector;
     GameDirector gameDirector;
 
@@ -30,6 +32,10 @@ public class InputEventDirector : MonoBehaviour
     {
         playEndButton.onClick.AddListener(workingDirector.ToggleWork);
         toggleClockModeButton.onClick.AddListener(gameDirector.ChangeClockMode);
+        //projectDropdown..AddListener()
+        //string selectedProject = projectDropdown.captionText.text;
+        projectDropdown.onValueChanged.AddListener(
+            (v) => workingDirector.ChangeProjectOfCurrentWork());
     }
 
     // Update is called once per frame
