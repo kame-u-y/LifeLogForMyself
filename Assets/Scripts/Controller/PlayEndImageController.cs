@@ -22,12 +22,14 @@ public class PlayEndImageController : MonoBehaviour
         if (_isWorking)
         {
             // 停止ボタン
-            GetComponent<Image>().color = new Color(255, 0, 0);
+            GetComponent<Image>().color = new Color(111 / 255.0f, 100 / 255.0f, 100 / 255.0f);
+            GetComponent<Image>().sprite = Resources.Load<Sprite>("endButton02");
         }
         else
         {
             // 再生ボタン
-            GetComponent<Image>().color = new Color(0, 255, 0);
+            GetComponent<Image>().color = new Color(100/255.0f, 111 / 255.0f, 100 / 255.0f);
+            GetComponent<Image>().sprite = Resources.Load<Sprite>("playButton01");
         }
     }
 }
