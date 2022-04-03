@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class ClockLabelController : MonoBehaviour
 {
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,17 +22,22 @@ public class ClockLabelController : MonoBehaviour
     {
         if (_isClock12h)
         {
-            this.transform.Find("ClockLabelE").GetComponent<TextMeshProUGUI>().text = "3";
-            this.transform.Find("ClockLabelS").GetComponent<TextMeshProUGUI>().text = "6";
-            this.transform.Find("ClockLabelW").GetComponent<TextMeshProUGUI>().text = "9";
-            this.transform.Find("ClockLabelN").GetComponent<TextMeshProUGUI>().text = "12";
+            this.transform.Find("ClockE").GetComponent<TextMeshProUGUI>().text = "3";
+            this.transform.Find("ClockS").GetComponent<TextMeshProUGUI>().text = "6";
+            this.transform.Find("ClockW").GetComponent<TextMeshProUGUI>().text = "9";
+            this.transform.Find("ClockN").GetComponent<TextMeshProUGUI>().text = "12";
         }
         else
         {
-            this.transform.Find("ClockLabelE").GetComponent<TextMeshProUGUI>().text = "6";
-            this.transform.Find("ClockLabelS").GetComponent<TextMeshProUGUI>().text = "12";
-            this.transform.Find("ClockLabelW").GetComponent<TextMeshProUGUI>().text = "18";
-            this.transform.Find("ClockLabelN").GetComponent<TextMeshProUGUI>().text = "24";
+            this.transform.Find("ClockE").GetComponent<TextMeshProUGUI>().text = "6";
+            this.transform.Find("ClockS").GetComponent<TextMeshProUGUI>().text = "12";
+            this.transform.Find("ClockW").GetComponent<TextMeshProUGUI>().text = "18";
+            this.transform.Find("ClockN").GetComponent<TextMeshProUGUI>().text = "24";
         }
+    }
+
+    public void ChangeWorkMaxLabel(int _minute)
+    {
+        this.transform.Find("WorkMeterMax").GetComponent<TextMeshProUGUI>().text = _minute.ToString();
     }
 }

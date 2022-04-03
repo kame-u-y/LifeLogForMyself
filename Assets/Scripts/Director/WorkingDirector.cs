@@ -7,26 +7,24 @@ using UnityEngine.UI;
 public class WorkingDirector : MonoBehaviour
 {
     private bool isWorking = false;
-    //private int startUnixSec;
-    //private int nowUnixSec;
     private WorkData currentWork;
-    private ProjectData currentProject;
+    private ProjectData selectedProject;
     private float time;
 
     [SerializeField]
-    PlayEndImageController playEndImage;
-
+    PlayEndImageController playEndImageCtrler;
     [SerializeField]
-    PieChartController pieChartController;
-
+    PieChartController pieChartCtrler;
     [SerializeField]
     Dropdown projectDropdown;
+    [SerializeField]
+    CurrentWorkMeterController currentWorkMeterCtrler;
 
     DatabaseDirector databaseDirector;
 
     void Awake()
     {
-        databaseDirector 
+        databaseDirector
             = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
     }
 
@@ -35,13 +33,14 @@ public class WorkingDirector : MonoBehaviour
     {
         // 再生中を検出出来たら面白そうだけど、まあアカウント作らんとならんくなるな
         isWorking = false;
-        playEndImage.ChangeButtonImage(isWorking);
+        playEndImageCtrler.ChangeButtonImage(isWorking);
 
         DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
         if (dayData == null) return;
 
         List<ProjectData> project = databaseDirector.FetchProjectList();
-        pieChartController.DisplayTodayPieChart(dayData, project);
+        pieChartCtrler.DisplayTodayPieChart(dayData, project);
+
     }
 
     // Update is called once per frame
@@ -63,9 +62,9 @@ public class WorkingDirector : MonoBehaviour
     {
         //nowUnixSec = GetNowTotalSeconds();
         currentWork.endUnixSec = GetNowTotalSeconds();
-        // todo: UpdateDisplay
-        pieChartController.UpdateCurrentWorkPiece(currentWork);
+        pieChartCtrler.UpdateCurrentWorkPiece(currentWork);
         print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
+        currentWorkMeterCtrler.UpdateMeter(currentWork.endUnixSec - currentWork.startUnixSec);
     }
 
 
@@ -77,7 +76,7 @@ public class WorkingDirector : MonoBehaviour
     public void CallForNeedUpdateCurrentWorkPiece()
     {
         if (!isWorking) return;
-        pieChartController.UpdateCurrentWorkPiece(currentWork);
+        pieChartCtrler.UpdateCurrentWorkPiece(currentWork);
     }
 
     public void CallForNeedDisplayTodayPieChart()
@@ -86,18 +85,24 @@ public class WorkingDirector : MonoBehaviour
         if (dayData == null) return;
 
         List<ProjectData> project = databaseDirector.FetchProjectList();
-        pieChartController.DisplayTodayPieChart(dayData, project);
+        pieChartCtrler.DisplayTodayPieChart(dayData, project);
     }
 
     public void ChangeProjectOfCurrentWork()
     {
+        selectedProject = databaseDirector.FindProject(projectDropdown.captionText.text);
+        Color c = new Color(
+            selectedProject.pieColor.r / 255.0f,
+            selectedProject.pieColor.g / 255.0f,
+            selectedProject.pieColor.b / 255.0f);
+        currentWorkMeterCtrler.ChangeColor(c);
+        
         if (!isWorking) return;
-        currentWork.projectName = projectDropdown.captionText.text;
-        currentProject = databaseDirector.FindProject(currentWork.projectName);
-        Color c = new Color(currentProject.pieColor.r, currentProject.pieColor.g, currentProject.pieColor.b);
-        print(currentProject.name);
-        pieChartController.ChangeCurrentColor(c);
 
+        currentWork.projectName = projectDropdown.captionText.text;
+        print(selectedProject.name);
+        pieChartCtrler.ChangeCurrentColor(c);
+        currentWorkMeterCtrler.ChangeColor(c);
     }
 
 
@@ -120,12 +125,12 @@ public class WorkingDirector : MonoBehaviour
             id = 0,
             startUnixSec = GetNowTotalSeconds(),
             endUnixSec = GetNowTotalSeconds(),
-            projectName = "作業"
+            projectName = projectDropdown.captionText.text
         };
-        currentProject = databaseDirector.FindProject(currentWork.projectName);
+        selectedProject = databaseDirector.FindProject(currentWork.projectName);
 
-        playEndImage.ChangeButtonImage(isWorking);
-        pieChartController.CreateCurrentWorkPiece(currentWork, currentProject);
+        playEndImageCtrler.ChangeButtonImage(isWorking);
+        pieChartCtrler.CreateCurrentWorkPiece(currentWork, selectedProject);
 
         time = 0;
     }
@@ -136,7 +141,7 @@ public class WorkingDirector : MonoBehaviour
         // todo: データを記録
         databaseDirector.AddEndedWork(currentWork);
 
-        playEndImage.ChangeButtonImage(isWorking);
+        playEndImageCtrler.ChangeButtonImage(isWorking);
         time = 0;
     }
 
