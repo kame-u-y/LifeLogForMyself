@@ -11,7 +11,7 @@ public class CurrentWorkMeterController : MonoBehaviour
 
     private void Awake()
     {
-        maxMinute = 25;
+        maxMinute = 1;
         this.GetComponent<Image>().fillAmount = 1.0f;
     }
 
@@ -29,7 +29,7 @@ public class CurrentWorkMeterController : MonoBehaviour
 
     public void UpdateMeter(int _elapsedTime)
     {
-        this.GetComponent<Image>().fillAmount = (float) 1.0f * _elapsedTime / (maxMinute * 60.0f);
+        this.GetComponent<Image>().fillAmount = (float) (1.0f * _elapsedTime / (maxMinute * 60.0f)) % 1.0f;
     }
 
     public void ChangeColor(Color _color)
