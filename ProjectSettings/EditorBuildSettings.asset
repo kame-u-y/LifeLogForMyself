@@ -8,4 +8,25 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive.unity
+    guid: 702e9e92a156b2f4bb47e64613c5a02b
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive_vv.unity
+    guid: f593f1ebec840414e94018cc2dbcb700
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive_vvv.unity
+    guid: 82ed38308387a3f46bf779f03268f068
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive_vvvv.unity
+    guid: 51e62b37a6e2aa047a54eaaaf90f1d9e
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive_.unity
+    guid: e21ae2f17b62f35458d352a8c6e11f9b
+  - enabled: 0
+    path: Assets/Scenes/Practice_Responsive__.unity
+    guid: e4c22630777868b4d9d0bfb58fe45bf7
+  - enabled: 0
+    path: Assets/Scenes/New Scene.unity
+    guid: ce549e3d4c54ff644a8602d7bf40e793
   m_configObjects: {}
