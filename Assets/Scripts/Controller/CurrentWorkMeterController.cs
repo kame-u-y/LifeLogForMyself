@@ -10,10 +10,13 @@ public class CurrentWorkMeterController : MonoBehaviour
     [SerializeField]
     ClockLabelController clockLabelCtrler;
 
+    Image image_;
+
     private void Awake()
     {
+        image_ = this.GetComponent<Image>();
         //maxMinute = 1;
-        this.GetComponent<Image>().fillAmount = 1.0f;
+        image_.fillAmount = 1.0f;
     }
 
     // Start is called before the first frame update
@@ -28,13 +31,18 @@ public class CurrentWorkMeterController : MonoBehaviour
         
     }
 
+    public void InitializeMeter()
+    {
+        image_.fillAmount = 1.0f;
+    }
+
     public void UpdateMeter(int _elapsedTime)
     {
-        this.GetComponent<Image>().fillAmount = (float) (1.0f * _elapsedTime / (maxMinute * 60.0f)) % 1.0f;
+        image_.fillAmount = (float) (1.0f * _elapsedTime / (maxMinute * 60.0f)) % 1.0f;
     }
 
     public void ChangeColor(Color _color)
     {
-        this.GetComponent<Image>().color = _color;
+        image_.color = _color;
     }
 }

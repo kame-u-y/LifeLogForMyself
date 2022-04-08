@@ -28,29 +28,10 @@ public class TodayPastPlateController : MonoBehaviour
 
     }
 
-    private void UpdatePastPlate()
+    public void UpdatePastPlate()
     {
-
-        int startSec;
-        int endSec;
-        if (gameDirector.isClock12h)
-        {
-            if (IsAm())
-            {
-                startSec = GetSecondOfToday(0, 0, 0);
-                endSec = GetSecondOfToday(11, 59, 59);
-            }
-            else
-            {
-                startSec = GetSecondOfToday(12, 0, 0);
-                endSec = GetSecondOfToday(23, 59, 59);
-            }
-        }
-        else
-        {
-            startSec = GetSecondOfToday(0, 0, 0);
-            endSec = GetSecondOfToday(23, 59, 59);
-        }
+        int startSec = gameDirector.GetSecondOfClockStart();
+        int endSec = gameDirector.GetSecondOfClockEnd();
         int nowSec = GetNowSecond();
         var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
         this.GetComponent<Image>().fillAmount = hoge;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +20,8 @@ public class WorkingDirector : MonoBehaviour
     Dropdown projectDropdown;
     [SerializeField]
     CurrentWorkMeterController currentWorkMeterCtrler;
+    [SerializeField]
+    TextMeshProUGUI currentCountText;
 
     DatabaseDirector databaseDirector;
 
@@ -41,6 +44,7 @@ public class WorkingDirector : MonoBehaviour
         List<ProjectData> project = databaseDirector.FetchProjectList();
         pieChartCtrler.DisplayTodayPieChart(dayData, project);
 
+        currentCountText.text = "00:00";
     }
 
     // Update is called once per frame
@@ -63,8 +67,11 @@ public class WorkingDirector : MonoBehaviour
         //nowUnixSec = GetNowTotalSeconds();
         currentWork.endUnixSec = GetNowTotalSeconds();
         pieChartCtrler.UpdateCurrentWorkPiece(currentWork);
-        print("now:" + (currentWork.endUnixSec - currentWork.startUnixSec));
-        currentWorkMeterCtrler.UpdateMeter(currentWork.endUnixSec - currentWork.startUnixSec);
+        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
+        print("now:" + elapsed);
+        currentWorkMeterCtrler.UpdateMeter(elapsed);
+
+        currentCountText.text = $"{String.Format("{0:00}", elapsed / 60)}:{String.Format("{0:00}", elapsed % 60)}";
     }
 
 
@@ -143,6 +150,9 @@ public class WorkingDirector : MonoBehaviour
 
         playEndImageCtrler.ChangeButtonImage(isWorking);
         time = 0;
+
+        currentWorkMeterCtrler.InitializeMeter();
+        //currentCountText.text = "00:00";
     }
 
     private int GetNowTotalSeconds()

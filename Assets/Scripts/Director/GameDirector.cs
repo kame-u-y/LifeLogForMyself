@@ -14,6 +14,8 @@ public class GameDirector : MonoBehaviour
     ClockLabelController clockLabelController;
     [SerializeField]
     ClockModeButtonController clockModeButtonController;
+    [SerializeField]
+    TodayPastPlateController todayPastPlateController;
 
 
     private void Awake()
@@ -24,10 +26,7 @@ public class GameDirector : MonoBehaviour
     void Start()
     {
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
-        workingDirector.CallForNeedDisplayTodayPieChart();
-        workingDirector.CallForNeedUpdateCurrentWorkPiece();
-        clockLabelController.ChangeClockLabels(isClock12h);
-        clockModeButtonController.ChangeButtonColor(isClock12h);
+        UpdateClockElements();
     }
 
     // Update is called once per frame
@@ -39,11 +38,16 @@ public class GameDirector : MonoBehaviour
     public void ChangeClockMode()
     {
         isClock12h = !isClock12h;
+        UpdateClockElements();
+    }
 
+    private void UpdateClockElements()
+    {
         workingDirector.CallForNeedDisplayTodayPieChart();
         workingDirector.CallForNeedUpdateCurrentWorkPiece();
         clockLabelController.ChangeClockLabels(isClock12h);
         clockModeButtonController.ChangeButtonColor(isClock12h);
+        todayPastPlateController.UpdatePastPlate();
     }
 
     public int GetSecondOfClockStart()
