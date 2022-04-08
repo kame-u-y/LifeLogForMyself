@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class WorkingDirector : MonoBehaviour
 {
-    private bool isWorking = false;
+    public bool isWorking = false;
     private WorkData currentWork;
     private ProjectData selectedProject;
     private float time;

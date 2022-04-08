@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ClockLabelController : MonoBehaviour
 {
@@ -20,21 +21,31 @@ public class ClockLabelController : MonoBehaviour
 
     public void ChangeClockLabels(bool _isClock12h)
     {
-        if (_isClock12h)
+        string spriteMode = "";
+        string clockMode = "";
+        if (IsScreenNormalSize())
         {
-            this.transform.Find("ClockE").GetComponent<TextMeshProUGUI>().text = "3";
-            this.transform.Find("ClockS").GetComponent<TextMeshProUGUI>().text = "6";
-            this.transform.Find("ClockW").GetComponent<TextMeshProUGUI>().text = "9";
-            this.transform.Find("ClockN").GetComponent<TextMeshProUGUI>().text = "12";
+            this.transform.Find("ClockNumber").gameObject.SetActive(true);
+            spriteMode = "Materials";
         }
         else
         {
-            this.transform.Find("ClockE").GetComponent<TextMeshProUGUI>().text = "6";
-            this.transform.Find("ClockS").GetComponent<TextMeshProUGUI>().text = "12";
-            this.transform.Find("ClockW").GetComponent<TextMeshProUGUI>().text = "18";
-            this.transform.Find("ClockN").GetComponent<TextMeshProUGUI>().text = "24";
+            this.transform.Find("ClockNumber").gameObject.SetActive(false);
+            spriteMode = "Resized_Materials";
         }
+
+        clockMode = _isClock12h ? "12" : "24";
+
+
+        this.transform.Find("ClockThorn").GetComponent<Image>().sprite =
+            Resources.Load<Sprite>($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
+        this.transform.Find("ClockNumber").GetComponent<Image>().sprite =
+            Resources.Load<Sprite>($"{spriteMode}/Cover/Label/Label{clockMode}h_Number");
     }
+
+    private bool IsScreenNormalSize()
+        => ProjectConstants.IsMoreThanThreshold(Screen.width)
+        || ProjectConstants.IsMoreThanThreshold(Screen.height);
 
     public void ChangeWorkMaxLabel(int _minute)
     {

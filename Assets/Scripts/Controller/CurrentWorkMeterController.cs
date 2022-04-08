@@ -5,13 +5,14 @@ using UnityEngine.UI;
 
 public class CurrentWorkMeterController : MonoBehaviour
 {
-    private int maxMinute;
+    [SerializeField]
+    private int maxMinute = 1;
     [SerializeField]
     ClockLabelController clockLabelCtrler;
 
     private void Awake()
     {
-        maxMinute = 1;
+        //maxMinute = 1;
         this.GetComponent<Image>().fillAmount = 1.0f;
     }
 

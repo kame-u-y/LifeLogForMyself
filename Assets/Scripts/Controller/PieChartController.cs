@@ -21,10 +21,13 @@ public class PieChartController : MonoBehaviour
         workPiePieces = new List<GameObject>();
 
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        Debug.Log("ほげ：" + gameDirector);
     }
 
     private void Start()
     {
+        Debug.Log("ふが：" + gameDirector);
+
     }
 
     private void Update()
@@ -43,25 +46,25 @@ public class PieChartController : MonoBehaviour
 
         // パイチャートを作るよ
         // とりあえず今日の分
-        _dayData.works.Sort((a, b) => a.startUnixSec - b.startUnixSec);
-
-        for (int i = _dayData.works.Count-1; i >= 0; i--)
+        List<WorkData> worksWithinRange = new List<WorkData>();
+        worksWithinRange = _dayData.works.FindAll((v) =>
         {
-            ProjectData p = _projects.Find(v => v.name == _dayData.works[i].projectName);
-            CreatePiePiece(_dayData.works[i], p);
+            int startSec = gameDirector.GetSecondOfClockStart();
+            int endSec = gameDirector.GetSecondOfClockEnd();
+            return v.startUnixSec >= startSec && v.endUnixSec <= endSec;
+        });
+        worksWithinRange.Sort((a, b) => a.startUnixSec - b.startUnixSec);
+
+        for (int i = worksWithinRange.Count-1; i >= 0; i--)
+        {
+            ProjectData p = _projects.Find(v => v.name == worksWithinRange[i].projectName);
+            CreateLogWorkPiece(worksWithinRange[i], p);
             //CreateBlankPiece(_dayData.works[i].startUnixSec - 1);
         }
 
         // パイチャートの幅は基本的にはendUnixSecで決定する
 
     }
-
-
-    //private void SetPieChartAnimation()
-    //{
-    //    //ResetCircle();
-    //    //databaseDirector.FetchTodayWorks();
-    //}
 
     private void ResetCircle()
     {
@@ -72,96 +75,56 @@ public class PieChartController : MonoBehaviour
         }
     }
 
-
-    //private void CreateBlankPiece(int _endSec)
-    //{
-    //    GameObject blank = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform);
-    //    blank.transform.localPosition = new Vector3(0, 0, 0);
-    //    //blank.GetComponent<Image>().color = new Color(170.0f / 255.0f, 170.0f / 255.0f, 170.0f / 255.0f);
-
-    //    // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
-    //    int todayStartSec = GetSecondOfToday(0, 0, 0);
-    //    int todayEndSec = GetSecondOfToday(23, 59, 59);
-
-    //    blank.GetComponent<Image>().fillAmount
-    //        = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_endSec - todayStartSec) / (todayEndSec - todayStartSec);
-    //    blank.SetActive(true);
-    //    workPiePieces.Add(blank);
-    //}
-
-    private void CreatePiePiece(WorkData _work, ProjectData _project)
+    private void CreateLogWorkPiece(WorkData _work, ProjectData _project)
     {
+        if (_project == null) return;
+
         GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("LogWorks").transform);
         newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
         newPiePiece.GetComponent<Image>().color
             = new Color(_project.pieColor.r, _project.pieColor.g, _project.pieColor.b);
 
-
-
-
-        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
-        int todayStartSec = GetSecondOfToday(0, 0, 0);
-        int todayEndSec = GetSecondOfToday(23, 59, 59);
-
-        //// 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
-        //newPiePiece.GetComponent<Image>().fillAmount
-        //    = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-
-        float angle = (gameDirector.isClock12h ? 2 : 1) * 360.0f * (_work.startUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-        newPiePiece.transform.rotation = Quaternion.Euler(0, 0, -angle);
-        newPiePiece.GetComponent<Image>().fillAmount
-            = (float)(gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - _work.startUnixSec) / (todayEndSec - todayStartSec);
-
+        CreatePiece(_work, newPiePiece);
 
         newPiePiece.SetActive(true);
         workPiePieces.Add(newPiePiece);
     }
 
-
     public void CreateCurrentWorkPiece(WorkData _work, ProjectData _project)
     {
-        //CreatePiePiece(_work, _project);
         currentWorkPiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("CurrentWork").transform);
         currentWorkPiece.transform.localPosition = new Vector3(0, 0, 0);
         currentWorkPiece.GetComponent<Image>().color
             = new Color(_project.pieColor.r, _project.pieColor.g, _project.pieColor.b);
 
-
-
-
-        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
-        int todayStartSec = GetSecondOfToday(0, 0, 0);
-        int todayEndSec = GetSecondOfToday(23, 59, 59);
-
-        //// 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
-        //currentWorkPiece.GetComponent<Image>().fillAmount
-        //    = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-
-        float angle = (gameDirector.isClock12h ? 2 : 1) * 360.0f * (_work.startUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-        currentWorkPiece.transform.rotation = Quaternion.Euler(0, 0, -angle);
-        currentWorkPiece.GetComponent<Image>().fillAmount
-            = (float)(gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - _work.startUnixSec) / (todayEndSec - todayStartSec);
-
-
+        CreatePiece(_work, currentWorkPiece);
+        
         currentWorkPiece.SetActive(true);
-
         //workPiePieces.Add(newPiePiece);
     }
 
     public void UpdateCurrentWorkPiece(WorkData _work)
     {
-        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
-        int todayStartSec = GetSecondOfToday(0, 0, 0);
-        int todayEndSec = GetSecondOfToday(23, 59, 59);
-
-        // 保存されてるサンプルのendUnixSecがおかしな値だからまともな表示にならない
-        //workPiePieces[currentWorkPieceId].GetComponent<Image>().fillAmount
-        //    = (float) (gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-        float angle = (gameDirector.isClock12h ? 2 : 1) * 360.0f * (_work.startUnixSec - todayStartSec) / (todayEndSec - todayStartSec);
-        currentWorkPiece.transform.rotation = Quaternion.Euler(0, 0, -angle);
-        currentWorkPiece.GetComponent<Image>().fillAmount
-            = (float)(gameDirector.isClock12h ? 2.0f : 1.0f) * (_work.endUnixSec - _work.startUnixSec) / (todayEndSec - todayStartSec);
+        CreatePiece(_work, currentWorkPiece);
     }
+
+
+    private void CreatePiece(WorkData _work, GameObject _obj)
+    {
+        // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
+        int startSec = gameDirector.GetSecondOfClockStart();
+        int endSec = gameDirector.GetSecondOfClockEnd();
+
+        float angle = CalculatePieRotationValue(360.0f, startSec, _work.startUnixSec, startSec, endSec);
+        _obj.transform.rotation = Quaternion.Euler(0, 0, -angle);
+
+        _obj.GetComponent<Image>().fillAmount
+            = CalculatePieRotationValue(1.0f, _work.startUnixSec, _work.endUnixSec, startSec, endSec);
+    }
+
+    private float CalculatePieRotationValue(float _rotationMax, int _startOfValue, int _endOfValue, int _startOfAll, int _endOfAll)
+        => (float)_rotationMax * (_endOfValue - _startOfValue) / (_endOfAll - _startOfAll);
+
 
     public void ChangeCurrentColor(Color _color)
     {
@@ -169,13 +132,4 @@ public class PieChartController : MonoBehaviour
     }
 
 
-    private int GetSecondOfToday(int _h, int _m, int _s)
-        => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
-            .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-
-
-    //private void CreatePieceOfPie(GameObject _obj, )
-    //{
-
-    //}
 }
