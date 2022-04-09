@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -35,6 +36,12 @@ public class CanvasResizingMonitor : UIBehaviour
     private Image clockThorn;
     [SerializeField]
     private Image clockNumber;
+    [SerializeField]
+    private GameObject workMeterMax;
+    [SerializeField]
+    private TextMeshProUGUI currentCountText;
+    //private GameObject currentCount;
+
 
     private int pScreenWidth;
     private int pScreenHeight;
@@ -55,8 +62,26 @@ public class CanvasResizingMonitor : UIBehaviour
     protected override void Start()
     {
         //base.Start();
-        pScreenWidth = Screen.width;
-        pScreenHeight = Screen.height;
+        InitializePValues();
+        SwitchClockImage();
+    }
+
+    /// <summary>
+    /// 初期化のためにあえて閾値に関して反対の値を前回値の保存用変数にぶちこむ
+    /// </summary>
+    private void InitializePValues()
+    {
+        if (Screen.width < ProjectConstants.ScreenThreshold 
+            || Screen.height < ProjectConstants.ScreenThreshold)
+        {
+            pScreenWidth = ProjectConstants.ScreenThreshold + 1;
+            pScreenHeight = ProjectConstants.ScreenThreshold + 1;
+        }
+        else
+        {
+            pScreenWidth = ProjectConstants.ScreenThreshold - 1;
+            pScreenHeight = ProjectConstants.ScreenThreshold - 1;
+        }
     }
 
     protected override void OnRectTransformDimensionsChange()
@@ -72,16 +97,6 @@ public class CanvasResizingMonitor : UIBehaviour
     {
         Debug.Log($"(w,h)=({Screen.width},{Screen.height})");
 
-        //if (IsSameScreenStateWithPrevious())
-        //{
-        //    Debug.Log("0:" + (IsMoreThanThreshold(pScreenWidth) && IsMoreThanThreshold(Screen.width)));
-        //    Debug.Log("1:" + (!IsMoreThanThreshold(pScreenWidth) && !IsMoreThanThreshold(Screen.width)));
-        //    Debug.Log("2:" + (IsMoreThanThreshold(pScreenHeight) && IsMoreThanThreshold(Screen.height)));
-        //    Debug.Log("3:" + (!IsMoreThanThreshold(pScreenHeight) && !IsMoreThanThreshold(Screen.height)));
-        //    return;
-        //}
-        
-
         string spriteMode = "";
         string buttonMode = "";
         string clockMode = "";
@@ -90,13 +105,15 @@ public class CanvasResizingMonitor : UIBehaviour
         {
             spriteMode = "Resized_Materials";
             clockNumber.gameObject.SetActive(false);
-            Debug.Log("false");
+            workMeterMax.SetActive(false);
+            currentCountText.fontSize = 150;
         }
         else if (IsStateSwitchingToNormal())
         {
             spriteMode = "Materials";
             clockNumber.gameObject.SetActive(true);
-            Debug.Log("true");
+            workMeterMax.SetActive(true);
+            currentCountText.fontSize = 100;
         } 
         else
         {

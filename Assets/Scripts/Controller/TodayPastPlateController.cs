@@ -9,10 +9,15 @@ public class TodayPastPlateController : MonoBehaviour
     GameDirector gameDirector;
     private float time;
 
+    private void Awake()
+    {
+        
+        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
     }
 
     // Update is called once per frame
@@ -35,7 +40,7 @@ public class TodayPastPlateController : MonoBehaviour
         int nowSec = GetNowSecond();
         var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
         this.GetComponent<Image>().fillAmount = hoge;
-        Debug.Log($"past:({hoge})");
+        //Debug.Log($"past:({hoge})");
     }
 
     private bool IsAm()

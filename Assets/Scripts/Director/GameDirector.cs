@@ -20,12 +20,12 @@ public class GameDirector : MonoBehaviour
 
     private void Awake()
     {
+        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         UpdateClockElements();
     }
 
@@ -67,4 +67,39 @@ public class GameDirector : MonoBehaviour
     private int GetSecondOfToday(int _h, int _m, int _s)
         => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
             .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+    private int touchCount = 0;
+
+    public void BackgroundClickHandler()
+    {
+        touchCount++;
+        Invoke("ResizeScreen", 0.3f);
+    }
+
+    private void ResizeScreen()
+    {
+        if (touchCount != 2)
+        {
+            touchCount = 0;
+            return;
+        }
+        else
+        {
+            touchCount = 0;
+        }
+        Debug.Log("Double Clicked!!");
+
+        if (Screen.width > 500 && Screen.height > 500)
+        {
+            Screen.SetResolution(150, 150, false);
+        }
+        else if (Screen.width > 200 && Screen.height > 200)
+        {
+            Screen.SetResolution(800, 800, false);
+        }
+        else
+        {
+            Screen.SetResolution(450, 450, false);
+        }
+    } 
 }

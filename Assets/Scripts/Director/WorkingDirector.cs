@@ -71,9 +71,13 @@ public class WorkingDirector : MonoBehaviour
         print("now:" + elapsed);
         currentWorkMeterCtrler.UpdateMeter(elapsed);
 
-        currentCountText.text = $"{String.Format("{0:00}", elapsed / 60)}:{String.Format("{0:00}", elapsed % 60)}";
+        int h = elapsed / 3600;
+        int m = (elapsed % 3600) / 60;
+        int s = elapsed % 60;
+        currentCountText.text = h > 0
+            ? $"{String.Format("{0:00}", h)}:{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}"
+            : $"{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}";
     }
-
 
 
     /// <summary>
@@ -109,7 +113,7 @@ public class WorkingDirector : MonoBehaviour
         currentWork.projectName = projectDropdown.captionText.text;
         print(selectedProject.name);
         pieChartCtrler.ChangeCurrentColor(c);
-        currentWorkMeterCtrler.ChangeColor(c);
+        //currentWorkMeterCtrler.ChangeColor(c);
     }
 
 
@@ -138,6 +142,12 @@ public class WorkingDirector : MonoBehaviour
 
         playEndImageCtrler.ChangeButtonImage(isWorking);
         pieChartCtrler.CreateCurrentWorkPiece(currentWork, selectedProject);
+
+        //Color c = new Color(
+        //    selectedProject.pieColor.r / 255.0f,
+        //    selectedProject.pieColor.g / 255.0f,
+        //    selectedProject.pieColor.b / 255.0f);
+        //pieChartCtrler.ChangeCurrentColor(c);
 
         time = 0;
     }

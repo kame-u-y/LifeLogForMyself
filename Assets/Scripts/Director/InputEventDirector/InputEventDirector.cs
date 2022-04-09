@@ -14,6 +14,8 @@ public class InputEventDirector : MonoBehaviour
     Button toggleClockModeButton;
     [SerializeField]
     Dropdown projectDropdown;
+    [SerializeField]
+    Button background;
 
     WorkingDirector workingDirector;
     GameDirector gameDirector;
@@ -36,6 +38,7 @@ public class InputEventDirector : MonoBehaviour
         //string selectedProject = projectDropdown.captionText.text;
         projectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
+        background.onClick.AddListener(gameDirector.BackgroundClickHandler);
     }
 
     // Update is called once per frame
