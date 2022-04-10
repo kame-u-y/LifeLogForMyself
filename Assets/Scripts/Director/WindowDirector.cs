@@ -19,11 +19,26 @@ public class WindowDirector : MonoBehaviour
     [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
     public static extern bool GetCursorPos(out Point lpPoint);
     [DllImport("user32.dll", EntryPoint = "GetWindowRect")]
-    public static extern bool GetWindowRect(IntPtr hWnd, out Rect lpRect);
+    private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+    [DllImport("user32.dll", EntryPoint = "GetSystemMetrics")]
+    private static extern int GetSystemMetrics(int nIndex);
+    
+    [StructLayout(LayoutKind.Sequential)]
+    private struct RECT
+    {
+        public int left;
+        public int top;
+        public int right;
+        public int bottom;
+    }
 
     IntPtr window;
     string windowName = "LifeLogForMyself";
     const int WS_DLGFRAME = 0x00400000;
+    const int SM_CXSCREEN = 0;
+    const int SM_CYSCREEN = 1;
+    const int HWND_TOP = 0;
+    const int HWND_TOPMOST = -1;
 
     [SerializeField]
     InputEventDirector inputEventDirector;
@@ -66,11 +81,10 @@ public class WindowDirector : MonoBehaviour
     private void InitializeWindowRect()
     {
 
-        const int HWND_TOP = 0;
-        Rect windowRect;
+        RECT windowRect;
         GetWindowRect(window, out windowRect);
-        Debug.Log("initialize windowRect: (" + windowRect.width + ", " + windowRect.height + ")");
-        SetWindowPos(window, HWND_TOP, 800, 800, 100, 100, 0);
+        Debug.Log("initialize windowRect: (" + windowRect.left + ", " + windowRect.right + ", " + windowRect.top + ", " + windowRect.bottom +") ");
+        SetWindowPos(window, HWND_TOPMOST, 800, 800, 100, 100, 0);
     }
 
     /// <summary>
@@ -114,11 +128,38 @@ public class WindowDirector : MonoBehaviour
             resizeWidth = 450;
             resizeHeight = 450;
         }
-        Screen.SetResolution(resizeWidth, resizeHeight, false);
+        //Screen.SetResolution(resizeWidth, resizeHeight, false);
 
+        //int width = canvasResizingMonitor.GetPScreenWidth();
+        //int height = canvasResizingMonitor.GetPScreenHeight();
+        int screenW = GetSystemMetrics(SM_CXSCREEN);
+        int screenH = GetSystemMetrics(SM_CYSCREEN);
+        Debug.Log("Screen: " + screenW + ", "+ screenH);
+
+        RECT windowRect;
+        GetWindowRect(window, out windowRect);
+
+        //int windowCenterX = (windowRect.left + windowRect.right) / 2;
+        //int windowCenterY = (windowRect.top + windowRect.bottom) / 2;
+        //int windowW = windowRect.right - windowRect.left;
+        //int windowH = windowRect.bottom - windowRect.top;
+        //int newPosX = windowCenterX < screenW / 2
+        //    ? 0 : windowRect.right - resizeWidth;
+        //int newPosY = windowCenterY < screenH / 2
+        //    ? 0 : windowRect.bottom - resizeHeight;
+
+        //int newPosX = (windowRect.left + windowRect.right) / 2 - resizeWidth / 2;
+        //int newPosY = (windowRect.top + windowRect.bottom) / 2 - resizeHeight / 2;
+
+        int newPosX = windowRect.right - resizeWidth;
+        int newPosY = windowRect.bottom - resizeHeight;
+
+        SetWindowPos(window, HWND_TOPMOST, newPosX, newPosY, resizeWidth, resizeHeight, 0);
+        
         canvasResizingMonitor.UpdatePSize(resizeWidth, resizeHeight);
         Debug.Log(canvasResizingMonitor.GetPScreenWidth());
         canvasResizingMonitor.SwitchClockImage();
+
     }
 
     /// <summary>
@@ -148,17 +189,16 @@ public class WindowDirector : MonoBehaviour
     private void MoveWindow()
     {
         var window = FindWindow(null, windowName);
-        const int HWND_TOP = 0;
         Point mousePoint;
-        Rect windowRect;
+        RECT windowRect;
 
         GetCursorPos(out mousePoint);
         GetWindowRect(window, out windowRect);
-        Debug.Log("windowRect: (" + windowRect.width + ", " + windowRect.height + ")");
+        Debug.Log("windowRect: (" + windowRect.left + ", " + windowRect.top + ")");
 
         int width = canvasResizingMonitor.GetPScreenWidth();
         int height = canvasResizingMonitor.GetPScreenHeight();
-        SetWindowPos(window, HWND_TOP, mousePoint.X - dragStartX, mousePoint.Y - dragStartY, width, height, 0);
+        SetWindowPos(window, HWND_TOPMOST, mousePoint.X - dragStartX, mousePoint.Y - dragStartY, width, height, 0);
 
         // ウィンドウサイズが消滅する
         //SetWindowPos(window, HWND_TOP, mousePoint.X - dragStartX, mousePoint.Y - dragStartY, (int)windowRect.width, (int)windowRect.height, 0);
