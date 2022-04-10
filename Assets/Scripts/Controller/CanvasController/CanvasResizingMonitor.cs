@@ -110,9 +110,9 @@ public class CanvasResizingMonitor : UIBehaviour
             clockNumber.gameObject.SetActive(false);
             workMeterMax.SetActive(false);
             currentCountText.fontSize = 150;
-            Vector3 pos = playEndButton.transform.localPosition;
-            pos.y = 5;
-            playEndButton.rectTransform.localPosition = pos;
+            //Vector3 pos = playEndButton.transform.localPosition;
+            //pos.y = 2;
+            //playEndButton.rectTransform.localPosition = pos;
         }
         else if (IsStateSwitchingToNormal())
         {
@@ -121,15 +121,18 @@ public class CanvasResizingMonitor : UIBehaviour
             workMeterMax.SetActive(true);
             currentCountText.fontSize = 100;
 
-            Vector3 pos = playEndButton.transform.localPosition;
-            pos.y = 0;
-            playEndButton.rectTransform.localPosition = pos;
+            //Vector3 pos = playEndButton.transform.localPosition;
+            //pos.y = 0;
+            //playEndButton.rectTransform.localPosition = pos;
         } 
         else
         {
             //UpdatePSize();
             return;
         }
+        Debug.Log("LocalPosition (SwitchClockImage):" + playEndButton.transform.localPosition);
+        Debug.Log("LocalPosition (SwitchClockImage):" + playEndButton.transform.position);
+
         buttonMode = workingDirector.isWorking ? "End" : "Play";
         clockMode = gameDirector.isClock12h ? "12" : "24";
 

@@ -40,18 +40,24 @@ public class WindowDirector : MonoBehaviour
     const int HWND_TOP = 0;
     const int HWND_TOPMOST = -1;
 
-    [SerializeField]
+    GameDirector gameDirector;
     InputEventDirector inputEventDirector;
     [SerializeField]
     CanvasResizingMonitor canvasResizingMonitor;
 
+
     private int touchCount = 0;
+    private bool isDragged = false;
 
     private int dragStartX = 0;
     private int dragStartY = 0;
 
+    [SerializeField]
+    GameObject playEndButton;
+
     private void Awake()
     {
+        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
         inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
     }
 
@@ -94,20 +100,26 @@ public class WindowDirector : MonoBehaviour
     public void OnResizingButtonClick()
     {
         touchCount++;
-        Invoke("ResizeScreen", 0.3f);
+        Invoke("HandleRepeatedClick", 0.3f);
+    }
+
+    private void HandleRepeatedClick()
+    {
+        if (!isDragged && touchCount == 2)
+        {
+            ResizeScreen();
+        }
+        else if (!isDragged && touchCount == 1)
+        {
+            gameDirector.ChangeClockMode();
+        }
+        touchCount = 0;
+        isDragged = false;
     }
 
     private void ResizeScreen()
     {
-        if (touchCount != 2)
-        {
-            touchCount = 0;
-            return;
-        }
-        else
-        {
-            touchCount = 0;
-        }
+        
         Debug.Log("Double Clicked!!");
 
         int resizeWidth = 150;
@@ -160,6 +172,9 @@ public class WindowDirector : MonoBehaviour
         Debug.Log(canvasResizingMonitor.GetPScreenWidth());
         canvasResizingMonitor.SwitchClockImage();
 
+        
+        Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.localPosition);
+        Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.position);
     }
 
     /// <summary>
@@ -173,6 +188,9 @@ public class WindowDirector : MonoBehaviour
         dragStartX = (int)mousePos.x;
         dragStartY = (int) (Screen.height - mousePos.y);
         Debug.Log($"{dragStartX}, {dragStartY}");
+
+        // ドラッグ後のclickイベント回避
+        isDragged = true;
     }
 
     public void OnTargetDrag(BaseEventData _eventData)
