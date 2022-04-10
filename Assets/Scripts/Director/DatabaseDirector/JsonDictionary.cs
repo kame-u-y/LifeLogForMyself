@@ -36,7 +36,6 @@ public class JsonDictionary<TKey, TValue> : ISerializationCallbackReceiver
 
     void ISerializationCallbackReceiver.OnBeforeSerialize()
     {
-        Debug.Log("called");
         dictionary = m_dictionary
             .Select(x => new KeyValuePair(x.Key, x.Value))
             .ToArray();
@@ -44,8 +43,6 @@ public class JsonDictionary<TKey, TValue> : ISerializationCallbackReceiver
 
     void ISerializationCallbackReceiver.OnAfterDeserialize()
     {
-        Debug.Log(dictionary);
-        Debug.Log("hoge!");
         m_dictionary = dictionary.ToDictionary(x => x.Key, x => x.Value);
         dictionary = null;
     }

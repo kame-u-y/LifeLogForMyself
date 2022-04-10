@@ -36,7 +36,7 @@ public class ProjectDropdownController : MonoBehaviour
             if (i >= dropdown_.options.Count)
             {
                 dropdown_.options.Add(new Dropdown.OptionData { text = projectList[i].name });
-                return;
+                continue;
             }
             else
             {

@@ -12,8 +12,8 @@ public class DatabaseDirector : MonoBehaviour
     void Awake()
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
-        saveData = new LoadedSaveData();
-
+        //saveData = new LoadedSaveData();
+        //Debug.Log(saveData.dailyDictionary);
         ImportSaveData();
     }
 
@@ -37,8 +37,10 @@ public class DatabaseDirector : MonoBehaviour
     public void ImportSaveData()
     {
         if (!File.Exists(filePath))
+        {
+            Debug.Log("file not found error");
             return;
-
+        }
         StreamReader streamReader = new StreamReader(filePath);
         string json = streamReader.ReadToEnd();
         streamReader.Close();
@@ -49,6 +51,7 @@ public class DatabaseDirector : MonoBehaviour
             dailyDictionary = jsonSaveData.dailyDictionary.Dictionary,
             projects = jsonSaveData.projects
         };
+        Debug.Log("imported save data");
     }
 
     public void ExportSaveData()
@@ -162,7 +165,6 @@ public class DatabaseDirector : MonoBehaviour
 
     public DayData FetchDayData(string _day)
     {
-        Debug.Log(saveData.dailyDictionary);
         return saveData.dailyDictionary.ContainsKey(_day)
            ? saveData.dailyDictionary[_day]
            : null;

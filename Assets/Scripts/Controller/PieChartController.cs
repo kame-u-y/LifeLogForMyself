@@ -21,12 +21,10 @@ public class PieChartController : MonoBehaviour
         workPiePieces = new List<GameObject>();
 
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
-        Debug.Log("ÇŸÇ∞ÅF" + gameDirector);
     }
 
     private void Start()
     {
-        Debug.Log("Ç”Ç™ÅF" + gameDirector);
 
     }
 

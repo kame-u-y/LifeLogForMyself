@@ -51,6 +51,8 @@ public class CanvasResizingMonitor : UIBehaviour
     [SerializeField]
     WorkingDirector workingDirector;
 
+    Vector3 playEndButtonPos;
+
     // Start is called before the first frame update
     protected override void Awake()
     {
@@ -64,6 +66,7 @@ public class CanvasResizingMonitor : UIBehaviour
         //base.Start();
         InitializePValues();
         SwitchClockImage();
+       
     }
 
     /// <summary>
@@ -93,7 +96,7 @@ public class CanvasResizingMonitor : UIBehaviour
         }
     }
 
-    private void SwitchClockImage()
+    public void SwitchClockImage()
     {
         Debug.Log($"(w,h)=({Screen.width},{Screen.height})");
 
@@ -107,6 +110,9 @@ public class CanvasResizingMonitor : UIBehaviour
             clockNumber.gameObject.SetActive(false);
             workMeterMax.SetActive(false);
             currentCountText.fontSize = 150;
+            Vector3 pos = playEndButton.transform.localPosition;
+            pos.y = 5;
+            playEndButton.rectTransform.localPosition = pos;
         }
         else if (IsStateSwitchingToNormal())
         {
@@ -114,9 +120,14 @@ public class CanvasResizingMonitor : UIBehaviour
             clockNumber.gameObject.SetActive(true);
             workMeterMax.SetActive(true);
             currentCountText.fontSize = 100;
+
+            Vector3 pos = playEndButton.transform.localPosition;
+            pos.y = 0;
+            playEndButton.rectTransform.localPosition = pos;
         } 
         else
         {
+            //UpdatePSize();
             return;
         }
         buttonMode = workingDirector.isWorking ? "End" : "Play";
@@ -135,7 +146,7 @@ public class CanvasResizingMonitor : UIBehaviour
         clockThorn.sprite = LoadSprite($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
         clockNumber.sprite = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
 
-        UpdatePSize();
+        UpdatePSize(Screen.width, Screen.height);
     }
 
     private bool IsSameScreenStateWithPrevious()
@@ -158,9 +169,15 @@ public class CanvasResizingMonitor : UIBehaviour
     private Sprite LoadSprite(string _s)
         => Resources.Load<Sprite>(_s);
 
-    private void UpdatePSize()
+    public void UpdatePSize(int _w, int _h)
     {
-        pScreenWidth = Screen.width;
-        pScreenHeight = Screen.height;
+        pScreenWidth = _w;
+        pScreenHeight = _h;
     }
+
+    public int GetPScreenWidth()
+        => pScreenWidth;
+
+    public int GetPScreenHeight() 
+        => pScreenHeight;
 }

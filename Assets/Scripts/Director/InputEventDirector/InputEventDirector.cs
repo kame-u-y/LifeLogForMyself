@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class InputEventDirector : MonoBehaviour
 {
-    public MyInputActions myInputActions;
+    private MyInputActions myInputActions;
 
     [SerializeField]
     Button playEndButton;
@@ -19,6 +21,7 @@ public class InputEventDirector : MonoBehaviour
 
     WorkingDirector workingDirector;
     GameDirector gameDirector;
+    WindowDirector windowDirector;
 
     private void Awake()
     {
@@ -27,6 +30,7 @@ public class InputEventDirector : MonoBehaviour
 
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
     }
 
     // Start is called before the first frame update
@@ -38,13 +42,41 @@ public class InputEventDirector : MonoBehaviour
         //string selectedProject = projectDropdown.captionText.text;
         projectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
-        background.onClick.AddListener(gameDirector.BackgroundClickHandler);
+        background.onClick.AddListener(windowDirector.OnResizingButtonClick);
+
+        EventTrigger trigger = background.gameObject.GetComponent<EventTrigger>();
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.BeginDrag,
+            (_eventData) => windowDirector.OnTargetBeginDrag(_eventData));
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.Drag,
+            (_eventData) => windowDirector.OnTargetDrag(_eventData));
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.EndDrag,
+            (_eventData) => windowDirector.OnTargetEndDrag(_eventData));
     }
 
     // Update is called once per frame
     private void Update()
     {
     }
+
+    private void AddEventTrigger(
+       EventTrigger _trigger,
+       EventTriggerType _type,
+       UnityAction<BaseEventData> _callback)
+    {
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = _type;
+        entry.callback.AddListener(_callback);
+        _trigger.triggers.Add(entry);
+    }
+
+    public Vector2 GetMousePosition()
+        => myInputActions.UI.Point.ReadValue<Vector2>();
 
     #region SwitchMap
     //public void SwitchBackToPlayer()
