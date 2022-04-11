@@ -100,27 +100,7 @@ crashlytics-build.properties
 /Assets/Procedural Worlds
 /Assets/Allegorithmic
 /Assets/Plugins
-/Assets/Resources/Materials/Base/Frame.PNG
-/Assets/Resources/Materials/Base/Plate.PNG
-/Assets/Resources/Materials/Base/WorkMeterPlate.PNG
-/Assets/Resources/Materials/Cover/Label/Label12h_Number.PNG
-/Assets/Resources/Materials/Cover/Label/Label12h_Thorn.PNG
-/Assets/Resources/Materials/Cover/Label/Label24h_Number.PNG
-/Assets/Resources/Materials/Cover/Label/Label24h_Thorn.PNG
-/Assets/Resources/Materials/Cover/PlayButton.PNG
-/Assets/Resources/Materials/Cover/EndButton.PNG
-/Assets/Resources/Materials/Cover/Cover.PNG
-/Assets/Resources/Materials/Cover/ClockNeedle.PNG
-/Assets/Resources/Resized_Materials/Pie/CurrentWorkMeter.PNG
-/Assets/Resources/Resized_Materials/Cover/PlayButton.PNG
-/Assets/Resources/Resized_Materials/Cover/Label/Label24h_Thorn.PNG
-/Assets/Resources/Resized_Materials/Cover/Label/Label12h_Thorn.PNG
-/Assets/Resources/Resized_Materials/Cover/EndButton.PNG
-/Assets/Resources/Resized_Materials/Cover/Cover.PNG
-/Assets/Resources/Resized_Materials/Base/WorkMeterPlate.PNG
-/Assets/Resources/Resized_Materials/Base/Plate.PNG
-/Assets/Resources/Resized_Materials/Base/Frame.PNG
-/Assets/Resources/Materials/Pie/CurrentWorkMeter.PNG
+
 /Assets/TextMesh Pro/Examples & Extras/Fonts
 /Assets/TextMesh Pro/Resources/Fonts & Materials/ARIBLK.TTF.meta
 /Assets/TextMesh Pro/Resources/Fonts & Materials/ARIBLK.TTF
@@ -181,3 +161,4 @@ crashlytics-build.properties
 /Assets/TextMesh Pro/Resources/Fonts & Materials/MSGOTHIC.TTC.meta
 /Assets/TextMesh Pro/Resources/Fonts & Materials/MSGOTHIC.TTC
 /Assets/TextMesh Pro/Resources/Fonts & Materials/MSGOTHIC SDF.asset
+/Assets/TextMesh Pro
