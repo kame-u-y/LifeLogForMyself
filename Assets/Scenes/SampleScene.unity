@@ -874,6 +874,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasResizingMonitor: {fileID: 1259169749}
+  playEndButton: {fileID: 269122036}
 --- !u!1 &444571945
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,5 @@
 {
-    "name": "BetterLifeLog",
+    "name": "MyInputActions",
     "maps": [
         {
             "name": "UI",
@@ -91,6 +91,15 @@
                     "type": "PassThrough",
                     "id": "5ce51e01-ae55-48a7-a4d7-83ffc30e29d8",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "5cbe5eda-c289-4e00-b787-7b51600b9e81",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -512,6 +521,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "abb8f779-9d9f-4214-927b-abbe9a2d29e8",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
