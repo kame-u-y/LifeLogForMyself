@@ -18,30 +18,23 @@ public class ProjectDropdownController : MonoBehaviour
         dropdown_ = this.GetComponent<Dropdown>();
         InitItems();
         ProjectData p = databaseDirector.FindProject(dropdown_.options[0].text);
-        currentWorkMeterCtrler.ChangeColor(
-            new Color(p.pieColor.r / 255.0f, p.pieColor.g / 255.0f, p.pieColor.b / 255.0f));
+        Color c = new Color(p.pieColor.r / 255.0f, p.pieColor.g / 255.0f, p.pieColor.b / 255.0f);
+        currentWorkMeterCtrler.ChangeColor(c);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void InitItems()
     {
         List<ProjectData> projectList = databaseDirector.FetchProjectList();
-        for (int i=0; i<projectList.Count; i++)
+        dropdown_.options = new List<Dropdown.OptionData>();
+        for (int i = 0; i < projectList.Count; i++)
         {
-            if (i >= dropdown_.options.Count)
-            {
-                dropdown_.options.Add(new Dropdown.OptionData { text = projectList[i].name });
-                continue;
-            }
-            else
-            {
-                dropdown_.options[i].text = projectList[i].name;
-            }
+            dropdown_.options.Add(new Dropdown.OptionData { text = projectList[i].name });
         }
     }
 }

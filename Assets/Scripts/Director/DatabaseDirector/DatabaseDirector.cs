@@ -39,6 +39,8 @@ public class DatabaseDirector : MonoBehaviour
         if (!File.Exists(filePath))
         {
             Debug.Log("file not found error");
+            saveData = CreateDefaultData();
+            ExportSaveData();
             return;
         }
         StreamReader streamReader = new StreamReader(filePath);
@@ -185,4 +187,32 @@ public class DatabaseDirector : MonoBehaviour
     //}
 
     // OverWrite‚Í•ÏX‰Â”\ŠÖ”‚ğ‚·‚×‚Ä’è‹`‚µ‚¿‚á‚¤‚Ì‚ª—˜•Ö«‚‚»‚¤
+
+    private LoadedSaveData CreateDefaultData()
+    {
+        return new LoadedSaveData()
+        {
+            dailyDictionary = new Dictionary<string, DayData>()
+            {
+                [DateTime.Now.ToString("yyyyMMdd")] = new DayData()
+                {
+                    works = new List<WorkData>()
+                }
+            },
+            projects = new List<ProjectData>()
+            {
+                new ProjectData()
+                {
+                    id = 0,
+                    name = "No Project",
+                    pieColor = new ColorData() {
+                        r = 143,
+                        g = 193,
+                        b = 16 
+                    },
+                    totalSec = 0
+                }
+            }
+        };
+    }
 }
