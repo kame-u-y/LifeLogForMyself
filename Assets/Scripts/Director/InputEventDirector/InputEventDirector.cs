@@ -19,6 +19,14 @@ public class InputEventDirector : MonoBehaviour
     [SerializeField]
     Button background;
 
+    [SerializeField]
+    PopupController popupController;
+    Button popupBackground;
+    Button mainButton;
+    Button settingsButton;
+    Button quitButton;
+
+
     WorkingDirector workingDirector;
     GameDirector gameDirector;
     WindowDirector windowDirector;
@@ -31,6 +39,12 @@ public class InputEventDirector : MonoBehaviour
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
         windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
+
+        popupBackground = popupController.transform.Find("PopupBackground").GetComponent<Button>();
+        mainButton = popupController.transform.Find("Popup/ButtonContainer/MainButton").GetComponent<Button>();
+        settingsButton = popupController.transform.Find("Popup/ButtonContainer/SettingsButton").GetComponent<Button>();
+        quitButton = popupController.transform.Find("Popup/ButtonContainer/QuitButton").GetComponent<Button>();
+        Debug.Log(quitButton);
     }
 
     // Start is called before the first frame update
@@ -57,6 +71,23 @@ public class InputEventDirector : MonoBehaviour
             trigger,
             EventTriggerType.EndDrag,
             (_eventData) => windowDirector.OnTargetEndDrag(_eventData));
+
+        myInputActions.UI.RightClick.performed += (_context) => popupController.OpenPopup(_context);
+        popupBackground.onClick.AddListener(popupController.ClosePopup);
+        mainButton.onClick.AddListener(
+             () =>
+             {
+                 gameDirector.SwitchGameMode(GameDirector.GameMode.Main);
+                 popupController.ClosePopup();
+             });
+        settingsButton.onClick.AddListener(
+             () =>
+             {
+                 gameDirector.SwitchGameMode(GameDirector.GameMode.Settings);
+                 popupController.ClosePopup();
+             });
+        quitButton.onClick.AddListener(gameDirector.Quit);
+
     }
 
     // Update is called once per frame

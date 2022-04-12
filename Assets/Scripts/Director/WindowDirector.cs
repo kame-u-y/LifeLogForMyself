@@ -55,6 +55,13 @@ public class WindowDirector : MonoBehaviour
     [SerializeField]
     GameObject playEndButton;
 
+    int smallScreen = 150;
+    int mediumScreen = 450;
+    int largeScreen = 800;
+
+    int smallThreshold = 200;
+    int mediumThreshold = 500;
+
     private void Awake()
     {
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
@@ -90,7 +97,10 @@ public class WindowDirector : MonoBehaviour
         RECT windowRect;
         GetWindowRect(window, out windowRect);
         Debug.Log("initialize windowRect: (" + windowRect.left + ", " + windowRect.right + ", " + windowRect.top + ", " + windowRect.bottom +") ");
-        SetWindowPos(window, HWND_TOPMOST, 800, 800, 100, 100, 0);
+
+        int screenW = GetSystemMetrics(SM_CXSCREEN);
+        int screenH = GetSystemMetrics(SM_CYSCREEN);
+        SetWindowPos(window, HWND_TOPMOST, (screenW - smallScreen) / 2, (screenH - smallScreen) / 2 , smallScreen, smallScreen, 0);
     }
 
     /// <summary>
@@ -122,23 +132,23 @@ public class WindowDirector : MonoBehaviour
         
         Debug.Log("Double Clicked!!");
 
-        int resizeWidth = 150;
-        int resizeHeight = 150;
-        if (Screen.width > 500 && Screen.height > 500)
+        int resizeWidth = smallScreen;
+        int resizeHeight = smallScreen;
+        if (Screen.width > mediumThreshold && Screen.height > mediumThreshold)
         {
             //Screen.SetResolution(150, 150, false);
-            resizeWidth = 150;
-            resizeHeight = 150;
+            resizeWidth = smallScreen;
+            resizeHeight = smallScreen;
         }
-        else if (Screen.width > 200 && Screen.height > 200)
+        else if (Screen.width > smallThreshold && Screen.height > smallThreshold)
         {
-            resizeWidth = 800;
-            resizeHeight = 800;
+            resizeWidth = largeScreen;
+            resizeHeight = largeScreen;
         }
         else
         {
-            resizeWidth = 450;
-            resizeHeight = 450;
+            resizeWidth = mediumScreen;
+            resizeHeight = mediumScreen;
         }
         //Screen.SetResolution(resizeWidth, resizeHeight, false);
 

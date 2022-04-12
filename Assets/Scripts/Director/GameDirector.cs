@@ -6,6 +6,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Drawing;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
@@ -20,6 +21,22 @@ public class GameDirector : MonoBehaviour
     [SerializeField]
     TodayPastPlateController todayPastPlateController;
 
+    [SerializeField]
+    GameObject mainContainer;
+    [SerializeField]
+    GameObject settingsContainer;
+    [SerializeField]
+    GameObject buttonContainer;
+    Button mainButton;
+    Button settingsButton;
+
+
+    public enum GameMode
+    {
+        Main,
+        Settings,
+        WatchLog
+    }
 
     private void Awake()
     {
@@ -30,12 +47,52 @@ public class GameDirector : MonoBehaviour
     void Start()
     {
         UpdateClockElements();
+        mainContainer.SetActive(true);
+        settingsContainer.SetActive(false);
+
+        mainButton = buttonContainer.transform.Find("MainButton").GetComponent<Button>();
+        settingsButton = buttonContainer.transform.Find("SettingsButton").GetComponent<Button>();
+        mainButton.interactable = false;
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void SwitchGameMode(GameMode _mode)
+    {
+        if (_mode == GameMode.Main)
+        {
+            bool b = true;
+            mainContainer.SetActive(b);
+            settingsContainer.SetActive(!b);
+            // watchLogContainer.SetActive(false);
+
+            mainButton.interactable = !b;
+            settingsButton.interactable = b;
+        }
+        else if (_mode == GameMode.Settings)
+        {
+            bool b = true;
+            mainContainer.SetActive(!b);
+            settingsContainer.SetActive(b);
+            // watchLogContainer.SetActive(false);
+
+            mainButton.interactable = b;
+            settingsButton.interactable = !b;
+        }
+        else if (_mode == GameMode.WatchLog)
+        {
+            bool b = true;
+            mainContainer.SetActive(!b);
+            settingsContainer.SetActive(!b);
+            // watchLogContainer.SetActive(true);
+
+            mainButton.interactable = b;
+            settingsButton.interactable = b;
+        }
     }
 
     public void ChangeClockMode()
@@ -70,4 +127,14 @@ public class GameDirector : MonoBehaviour
     private int GetSecondOfToday(int _h, int _m, int _s)
         => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
             .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #elif UNITY_STANDALONE
+            UnityEngine.Application.Quit();
+        #endif
+    }
 }
