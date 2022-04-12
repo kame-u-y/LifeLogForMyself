@@ -47,8 +47,8 @@ public class GameDirector : MonoBehaviour
     void Start()
     {
         UpdateClockElements();
-        mainContainer.SetActive(true);
-        settingsContainer.SetActive(false);
+        mainContainer.transform.localScale = Vector3.one;
+        settingsContainer.transform.localScale = Vector3.zero;
 
         mainButton = buttonContainer.transform.Find("MainButton").GetComponent<Button>();
         settingsButton = buttonContainer.transform.Find("SettingsButton").GetComponent<Button>();
@@ -66,8 +66,8 @@ public class GameDirector : MonoBehaviour
         if (_mode == GameMode.Main)
         {
             bool b = true;
-            mainContainer.SetActive(b);
-            settingsContainer.SetActive(!b);
+            mainContainer.transform.localScale = Vector3.one;
+            settingsContainer.transform.localScale = Vector3.zero;
             // watchLogContainer.SetActive(false);
 
             mainButton.interactable = !b;
@@ -76,8 +76,9 @@ public class GameDirector : MonoBehaviour
         else if (_mode == GameMode.Settings)
         {
             bool b = true;
-            mainContainer.SetActive(!b);
-            settingsContainer.SetActive(b);
+            mainContainer.transform.localScale = Vector3.zero;
+            settingsContainer.transform.localScale = Vector3.one;
+
             // watchLogContainer.SetActive(false);
 
             mainButton.interactable = b;
@@ -86,8 +87,8 @@ public class GameDirector : MonoBehaviour
         else if (_mode == GameMode.WatchLog)
         {
             bool b = true;
-            mainContainer.SetActive(!b);
-            settingsContainer.SetActive(!b);
+            mainContainer.transform.localScale = Vector3.zero;
+            settingsContainer.transform.localScale = Vector3.zero;
             // watchLogContainer.SetActive(true);
 
             mainButton.interactable = b;

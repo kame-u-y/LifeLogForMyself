@@ -7,8 +7,13 @@ public class CurrentWorkMeterController : MonoBehaviour
 {
     [SerializeField]
     private int maxMinute = 1;
+    private int loopCount = 0;
     [SerializeField]
     ClockLabelController clockLabelCtrler;
+    
+    private AudioSource audioSource_;
+    [SerializeField]
+    private AudioClip audioClip;
 
     Image image_;
 
@@ -17,12 +22,16 @@ public class CurrentWorkMeterController : MonoBehaviour
         image_ = this.GetComponent<Image>();
         //maxMinute = 1;
         image_.fillAmount = 1.0f;
+
+        audioSource_ = this.gameObject.GetComponent<AudioSource>();
+        audioSource_.clip = audioClip;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         clockLabelCtrler.ChangeWorkMaxLabel(maxMinute);
+
     }
 
     // Update is called once per frame
@@ -34,11 +43,18 @@ public class CurrentWorkMeterController : MonoBehaviour
     public void InitializeMeter()
     {
         image_.fillAmount = 1.0f;
+        loopCount = 0;
     }
 
     public void UpdateMeter(int _elapsedTime)
     {
-        image_.fillAmount = (float) (1.0f * _elapsedTime / (maxMinute * 60.0f)) % 1.0f;
+        var ratio = (float)(1.0f * _elapsedTime / (maxMinute * 60.0f));
+        image_.fillAmount = ratio % 1.0f;
+        if (ratio - loopCount >= 1)
+        {
+            audioSource_.Play();
+            loopCount++;
+        }
     }
 
     public void ChangeColor(Color _color)
