@@ -12,18 +12,12 @@ public class DatabaseDirector : MonoBehaviour
     void Awake()
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
-        //saveData = new LoadedSaveData();
-        //Debug.Log(saveData.dailyDictionary);
         ImportSaveData();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        //print(saveData.dailyDictionary);
-        //print(saveData.dailyDictionary["20220401"].works[0].endUnixSec);
-
         //SaveSampleWorkData();
         //SaveSampleProjectData();
     }
@@ -51,8 +45,14 @@ public class DatabaseDirector : MonoBehaviour
         saveData = new LoadedSaveData()
         {
             dailyDictionary = jsonSaveData.dailyDictionary.Dictionary,
-            projects = jsonSaveData.projects
+            projects = jsonSaveData.ConvertProjectsToLoadedFormat(),
+            notificationSoundPath = jsonSaveData.notificationSoundPath,
+            progressMeterMax = jsonSaveData.progressMeterMax,
+            twoResizingStages = jsonSaveData.twoResizingStages,
+            threeResizingStages = jsonSaveData.threeResizingStages
         };
+        Enum.TryParse(jsonSaveData.resizingModeString, out saveData.resizingMode);
+
         Debug.Log("imported save data");
     }
 
@@ -62,7 +62,12 @@ public class DatabaseDirector : MonoBehaviour
         var jsonSaveData = new JsonSaveData()
         {
             dailyDictionary = new JsonDictionary<string, DayData>(saveData.dailyDictionary),
-            projects = saveData.projects
+            projects = saveData.ConvertProjectsToJsonFormat(),
+            notificationSoundPath = saveData.notificationSoundPath,
+            progressMeterMax = saveData.progressMeterMax,
+            resizingModeString = saveData.resizingMode.ToString(),
+            twoResizingStages = saveData.twoResizingStages,
+            threeResizingStages = saveData.threeResizingStages
         };
         //jsonSaveData.dailyDictionary.Dictionary()
         string json = JsonUtility.ToJson(jsonSaveData, true);
@@ -72,6 +77,8 @@ public class DatabaseDirector : MonoBehaviour
         streamWriter.Flush();
         streamWriter.Close();
     }
+
+
 
     public void AddEndedWork(WorkData _work)
     {
@@ -95,24 +102,6 @@ public class DatabaseDirector : MonoBehaviour
 
         saveData.dailyDictionary[today].works.Add(_work);
 
-        //ProjectData newProject = new ProjectData()
-        //{
-        //    id = 0,
-        //    name = _work.projectName,
-        //    pieColor = new ColorData()
-        //    {
-        //        r = 255.0f,
-        //        g = 0.0f,
-        //        b = 0.0f
-        //    },
-        //    totalSec = 1000
-        //};
-
-        //if (!IsProjectDataExist(today, newProject.name))
-        //{
-        //    saveData.dailyDictionary[today].projects.Add(newProject);
-        //}
-
         ExportSaveData();
     }
 
@@ -128,10 +117,6 @@ public class DatabaseDirector : MonoBehaviour
         saveData.projects.Add(_project);
         ExportSaveData();
     }
-
-    //private bool IsProjectDataExist(string _day, string _name)
-    //    => saveData.dailyDictionary[_day].projects.Exists(v => v.name == _name);
-
 
     private void SaveSampleWorkData()
     {
@@ -165,6 +150,7 @@ public class DatabaseDirector : MonoBehaviour
     }
 
 
+    #region fetching_data_functions
     public DayData FetchDayData(string _day)
     {
         return saveData.dailyDictionary.ContainsKey(_day)
@@ -187,6 +173,8 @@ public class DatabaseDirector : MonoBehaviour
     //}
 
     // OverWriteÇÕïœçXâ¬î\ä÷êîÇÇ∑Ç◊ÇƒíËã`ÇµÇøÇ·Ç§ÇÃÇ™óòï÷ê´çÇÇªÇ§
+    #endregion
+
 
     private LoadedSaveData CreateDefaultData()
     {
@@ -210,8 +198,23 @@ public class DatabaseDirector : MonoBehaviour
                         g = 193,
                         b = 16 
                     },
+                    notificationMode = NotificationMode.Sound,
                     totalSec = 0
                 }
+            },
+            notificationSoundPath = "",
+            progressMeterMax = 25,
+            resizingMode = ResizingMode.ThreeStages,
+            twoResizingStages = new TwoResizingData()
+            {
+                medium = 450,
+                small = 150
+            },
+            threeResizingStages = new ThreeResizingData()
+            {
+                large = 800,
+                medium = 450,
+                small = 150
             }
         };
     }

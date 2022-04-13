@@ -47,12 +47,11 @@ public class GameDirector : MonoBehaviour
     void Start()
     {
         UpdateClockElements();
-        mainContainer.transform.localScale = Vector3.one;
-        settingsContainer.transform.localScale = Vector3.zero;
 
         mainButton = buttonContainer.transform.Find("MainButton").GetComponent<Button>();
         settingsButton = buttonContainer.transform.Find("SettingsButton").GetComponent<Button>();
-        mainButton.interactable = false;
+        
+        SwitchGameMode(GameMode.Main);
     }
 
     // Update is called once per frame
