@@ -2,22 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectItemController : MonoBehaviour
+/// <summary>
+/// ただResizingModeの情報を持つためだけのToggle用スクリプト
+/// </summary>
+public class ResizingModeToggleController : MonoBehaviour
 {
     [SerializeField]
-    GameObject projectSettingTemplate;
-    
+    public ResizingMode resizingMode;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
 
-    
+    }
 }

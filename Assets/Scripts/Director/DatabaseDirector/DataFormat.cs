@@ -35,6 +35,7 @@ public class JsonSaveData
     }
 }
 
+[System.Serializable]
 public class LoadedSaveData
 {
     public Dictionary<string, DayData> dailyDictionary;
@@ -64,25 +65,7 @@ public class LoadedSaveData
     }
 }
 
-public enum ResizingMode
-{
-    TwoStages,
-    ThreeStages
-}
-
-public class TwoResizingData
-{
-    public int medium;
-    public int small;
-}
-
-public class ThreeResizingData
-{
-    public int large;
-    public int medium;
-    public int small;
-}
-
+// dailyDictionary
 [System.Serializable]
 public class DayData
 {
@@ -99,6 +82,7 @@ public class WorkData
     public string projectName;
 }
 
+// projects
 [System.Serializable]
 public class JsonProjectData
 {
@@ -138,6 +122,27 @@ public class ColorData
     public float b;
 }
 
+[System.Serializable]
+public enum ResizingMode
+{
+    TwoStages,
+    ThreeStages
+}
+
+[System.Serializable]
+public class TwoResizingData
+{
+    public int medium;
+    public int small;
+}
+
+[System.Serializable]
+public class ThreeResizingData
+{
+    public int large;
+    public int medium;
+    public int small;
+}
 
 
 #region TestDataClass

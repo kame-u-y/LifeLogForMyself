@@ -69,15 +69,16 @@ public class DatabaseDirector : MonoBehaviour
             twoResizingStages = saveData.twoResizingStages,
             threeResizingStages = saveData.threeResizingStages
         };
+        //Debug.Log(jsonSaveData.twoResizingStages.small);
+        //Debug.Log(jsonSaveData.twoResizingStages.medium);
         //jsonSaveData.dailyDictionary.Dictionary()
         string json = JsonUtility.ToJson(jsonSaveData, true);
-
+        Debug.Log(json);
         StreamWriter streamWriter = new StreamWriter(filePath);
         streamWriter.Write(json);
         streamWriter.Flush();
         streamWriter.Close();
     }
-
 
 
     public void AddEndedWork(WorkData _work)
@@ -149,6 +150,19 @@ public class DatabaseDirector : MonoBehaviour
         AddProject(newProject);
     }
 
+
+    public void ApplySettings(
+        int _progressBarMax, 
+        ResizingMode _resizingMode,
+        TwoResizingData _twoResizingData,
+        ThreeResizingData _threeResizingData)
+    {
+        saveData.progressMeterMax = _progressBarMax;
+        saveData.resizingMode = _resizingMode;
+        saveData.twoResizingStages = _twoResizingData;
+        saveData.threeResizingStages = _threeResizingData;
+        ExportSaveData();
+    }
 
     #region fetching_data_functions
     public DayData FetchDayData(string _day)
