@@ -155,12 +155,14 @@ public class DatabaseDirector : MonoBehaviour
         int _progressBarMax, 
         ResizingMode _resizingMode,
         TwoResizingData _twoResizingData,
-        ThreeResizingData _threeResizingData)
+        ThreeResizingData _threeResizingData,
+        List<ProjectData> _projects)
     {
         saveData.progressMeterMax = _progressBarMax;
         saveData.resizingMode = _resizingMode;
         saveData.twoResizingStages = _twoResizingData;
         saveData.threeResizingStages = _threeResizingData;
+        saveData.projects = _projects;
         ExportSaveData();
     }
 

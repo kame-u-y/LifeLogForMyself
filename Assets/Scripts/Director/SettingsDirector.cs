@@ -138,6 +138,12 @@ public class SettingsDirector : MonoBehaviour
     private void UpdateThreeLarge(int _v) => threeResizingData.large = _v;
 
 
+    public void RevertChanges()
+    {
+        // Œ³‚É–ß‚·
+
+    }
+
     public void ApplySettings()
     {
         // large > medium > small
@@ -147,6 +153,7 @@ public class SettingsDirector : MonoBehaviour
             progressBarMax, 
             resizingMode, 
             twoResizingData, 
-            threeResizingData);
+            threeResizingData,
+            projectSettingsController.GetChangedProjectDataList());
     }
 }

@@ -200,9 +200,11 @@ public class InputEventDirector : MonoBehaviour
         _item.transform.Find("Values/ProjectColor").GetComponent<Button>().onClick.AddListener(null);
         _item.transform.Find("Values/NotificationMode").GetComponent<Dropdown>().onValueChanged.AddListener(
             _v => projectSettingsController.UpdateNotificationMode(_id));
-        _item.transform.Find("Values/MoveUpper/Button").GetComponent<Button>().onClick.AddListener(null);
-        _item.transform.Find("Values/MoveLower/Button").GetComponent<Button>().onClick.AddListener(null);
-        _item.transform.Find("Values/Delete").GetComponent<Button>().onClick.AddListener(null);
+        _item.transform.Find("Values/MoveUpper/Button").GetComponent<Button>().onClick.AddListener(
+            () => projectSettingsController.MoveUpperItem(_id));
+        _item.transform.Find("Values/MoveLower/Button").GetComponent<Button>().onClick.AddListener(
+            () => projectSettingsController.MoveLowerItem(_id));
+        _item.transform.Find("Values/Delete/Button").GetComponent<Button>().onClick.AddListener(null);
     }
 
     #region SwitchMap
