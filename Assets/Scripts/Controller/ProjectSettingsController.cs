@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,13 +13,17 @@ public class ProjectSettingsController : MonoBehaviour
     List<ProjectItemData> projectItems;
 
 
+    private void Awake()
+    {
+        projectItems = new List<ProjectItemData>();
+        
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
-        projectItems = new List<ProjectItemData>();
-        
+
     }
 
     // Update is called once per frame
@@ -45,11 +50,29 @@ public class ProjectSettingsController : MonoBehaviour
     {
         GameObject newItem = Instantiate(itemTemplate, Vector3.zero, Quaternion.identity, this.transform);
         newItem.SetActive(true);
-        newItem.transform.Find("Values/ProjectName").GetComponent<InputField>().text = "ÉWÉÉÉìÉoÉâÉÑ";
-        newItem.transform.Find("Values/ProjectColor").GetComponent<Image>().color = new Color(1f, 1f, 0f);
+        Debug.Log(newItem.transform.Find("Values/Index").GetComponent<TextMeshProUGUI>());
+        newItem.transform.Find("Values/Index").GetComponent<TextMeshProUGUI>().text = projectItems.Count.ToString();
+        var projectNameField = newItem.transform.Find("Values/ProjectName").GetComponent<InputField>();
+        projectNameField.text = _project.name;
+        if (projectItems.Count == 0)
+        {
+            projectNameField.interactable = false;
+        }
+        Color c = new Color(_project.pieColor.r / 255.0f, _project.pieColor.g / 255.0f, _project.pieColor.b / 255.0f);
+        newItem.transform.Find("Values/ProjectColor").GetComponent<Image>().color = c;
         // Å´Ç§Ç‹Ç≠Ç¢Ç≠Ç©Ç»ÅHcaptionTextïœÇ¶ÇΩÇæÇØÇæÇØÇ«...
-        newItem.transform.Find("Values/NotificationMode").GetComponent<Dropdown>().captionText.text
-            = _project.notificationMode.ToString();
+        var dropdown = newItem.transform.Find("Values/NotificationMode").GetComponent<Dropdown>();
+        //dropdown.AddOptions(new List<string>()
+        //{
+        //    NotificationMode.None.ToString(),
+        //    NotificationMode.Sound.ToString(),
+        //    NotificationMode.Pomodoro.ToString()
+        //});
+        //dropdown.RefreshShownValue();
+        dropdown.value = dropdown.options.FindIndex(v => v.text == _project.notificationMode.ToString());
+
+        //dropdown.captionText.text = _project.notificationMode;
+
         inputEventDirector.AddProjectSettingItemEvents(newItem, projectItems.Count);
 
         projectItems.Add(new ProjectItemData()

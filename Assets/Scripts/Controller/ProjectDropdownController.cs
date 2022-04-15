@@ -36,5 +36,6 @@ public class ProjectDropdownController : MonoBehaviour
         {
             dropdown_.options.Add(new Dropdown.OptionData { text = projectList[i].name });
         }
+        dropdown_.RefreshShownValue();
     }
 }

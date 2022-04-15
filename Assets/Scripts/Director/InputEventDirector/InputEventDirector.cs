@@ -199,7 +199,7 @@ public class InputEventDirector : MonoBehaviour
             _v => projectSettingsController.UpdateProjectName(_v, _id));
         _item.transform.Find("Values/ProjectColor").GetComponent<Button>().onClick.AddListener(null);
         _item.transform.Find("Values/NotificationMode").GetComponent<Dropdown>().onValueChanged.AddListener(
-            _v => { });
+            _v => projectSettingsController.UpdateNotificationMode(_id));
         _item.transform.Find("Values/MoveUpper/Button").GetComponent<Button>().onClick.AddListener(null);
         _item.transform.Find("Values/MoveLower/Button").GetComponent<Button>().onClick.AddListener(null);
         _item.transform.Find("Values/Delete").GetComponent<Button>().onClick.AddListener(null);
