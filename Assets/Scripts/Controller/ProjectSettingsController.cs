@@ -16,7 +16,7 @@ public class ProjectSettingsController : MonoBehaviour
     private void Awake()
     {
         projectItems = new List<ProjectItemData>();
-        
+
     }
 
     // Start is called before the first frame update
@@ -62,16 +62,12 @@ public class ProjectSettingsController : MonoBehaviour
         newItem.transform.Find("Values/ProjectColor").GetComponent<Image>().color = c;
         // Å´Ç§Ç‹Ç≠Ç¢Ç≠Ç©Ç»ÅHcaptionTextïœÇ¶ÇΩÇæÇØÇæÇØÇ«...
         var dropdown = newItem.transform.Find("Values/NotificationMode").GetComponent<Dropdown>();
-        //dropdown.AddOptions(new List<string>()
-        //{
-        //    NotificationMode.None.ToString(),
-        //    NotificationMode.Sound.ToString(),
-        //    NotificationMode.Pomodoro.ToString()
-        //});
-        //dropdown.RefreshShownValue();
-        dropdown.value = dropdown.options.FindIndex(v => v.text == _project.notificationMode.ToString());
-
-        //dropdown.captionText.text = _project.notificationMode;
+        dropdown.value = dropdown.options.FindIndex(v =>
+        {
+            Debug.Log(v.text + ", " + _project.notificationMode);
+            return v.text == _project.notificationMode.ToString();
+        });
+    //dropdown.value = 1;
 
         inputEventDirector.AddProjectSettingItemEvents(newItem, projectItems.Count);
 

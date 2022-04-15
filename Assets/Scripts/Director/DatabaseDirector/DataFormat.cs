@@ -27,7 +27,9 @@ public class JsonSaveData
                 pieColor = v.pieColor,
                 totalSec = v.totalSec
             };
-            Enum.TryParse(v.notificationModeString, out newProject.notificationMode);
+            Enum.TryParse(v.notificationMode, out newProject.notificationMode);
+            Debug.Log(v.notificationMode +","+newProject.notificationMode);
+
             loadedProjects.Add(newProject);
         });
 
@@ -56,7 +58,7 @@ public class LoadedSaveData
                 id = v.id,
                 name = v.name,
                 pieColor = v.pieColor,
-                notificationModeString = v.notificationMode.ToString(),
+                notificationMode = v.notificationMode.ToString(),
                 totalSec = v.totalSec
             };
             jsonProjects.Add(newJsonProject);
@@ -89,7 +91,7 @@ public class JsonProjectData
     public int id;
     public string name;
     public ColorData pieColor;
-    public string notificationModeString;
+    public string notificationMode;
     public int totalSec;
 
 }
