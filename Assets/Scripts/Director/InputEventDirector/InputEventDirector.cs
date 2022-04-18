@@ -64,9 +64,12 @@ public class InputEventDirector : MonoBehaviour
     ToggleGroup settingResizingMode;
     [SerializeField]
     GameObject resizingValueForms;
-    InputField resizingSmall;
-    InputField resizingMedium;
-    InputField resizingLarge;
+
+    InputField twoResizingSmall;
+    InputField twoResizingMedium;
+    InputField threeResizingSmall;
+    InputField threeResizingMedium;
+    InputField threeResizingLarge;
 
     [SerializeField]
     ProjectSettingsController projectSettingsController;
@@ -127,12 +130,15 @@ public class InputEventDirector : MonoBehaviour
         progressBarMax = generalSettings.transform
             .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
 
-        resizingSmall = resizingValueForms.transform
-            .Find("Small/ItemValue/InputField").GetComponent<InputField>();
-        resizingMedium = resizingValueForms.transform
-            .Find("Medium/ItemValue/InputField").GetComponent<InputField>();
-        resizingLarge = resizingValueForms.transform
-            .Find("Large/ItemValue/InputField").GetComponent<InputField>();
+        string topScope = "ItemValue";
+        string bottomScope = "ItemValue/InputField";
+        Func<string, InputField> access = (string s)
+            => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
+        twoResizingSmall = access("TwoStages/Small");
+        twoResizingMedium = access("TwoStages/Medium");
+        threeResizingSmall = access("ThreeStages/Small");
+        threeResizingMedium = access("ThreeStages/Medium");
+        threeResizingLarge = access("ThreeStages/Large");
 
         generalSettingsRevert = generalSettings.transform
             .Find("DecisionButton/Revert").GetComponent<Button>();
@@ -239,12 +245,19 @@ public class InputEventDirector : MonoBehaviour
             toggle.onValueChanged.AddListener(
                 _v => settingsDirector.UpdateResizingMode(_v));
         }
-        resizingSmall.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateResizingSmall(int.Parse(_v)));
-        resizingMedium.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateResizingMedium(int.Parse(_v)));
-        resizingLarge.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateResizingLarge(int.Parse(_v)));
+
+        twoResizingSmall.onValueChanged.AddListener(
+            _v => settingsDirector.UpdateTwoSmall(int.Parse(_v)));
+        twoResizingMedium.onValueChanged.AddListener(
+            _v => settingsDirector.UpdateTwoMedium(int.Parse(_v)));
+
+        threeResizingSmall.onValueChanged.AddListener(
+            _v => settingsDirector.UpdateThreeSmall(int.Parse(_v)));
+        threeResizingMedium.onValueChanged.AddListener(
+            _v => settingsDirector.UpdateThreeMedium(int.Parse(_v)));
+        threeResizingLarge.onValueChanged.AddListener(
+            _v => settingsDirector.UpdateThreeLarge(int.Parse(_v)));
+
         // projects settings
         projectAdditionButton.onClick.AddListener(
             () => projectSettingsController.AddNewProject());

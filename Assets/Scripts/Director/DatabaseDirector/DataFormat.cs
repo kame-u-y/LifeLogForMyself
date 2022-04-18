@@ -147,6 +147,9 @@ public class TwoResizingData
 {
     public int medium;
     public int small;
+
+    public TwoResizingData ShallowCopy()
+        => (TwoResizingData)this.MemberwiseClone();
 }
 
 [System.Serializable]
@@ -155,6 +158,9 @@ public class ThreeResizingData
     public int large;
     public int medium;
     public int small;
+
+    public ThreeResizingData ShallowCopy()
+        => (ThreeResizingData)this.MemberwiseClone();
 }
 
 

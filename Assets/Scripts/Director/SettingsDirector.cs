@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,16 +20,24 @@ public class SettingsDirector : MonoBehaviour
 
     //private List<GameObject> projectList;
 
-    private int progressBarMax = 0;
+    #region general settings data
+    private float progressMeterMax = 0;
+
+    private string notificationSoundPath;
 
     [SerializeField]
     private ToggleGroup settingResizingMode;
     private ResizingMode resizingMode;
+    
     [SerializeField]
-    private GameObject largeSettigForm;
+    private GameObject twoStageForms;
+    [SerializeField]
+    private GameObject threeStageForms;
 
-    private TwoResizingData twoResizingData;
-    private ThreeResizingData threeResizingData;
+    private TwoResizingData twoResizingStages;
+    private ThreeResizingData threeResizingStages;
+    #endregion
+
 
     [SerializeField]
     private ProjectSettingsController projectSettingsController;
@@ -66,10 +76,12 @@ public class SettingsDirector : MonoBehaviour
         SwitchSettingsMode(SettingsMode.General);
 
         UpdateResizingMode(true);
-        twoResizingData = new TwoResizingData();
-        threeResizingData = new ThreeResizingData();
+        twoResizingStages = new TwoResizingData();
+        threeResizingStages = new ThreeResizingData();
 
+        InitializeGeneralSettings();
         projectSettingsController.DisplayItems(databaseDirector.FetchProjectList());
+
         
         SetAnySettingsChanged(false);
     }
@@ -106,9 +118,70 @@ public class SettingsDirector : MonoBehaviour
         }
     }
 
+    private void InitializeGeneralSettings()
+    {
+        progressMeterMax = databaseDirector.FetchProgressMeterMax();
+        InputField meterMax = generalSettings.transform
+            .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
+        Debug.Log(databaseDirector.FetchProgressMeterMax());
+        meterMax.text = progressMeterMax.ToString();
+
+        // notification sound path
+        notificationSoundPath = databaseDirector.FetchNotificationSoundPath();
+        TextMeshProUGUI soundPath = generalSettings.transform
+            .Find("NotificationSound/ItemValue/Text (TMP)").GetComponent<TextMeshProUGUI>();
+        soundPath.text = notificationSoundPath;
+
+        // resizing mode
+        ToggleGroup resizeModeGroup = generalSettings.transform
+            .Find("ResizingMode/ItemValue/ModeToggleGroup").GetComponent<ToggleGroup>();
+        Toggle[] toggles = resizeModeGroup.GetComponentsInChildren<Toggle>();
+        //resizeModeGroup.SetAllTogglesOff();
+        resizingMode = databaseDirector.FetchResizingMode();
+        foreach (var toggle in toggles)
+        {
+            if (toggle.GetComponent<ResizingModeToggleController>().resizingMode == resizingMode)
+            {
+                toggle.isOn = true;
+            }
+        }
+
+        // resizing stage forms
+        string topScope = "ResizingValueForms/ItemValue";
+        string bottomScope = "ItemValue/InputField";
+        Func<string, InputField> access = (string s)
+            => generalSettings.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
+
+        InputField twoSmall = access("TwoStages/Small");
+        InputField twoMedium = access("TwoStages/Medium");
+        twoResizingStages = databaseDirector.FetchTwoResizingStages().ShallowCopy();
+        twoSmall.text = twoResizingStages.small.ToString();
+        twoMedium.text = twoResizingStages.medium.ToString();
+        
+
+        InputField threeSmall = access("ThreeStages/Small");
+        InputField threeMedium = access("ThreeStages/Medium");
+        InputField threeLarge = access("ThreeStages/Large");
+        threeResizingStages = databaseDirector.FetchThreeResizingStages().ShallowCopy();
+        threeSmall.text = threeResizingStages.small.ToString();
+        threeMedium.text = threeResizingStages.medium.ToString();
+        threeLarge.text = threeResizingStages.large.ToString();
+
+        if (resizingMode == ResizingMode.TwoStages)
+        {
+            twoStageForms.SetActive(true);
+            threeStageForms.SetActive(false);
+        }
+        else if (resizingMode == ResizingMode.ThreeStages)
+        {
+            twoStageForms.SetActive(false);
+            threeStageForms.SetActive(true);
+        }
+    }
+
     public void UpdateProgressBarMax(int _v)
     {
-        progressBarMax = _v;
+        progressMeterMax = _v;
         SetAnySettingsChanged(true);
     }
 
@@ -119,48 +192,51 @@ public class SettingsDirector : MonoBehaviour
             resizingMode = settingResizingMode.GetFirstActiveToggle()
                 .GetComponent<ResizingModeToggleController>().resizingMode;
             // 設定の表示変更
-            largeSettigForm.SetActive(resizingMode == ResizingMode.ThreeStages);
+            if (resizingMode == ResizingMode.TwoStages)
+            {
+                twoStageForms.SetActive(true);
+                threeStageForms.SetActive(false);
+            }
+            else if (resizingMode == ResizingMode.ThreeStages)
+            {
+                twoStageForms.SetActive(false);
+                threeStageForms.SetActive(true);
+            }
 
             SetAnySettingsChanged(true);
         }
     }
 
-    public void UpdateResizingSmall(int _v)
+
+    // TwoStages
+    public void UpdateTwoSmall(int _v)
     {
-        Debug.Log(_v);
-        if (resizingMode == ResizingMode.TwoStages)
-        {
-            UpdateTwoSmall(_v);
-        }
-        else
-        {
-            UpdateThreeSmall(_v);
-        }
+        twoResizingStages.small = _v;
         SetAnySettingsChanged(true);
     }
-
-    public void UpdateResizingMedium(int _v)
+    public void UpdateTwoMedium(int _v)
     {
-        if (resizingMode == ResizingMode.TwoStages)
-            UpdateTwoMedium(_v);
-        else
-            UpdateThreeMedium(_v);
+        twoResizingStages.medium = _v;
         SetAnySettingsChanged(true);
     }
-
-    public void UpdateResizingLarge(int _v)
+    
+    // ThreeStages
+    public void UpdateThreeSmall(int _v)
     {
-        UpdateThreeLarge(_v);
+        threeResizingStages.small = _v;
         SetAnySettingsChanged(true);
     }
-
-    private void UpdateTwoSmall(int _v) => twoResizingData.small = _v;
-    private void UpdateTwoMedium(int _v) => twoResizingData.medium = _v;
-
-    private void UpdateThreeSmall(int _v) => threeResizingData.small = _v;
-    private void UpdateThreeMedium(int _v) => threeResizingData.medium = _v;
-    private void UpdateThreeLarge(int _v) => threeResizingData.large = _v;
-
+    public void UpdateThreeMedium(int _v)
+    {
+        threeResizingStages.medium = _v;
+        SetAnySettingsChanged(true);
+    }
+    public void UpdateThreeLarge(int _v)
+    {
+        threeResizingStages.large = _v;
+        SetAnySettingsChanged(true);
+    }
+     
     private void SetAnySettingsChanged(bool _b)
     {
         IsAnySettingsChanged = _b;
@@ -171,8 +247,8 @@ public class SettingsDirector : MonoBehaviour
     public void RevertChanges()
     {
         // 元に戻す
+        InitializeGeneralSettings();
         isAnySettingsChanged = false;
-
     }
 
     public void ApplySettings()
@@ -181,10 +257,10 @@ public class SettingsDirector : MonoBehaviour
         // になってなかったらエラー todo
 
         databaseDirector.ApplySettings(
-            progressBarMax,
+            progressMeterMax,
             resizingMode,
-            twoResizingData,
-            threeResizingData);
+            twoResizingStages,
+            threeResizingStages);
             //projectSettingsController.GetProjectDataList());
     }
 }

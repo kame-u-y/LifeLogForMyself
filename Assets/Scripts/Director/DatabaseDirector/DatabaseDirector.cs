@@ -152,11 +152,11 @@ public class DatabaseDirector : MonoBehaviour
 
 
     public void ApplySettings(
-        int _progressBarMax, 
+        float _progressBarMax,
         ResizingMode _resizingMode,
         TwoResizingData _twoResizingData,
         ThreeResizingData _threeResizingData)
-        //List<ProjectData> _projects)
+    //List<ProjectData> _projects)
     {
         saveData.progressMeterMax = _progressBarMax;
         saveData.resizingMode = _resizingMode;
@@ -195,6 +195,20 @@ public class DatabaseDirector : MonoBehaviour
     public ProjectData FindProject(string _name)
         => saveData.projects.Find(v => v.name == _name);
 
+    public string FetchNotificationSoundPath()
+        => saveData.notificationSoundPath;
+
+    public float FetchProgressMeterMax()
+        => saveData.progressMeterMax;
+
+    public ResizingMode FetchResizingMode()
+        => saveData.resizingMode;
+
+    public TwoResizingData FetchTwoResizingStages()
+        => saveData.twoResizingStages;
+
+    public ThreeResizingData FetchThreeResizingStages()
+        => saveData.threeResizingStages;
 
     //public List<WorkData> FetchTodayWorks()
     //{
@@ -227,7 +241,7 @@ public class DatabaseDirector : MonoBehaviour
                     pieColor = new ColorData() {
                         r = 143,
                         g = 193,
-                        b = 16 
+                        b = 16
                     },
                     notificationMode = NotificationMode.Sound,
                     totalSec = 0
