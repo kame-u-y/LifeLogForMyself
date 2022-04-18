@@ -1,3 +1,4 @@
+using HSVPicker;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,9 +34,21 @@ public class InputEventDirector : MonoBehaviour
     [SerializeField]
     PopupController popupController;
     Button popupBackground;
+    // main menu
     Button mainButton;
     Button settingsButton;
     Button quitButton;
+    // color picker
+    ColorPicker colorPicker;
+    // delete
+    Button deleteCancelButton;
+    Button deleteApplyButton;
+    // addition
+    //InputField newProjectName;
+    //Button newProjectColorPicker;
+    //Dropdown newProjectNotificationMode;
+    //Button additionCancelButton;
+    //Button additionApplyButton;
     #endregion
 
     #region settings
@@ -57,9 +70,15 @@ public class InputEventDirector : MonoBehaviour
 
     [SerializeField]
     ProjectSettingsController projectSettingsController;
-
     [SerializeField]
-    Button settingApplyButton;
+    Button projectAdditionButton;
+    // apply
+    Button generalSettingsRevert;
+    Button generalSettingsApply;
+    [SerializeField]
+    GameObject projectSettings;
+    Button projectSettingsRevert;
+    Button projectSettingsApply;
     #endregion
 
     private void Awake()
@@ -75,11 +94,31 @@ public class InputEventDirector : MonoBehaviour
         #endregion
 
         #region popup
-        popupBackground = popupController.transform.Find("PopupBackground").GetComponent<Button>();
-        mainButton = popupController.transform.Find("Popup/ButtonContainer/MainButton").GetComponent<Button>();
-        settingsButton = popupController.transform.Find("Popup/ButtonContainer/SettingsButton").GetComponent<Button>();
-        quitButton = popupController.transform.Find("Popup/ButtonContainer/QuitButton").GetComponent<Button>();
-        Debug.Log(quitButton);
+        popupBackground = popupController.transform
+            .Find("PopupBackground").GetComponent<Button>();
+        // main menu
+        mainButton = popupController.transform
+            .Find("Popup/MainMenu/MainButton").GetComponent<Button>();
+        settingsButton = popupController.transform
+            .Find("Popup/MainMenu/SettingsButton").GetComponent<Button>();
+        quitButton = popupController.transform
+            .Find("Popup/MainMenu/QuitButton").GetComponent<Button>();
+        // color picker
+        colorPicker = popupController.transform
+            .Find("Popup/ProjectColorPicker/Picker 2.0").GetComponent<ColorPicker>();
+        // delete
+        deleteCancelButton = popupController.transform
+            .Find("Popup/ProjectDelete/Buttons/CancelButton").GetComponent<Button>();
+        deleteApplyButton = popupController.transform
+            .Find("Popup/ProjectDelete/Buttons/DeleteButton").GetComponent<Button>();
+        //// addition
+        //newProjectName = popupController.transform
+        //    .Find("Popup/ProjectAddition/ProjectDataForms/ProjectName/ItemValue/InputField").GetComponent<InputField>();
+        //newProjectColorPicker = popupController.transform
+        //    .Find("Popup/ProjectAddition/ProjectDataForms/ProjectColor/ItemValue/Button").GetComponent<Button>();
+        //newProjectNotificationMode = popupController.transform
+        //    .Find("Popup/ProjectAddition/ProjectDataForms/NotificationMode/ItemValue/DropDown").GetComponent<Dropdown>();
+
         #endregion
 
         #region settings
@@ -87,13 +126,22 @@ public class InputEventDirector : MonoBehaviour
         projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();
         progressBarMax = generalSettings.transform
             .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
-        
+
         resizingSmall = resizingValueForms.transform
             .Find("Small/ItemValue/InputField").GetComponent<InputField>();
         resizingMedium = resizingValueForms.transform
             .Find("Medium/ItemValue/InputField").GetComponent<InputField>();
         resizingLarge = resizingValueForms.transform
             .Find("Large/ItemValue/InputField").GetComponent<InputField>();
+
+        generalSettingsRevert = generalSettings.transform
+            .Find("DecisionButton/Revert").GetComponent<Button>();
+        generalSettingsApply = generalSettings.transform
+            .Find("DecisionButton/Apply").GetComponent<Button>();
+        projectSettingsRevert = projectSettings.transform
+           .Find("DecisionButton/Revert").GetComponent<Button>();
+        projectSettingsApply = projectSettings.transform
+            .Find("DecisionButton/Apply").GetComponent<Button>();
         #endregion
     }
 
@@ -125,11 +173,14 @@ public class InputEventDirector : MonoBehaviour
         #endregion
 
         #region popup
-        myInputActions.UI.RightClick.performed += (_context) => popupController.OpenPopup(_context);
+        myInputActions.UI.RightClick.performed +=
+            (_context) => popupController.OpenPopup(PopupController.PopupMode.MainMenu);
         popupBackground.onClick.AddListener(popupController.ClosePopup);
+        // main menu
         mainButton.onClick.AddListener(
              () =>
              {
+                 settingsDirector.RevertChanges();
                  gameDirector.SwitchGameMode(GameDirector.GameMode.Main);
                  popupController.ClosePopup();
              });
@@ -140,6 +191,38 @@ public class InputEventDirector : MonoBehaviour
                  popupController.ClosePopup();
              });
         quitButton.onClick.AddListener(gameDirector.Quit);
+        // color picker
+        colorPicker.onValueChanged.AddListener(
+            _color =>
+            {
+                projectSettingsController.UpdateProjectColor(
+                    popupController.SelectedProjectId,
+                    _color);
+            });
+        // delete
+        deleteCancelButton.onClick.AddListener(popupController.ClosePopup);
+        deleteApplyButton.onClick.AddListener(
+            () =>
+            {
+                projectSettingsController.ApplyProjectDelete(
+                    popupController.SelectedProjectId);
+                popupController.ClosePopup();
+            });
+        //// add
+        //newProjectName.onEndEdit.AddListener(
+        //    _v => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
+        //newProjectColorPicker.onClick.AddListener(
+        //    () => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
+        //newProjectNotificationMode.onValueChanged.AddListener(
+        //    _v => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
+        //additionCancelButton.onClick.AddListener(popupController.ClosePopup);
+        //additionApplyButton.onClick.AddListener(
+        //    () => 
+        //    {
+        //        Debug.LogWarning("ŽÀ‘•‚µ‚ë"); 
+        //        // applyˆ—
+        //        popupController.ClosePopup();
+        //    });
         #endregion
 
         #region settings
@@ -147,9 +230,8 @@ public class InputEventDirector : MonoBehaviour
             () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.General));
         projectsTabButton.onClick.AddListener(
             () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.Projects));
-
-        #region general settings
-        progressBarMax.onEndEdit.AddListener(
+        // general settings
+        progressBarMax.onValueChanged.AddListener(
             _v => settingsDirector.UpdateProgressBarMax(int.Parse(_v)));
         Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();
         foreach (var toggle in toggles)
@@ -157,20 +239,28 @@ public class InputEventDirector : MonoBehaviour
             toggle.onValueChanged.AddListener(
                 _v => settingsDirector.UpdateResizingMode(_v));
         }
-        resizingSmall.onEndEdit.AddListener(
+        resizingSmall.onValueChanged.AddListener(
             _v => settingsDirector.UpdateResizingSmall(int.Parse(_v)));
-        resizingMedium.onEndEdit.AddListener(
+        resizingMedium.onValueChanged.AddListener(
             _v => settingsDirector.UpdateResizingMedium(int.Parse(_v)));
-        resizingLarge.onEndEdit.AddListener(
+        resizingLarge.onValueChanged.AddListener(
             _v => settingsDirector.UpdateResizingLarge(int.Parse(_v)));
-        
-        settingApplyButton.onClick.AddListener(
+        // projects settings
+        projectAdditionButton.onClick.AddListener(
+            () => projectSettingsController.AddNewProject());
+        // apply
+        generalSettingsRevert.onClick.AddListener(
+            () => settingsDirector.RevertChanges());
+        generalSettingsApply.onClick.AddListener(
             () => settingsDirector.ApplySettings());
-        #endregion
-
-        #region projects settings
-
-        #endregion
+        projectSettingsRevert.onClick.AddListener(
+            () => projectSettingsController.RevertProjectChanges());
+        projectSettingsApply.onClick.AddListener(
+            () =>
+            {
+                Debug.Log("event");
+                projectSettingsController.ApplyProjectChanges();
+            });
         #endregion
     }
 
@@ -195,16 +285,18 @@ public class InputEventDirector : MonoBehaviour
 
     public void AddProjectSettingItemEvents(GameObject _item, int _id)
     {
-        _item.transform.Find("Values/ProjectName").GetComponent<InputField>().onEndEdit.AddListener(
+        _item.transform.Find("Values/ProjectName").GetComponent<InputField>().onValueChanged.AddListener(
             _v => projectSettingsController.UpdateProjectName(_v, _id));
-        _item.transform.Find("Values/ProjectColor").GetComponent<Button>().onClick.AddListener(null);
+        _item.transform.Find("Values/ProjectColor").GetComponent<Button>().onClick.AddListener(
+            () => popupController.OpenProjectColorPickerPopup(PopupController.PopupMode.ProjectColorPicker, _id));
         _item.transform.Find("Values/NotificationMode").GetComponent<Dropdown>().onValueChanged.AddListener(
             _v => projectSettingsController.UpdateNotificationMode(_id));
         _item.transform.Find("Values/MoveUpper/Button").GetComponent<Button>().onClick.AddListener(
             () => projectSettingsController.MoveUpperItem(_id));
         _item.transform.Find("Values/MoveLower/Button").GetComponent<Button>().onClick.AddListener(
             () => projectSettingsController.MoveLowerItem(_id));
-        _item.transform.Find("Values/Delete/Button").GetComponent<Button>().onClick.AddListener(null);
+        _item.transform.Find("Values/Delete/Button").GetComponent<Button>().onClick.AddListener(
+            () => popupController.OpenProjectDeletePopup(PopupController.PopupMode.ProjectDelete, _id));
     }
 
     #region SwitchMap

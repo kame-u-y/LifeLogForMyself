@@ -32,6 +32,18 @@ public class SettingsDirector : MonoBehaviour
     [SerializeField]
     private ProjectSettingsController projectSettingsController;
 
+    private bool isAnySettingsChanged = false;
+    public bool IsAnySettingsChanged
+    {
+        get => isAnySettingsChanged;
+        set => isAnySettingsChanged = value;
+    }
+    // revert apply
+    [SerializeField]
+    Button settingRevertButton;
+    [SerializeField]
+    Button settingApplyButton;
+
     public enum SettingsMode
     {
         General,
@@ -58,6 +70,8 @@ public class SettingsDirector : MonoBehaviour
         threeResizingData = new ThreeResizingData();
 
         projectSettingsController.DisplayItems(databaseDirector.FetchProjectList());
+        
+        SetAnySettingsChanged(false);
     }
 
     // Update is called once per frame
@@ -76,6 +90,8 @@ public class SettingsDirector : MonoBehaviour
 
             generalTabButton.interactable = !b;
             projectsTabButton.interactable = b;
+
+            //IsAnySettingsChanged = false;
         }
         else if (_mode == SettingsMode.Projects)
         {
@@ -85,12 +101,15 @@ public class SettingsDirector : MonoBehaviour
 
             generalTabButton.interactable = b;
             projectsTabButton.interactable = !b;
+
+            SetAnySettingsChanged(false);
         }
     }
 
     public void UpdateProgressBarMax(int _v)
     {
         progressBarMax = _v;
+        SetAnySettingsChanged(true);
     }
 
     public void UpdateResizingMode(bool _v)
@@ -101,6 +120,8 @@ public class SettingsDirector : MonoBehaviour
                 .GetComponent<ResizingModeToggleController>().resizingMode;
             // 設定の表示変更
             largeSettigForm.SetActive(resizingMode == ResizingMode.ThreeStages);
+
+            SetAnySettingsChanged(true);
         }
     }
 
@@ -115,6 +136,7 @@ public class SettingsDirector : MonoBehaviour
         {
             UpdateThreeSmall(_v);
         }
+        SetAnySettingsChanged(true);
     }
 
     public void UpdateResizingMedium(int _v)
@@ -123,11 +145,13 @@ public class SettingsDirector : MonoBehaviour
             UpdateTwoMedium(_v);
         else
             UpdateThreeMedium(_v);
+        SetAnySettingsChanged(true);
     }
 
     public void UpdateResizingLarge(int _v)
     {
         UpdateThreeLarge(_v);
+        SetAnySettingsChanged(true);
     }
 
     private void UpdateTwoSmall(int _v) => twoResizingData.small = _v;
@@ -137,23 +161,30 @@ public class SettingsDirector : MonoBehaviour
     private void UpdateThreeMedium(int _v) => threeResizingData.medium = _v;
     private void UpdateThreeLarge(int _v) => threeResizingData.large = _v;
 
+    private void SetAnySettingsChanged(bool _b)
+    {
+        IsAnySettingsChanged = _b;
+        settingRevertButton.interactable = _b;
+        settingApplyButton.interactable = _b;
+    }
 
     public void RevertChanges()
     {
         // 元に戻す
+        isAnySettingsChanged = false;
 
     }
 
     public void ApplySettings()
     {
         // large > medium > small
-        // になってなかったらエラー
+        // になってなかったらエラー todo
 
         databaseDirector.ApplySettings(
-            progressBarMax, 
-            resizingMode, 
-            twoResizingData, 
-            threeResizingData,
-            projectSettingsController.GetChangedProjectDataList());
+            progressBarMax,
+            resizingMode,
+            twoResizingData,
+            threeResizingData);
+            //projectSettingsController.GetProjectDataList());
     }
 }

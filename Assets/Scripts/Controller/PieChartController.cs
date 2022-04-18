@@ -80,9 +80,9 @@ public class PieChartController : MonoBehaviour
         GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("LogWorks").transform);
         newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
         Color c = new Color(
-            _project.pieColor.r / 255.0f,
-            _project.pieColor.g / 255.0f,
-            _project.pieColor.b / 255.0f);
+            _project.pieColor.r,
+            _project.pieColor.g,
+            _project.pieColor.b);
         newPiePiece.GetComponent<Image>().color = c;
 
         CreatePiece(_work, newPiePiece);
@@ -96,9 +96,9 @@ public class PieChartController : MonoBehaviour
         currentWorkPiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("CurrentWork").transform);
         currentWorkPiece.transform.localPosition = new Vector3(0, 0, 0);
         Color c = new Color(
-            _project.pieColor.r / 255.0f,
-            _project.pieColor.g / 255.0f,
-            _project.pieColor.b / 255.0f);
+            _project.pieColor.r,
+            _project.pieColor.g,
+            _project.pieColor.b);
         currentWorkPiece.GetComponent<Image>().color = c;
 
         CreatePiece(_work, currentWorkPiece);

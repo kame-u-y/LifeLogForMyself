@@ -103,9 +103,9 @@ public class WorkingDirector : MonoBehaviour
     {
         selectedProject = databaseDirector.FindProject(projectDropdown.captionText.text);
         Color c = new Color(
-            selectedProject.pieColor.r / 255.0f,
-            selectedProject.pieColor.g / 255.0f,
-            selectedProject.pieColor.b / 255.0f);
+            selectedProject.pieColor.r,
+            selectedProject.pieColor.g,
+            selectedProject.pieColor.b);
         currentWorkMeterCtrler.ChangeColor(c);
         
         if (!isWorking) return;

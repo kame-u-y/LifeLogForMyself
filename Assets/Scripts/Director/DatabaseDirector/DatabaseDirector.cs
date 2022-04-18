@@ -155,14 +155,29 @@ public class DatabaseDirector : MonoBehaviour
         int _progressBarMax, 
         ResizingMode _resizingMode,
         TwoResizingData _twoResizingData,
-        ThreeResizingData _threeResizingData,
-        List<ProjectData> _projects)
+        ThreeResizingData _threeResizingData)
+        //List<ProjectData> _projects)
     {
         saveData.progressMeterMax = _progressBarMax;
         saveData.resizingMode = _resizingMode;
         saveData.twoResizingStages = _twoResizingData;
         saveData.threeResizingStages = _threeResizingData;
-        saveData.projects = _projects;
+        //saveData.projects = _projects;
+        ExportSaveData();
+    }
+
+    public void ApplyProjectSettings(List<ProjectData> _project)
+    {
+        saveData.projects = _project;
+        ExportSaveData();
+    }
+
+    public void ApplyProjectDelete(string _name)
+    {
+        var id = saveData.projects.FindIndex(v => v.name == _name);
+        if (id == -1) return;
+
+        saveData.projects.RemoveAt(id);
         ExportSaveData();
     }
 

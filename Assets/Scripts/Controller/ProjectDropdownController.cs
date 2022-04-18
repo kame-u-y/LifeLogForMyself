@@ -18,7 +18,7 @@ public class ProjectDropdownController : MonoBehaviour
         dropdown_ = this.GetComponent<Dropdown>();
         InitItems();
         ProjectData p = databaseDirector.FindProject(dropdown_.options[0].text);
-        Color c = new Color(p.pieColor.r / 255.0f, p.pieColor.g / 255.0f, p.pieColor.b / 255.0f);
+        Color c = new Color(p.pieColor.r, p.pieColor.g, p.pieColor.b);
         currentWorkMeterCtrler.ChangeColor(c);
     }
 

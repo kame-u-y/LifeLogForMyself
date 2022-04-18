@@ -105,7 +105,18 @@ public class ProjectData
     public NotificationMode notificationMode;
     public int totalSec;
 
-   
+    public ProjectData()
+    {
+        id = 0;
+        name = "NewProject";
+        pieColor = new ColorData() { r = 143/255.0f, g = 192/255.0f, b = 15/255.0f };
+        notificationMode = NotificationMode.Sound;
+        totalSec = 0;
+    }
+
+    public ProjectData ShallowCopy()
+        => (ProjectData)this.MemberwiseClone();
+
 }
 
 [System.Serializable]
