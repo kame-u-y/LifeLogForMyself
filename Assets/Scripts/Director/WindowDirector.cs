@@ -29,7 +29,7 @@ public class WindowDirector : MonoBehaviour
         public int x;
         public int y;
     }
-    
+
     [StructLayout(LayoutKind.Sequential)]
     private struct RECT
     {
@@ -64,17 +64,55 @@ public class WindowDirector : MonoBehaviour
     [SerializeField]
     GameObject playEndButton;
 
-    int smallScreen = 150;
-    int mediumScreen = 450;
-    int largeScreen = 800;
+    //int smallScreen = 150;
+    //int mediumScreen = 450;
+    //int largeScreen = 800;
 
-    int smallThreshold = 200;
-    int mediumThreshold = 500;
+    //int smallThreshold = 200;
+    //int mediumThreshold = 500;
+
+    // threshold は 50上がちょうどいい
+
+    DatabaseDirector databaseDirector;
+
+    ResizingMode resizingMode;
+    //TwoResizingData twoResizingStages;
+    //ThreeResizingData threeResizingStages;
+
+    const int DefaultSmall = 150;
+    private int smallScreen = DefaultSmall;
+    public int SmallScreen
+    {
+        get => smallScreen;
+        set => smallScreen = value;
+    }
+
+    const int DefaultMedium = 450;
+    private int mediumScreen = DefaultMedium;
+    public int MediumScreen
+    {
+        get => mediumScreen;
+        set => mediumScreen = value;
+    }
+
+    const int DefaultLarge = 800;
+    private int largeScreen = DefaultLarge;
+    public int LargeScreen
+    {
+        get => largeScreen;
+        set => largeScreen = value;
+    }
+
+    private const int ThresholdOffset = 50;
+    private int smallThreshold = DefaultSmall + ThresholdOffset;
+    private int mediumThreshold = DefaultMedium + ThresholdOffset;
+
 
     private void Awake()
     {
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
         inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
+        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
     }
 
     // Start is called before the first frame update
@@ -82,20 +120,25 @@ public class WindowDirector : MonoBehaviour
     {
         window = FindWindow(null, windowName);
         DeleteWindowTitleBar();
+
+        //resizingMode = databaseDirector.FetchResizingMode();
+        //twoResizingStages = databaseDirector.FetchTwoResizingStages();
+        //threeResizingStages = databaseDirector.FetchThreeResizingStages();
+        UpdateScreenSize();
         InitializeWindowRect();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
     private void DeleteWindowTitleBar()
     {
         if (gameDirector.DebugMode) return;
-     
+
         const int GWL_STYLE = -16;
         int style = GetWindowLong(window, GWL_STYLE);
         style &= ~WS_DLGFRAME;
@@ -108,11 +151,45 @@ public class WindowDirector : MonoBehaviour
 
         RECT windowRect;
         GetWindowRect(window, out windowRect);
-        Debug.Log("initialize windowRect: (" + windowRect.left + ", " + windowRect.right + ", " + windowRect.top + ", " + windowRect.bottom +") ");
+        Debug.Log("initialize windowRect: (" + windowRect.left + ", " + windowRect.right + ", " + windowRect.top + ", " + windowRect.bottom + ") ");
+
 
         int screenW = GetSystemMetrics(SM_CXSCREEN);
         int screenH = GetSystemMetrics(SM_CYSCREEN);
-        SetWindowPos(window, HWND_TOPMOST, (screenW - smallScreen) / 2, (screenH - smallScreen) / 2 , smallScreen, smallScreen, 0);
+        //int smallScreen = 200;
+        //if (resizingMode == ResizingMode.TwoStages)
+        //{
+        //    smallScreen = twoResizingStages.small;
+        //}
+        //else if (resizingMode == ResizingMode.ThreeStages)
+        //{
+        //    smallScreen = threeResizingStages.small;
+        //}
+        int windowX = (screenW - smallScreen) / 2;
+        int windowY = (screenH - smallScreen) / 2;
+
+        SetWindowPos(window, HWND_TOPMOST, windowX, windowY, smallScreen, smallScreen, 0);
+    }
+
+    public void UpdateScreenSize()
+    {
+        resizingMode = databaseDirector.FetchResizingMode();
+
+        if (resizingMode == ResizingMode.TwoStages)
+        {
+            TwoResizingData twoResizingStages = databaseDirector.FetchTwoResizingStages();
+            smallScreen = twoResizingStages.small;
+            mediumScreen = twoResizingStages.medium;
+        }
+        else if (resizingMode == ResizingMode.ThreeStages)
+        {
+            ThreeResizingData threeResizingStages = databaseDirector.FetchThreeResizingStages();
+            smallScreen = threeResizingStages.small;
+            mediumScreen = threeResizingStages.medium;
+            largeScreen = threeResizingStages.large;
+        }
+        smallThreshold = smallScreen + ThresholdOffset;
+        mediumThreshold = mediumScreen + ThresholdOffset;
     }
 
     /// <summary>
@@ -142,34 +219,52 @@ public class WindowDirector : MonoBehaviour
     private void ResizeScreen()
     {
         if (gameDirector.DebugMode) return;
-        
+
         Debug.Log("Double Clicked!!");
 
-        int resizeWidth = smallScreen;
-        int resizeHeight = smallScreen;
-        if (Screen.width > mediumThreshold && Screen.height > mediumThreshold)
-        {
-            //Screen.SetResolution(150, 150, false);
-            resizeWidth = smallScreen;
-            resizeHeight = smallScreen;
-        }
-        else if (Screen.width > smallThreshold && Screen.height > smallThreshold)
-        {
-            resizeWidth = largeScreen;
-            resizeHeight = largeScreen;
-        }
-        else
-        {
-            resizeWidth = mediumScreen;
-            resizeHeight = mediumScreen;
-        }
-        //Screen.SetResolution(resizeWidth, resizeHeight, false);
+        //int resizeWidth = smallScreen;
+        //int resizeHeight = smallScreen;
+        int resizeSize = smallScreen;
 
-        //int width = canvasResizingMonitor.GetPScreenWidth();
-        //int height = canvasResizingMonitor.GetPScreenHeight();
+        if (resizingMode == ResizingMode.TwoStages)
+        {
+            if (Screen.width > smallScreen && Screen.height > smallScreen)
+            {
+                //resizeWidth = smallScreen;
+                //resizeHeight = smallScreen;
+                resizeSize = smallScreen;
+            }
+            //else if (Screen.width > smallScreen && Screen.height > smallScreen)
+            else 
+            {
+                resizeSize = mediumScreen;
+            }
+        }
+        else if (resizingMode == ResizingMode.ThreeStages)
+        {
+            if (Screen.width > mediumScreen && Screen.height > mediumScreen)
+            {
+                //resizeWidth = smallScreen;
+                //resizeHeight = smallScreen;
+                resizeSize = smallScreen;
+            }
+            else if (Screen.width > smallScreen && Screen.height > smallScreen)
+            {
+                //resizeWidth = largeScreen;
+                //resizeHeight = largeScreen;
+                resizeSize = largeScreen;
+            }
+            else
+            {
+                //resizeWidth = mediumScreen;
+                //resizeHeight = mediumScreen;
+                resizeSize = mediumScreen;
+            }
+        }
+
         int screenW = GetSystemMetrics(SM_CXSCREEN);
         int screenH = GetSystemMetrics(SM_CYSCREEN);
-        Debug.Log("Screen: " + screenW + ", "+ screenH);
+        Debug.Log("Screen: " + screenW + ", " + screenH);
 
         RECT windowRect;
         GetWindowRect(window, out windowRect);
@@ -186,16 +281,16 @@ public class WindowDirector : MonoBehaviour
         //int newPosX = (windowRect.left + windowRect.right) / 2 - resizeWidth / 2;
         //int newPosY = (windowRect.top + windowRect.bottom) / 2 - resizeHeight / 2;
 
-        int newPosX = windowRect.right - resizeWidth;
-        int newPosY = windowRect.bottom - resizeHeight;
+        int newPosX = windowRect.right - resizeSize;
+        int newPosY = windowRect.bottom - resizeSize;
 
-        SetWindowPos(window, HWND_TOPMOST, newPosX, newPosY, resizeWidth, resizeHeight, 0);
-        
-        canvasResizingMonitor.UpdatePSize(resizeWidth, resizeHeight);
+        SetWindowPos(window, HWND_TOPMOST, newPosX, newPosY, resizeSize, resizeSize, 0);
+
+        canvasResizingMonitor.UpdatePSize(resizeSize, resizeSize);
         Debug.Log(canvasResizingMonitor.GetPScreenWidth());
         canvasResizingMonitor.SwitchClockImage();
 
-        
+
         Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.localPosition);
         Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.position);
     }
@@ -211,7 +306,7 @@ public class WindowDirector : MonoBehaviour
         Debug.Log("begin drag");
         Vector2 mousePos = inputEventDirector.GetMousePosition();
         dragStartX = (int)mousePos.x;
-        dragStartY = (int) (Screen.height - mousePos.y);
+        dragStartY = (int)(Screen.height - mousePos.y);
         Debug.Log($"{dragStartX}, {dragStartY}");
 
         // ドラッグ後のclickイベント回避
@@ -229,7 +324,7 @@ public class WindowDirector : MonoBehaviour
     public void OnTargetEndDrag(BaseEventData _eventData)
     {
         if (gameDirector.DebugMode) return;
-     
+
         Debug.Log("end drag");
     }
 

@@ -8,11 +8,13 @@ public class DatabaseDirector : MonoBehaviour
 {
     string filePath;
     LoadedSaveData saveData;
+    WindowDirector windowDirector;
 
     void Awake()
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
+        windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
     }
 
     // Start is called before the first frame update
@@ -166,12 +168,21 @@ public class DatabaseDirector : MonoBehaviour
         saveData.threeResizingStages = _threeResizingData;
         //saveData.projects = _projects;
         ExportSaveData();
+
+        //変更の通知
+        // meterラベル meter controller
+        // 通知音 meter controller
+        // resizingモード window director
+        windowDirector.UpdateScreenSize();
+
     }
 
     public void ApplyProjectSettings(List<ProjectData> _project)
     {
         saveData.projects = _project;
         ExportSaveData();
+
+        //変更の通知
     }
 
     public void ApplyProjectDelete(string _name)
@@ -181,6 +192,8 @@ public class DatabaseDirector : MonoBehaviour
 
         saveData.projects.RemoveAt(id);
         ExportSaveData();
+
+        //変更の通知
     }
 
     #region fetching_data_functions
