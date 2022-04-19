@@ -181,7 +181,7 @@ public class SettingsDirector : MonoBehaviour
         }
     }
 
-    public void UpdateProgressBarMax(int _v)
+    public void UpdateProgressBarMax(float _v)
     {
         progressMeterMax = _v;
         SetAnySettingsChanged(true);

@@ -79,6 +79,15 @@ public class WorkingDirector : MonoBehaviour
             : $"{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}";
     }
 
+    /// <summary>
+    /// 設定更新用
+    /// </summary>
+    /// <param name="_maxMinute"></param>
+    public void UpdateWorkMeterMax(float _maxMinute)
+    {
+        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
+        currentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
+    }
 
     /// <summary>
     /// 外部から描画の更新が必要な場合に呼ばれる
@@ -106,7 +115,7 @@ public class WorkingDirector : MonoBehaviour
             selectedProject.pieColor.r,
             selectedProject.pieColor.g,
             selectedProject.pieColor.b);
-        currentWorkMeterCtrler.ChangeColor(c);
+        currentWorkMeterCtrler.UpdateColor(c);
         
         if (!isWorking) return;
 

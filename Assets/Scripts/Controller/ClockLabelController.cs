@@ -47,7 +47,7 @@ public class ClockLabelController : MonoBehaviour
         => ProjectConstants.IsMoreThanThreshold(Screen.width)
         || ProjectConstants.IsMoreThanThreshold(Screen.height);
 
-    public void ChangeWorkMaxLabel(int _minute)
+    public void UpdateWorkMaxLabel(float _minute)
     {
         this.transform.Find("WorkMeterMax").GetComponent<TextMeshProUGUI>().text = _minute.ToString();
     }

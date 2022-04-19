@@ -231,7 +231,7 @@ public class InputEventDirector : MonoBehaviour
             () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.Projects));
         // general settings
         progressMeterMax.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateProgressBarMax(int.Parse(_v)));
+            _v => settingsDirector.UpdateProgressBarMax(float.Parse(_v)));
         notificationSoundPath.onClick.AddListener(
             () => settingsDirector.UpdateNotificationSoundPath());
         Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();

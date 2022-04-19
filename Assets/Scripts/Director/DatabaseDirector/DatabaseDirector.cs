@@ -9,12 +9,16 @@ public class DatabaseDirector : MonoBehaviour
     string filePath;
     LoadedSaveData saveData;
     WindowDirector windowDirector;
+    WorkingDirector workingDirector;
+    [SerializeField]
+    CurrentWorkMeterController currentWorkMeterCtrler;
 
     void Awake()
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
         windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
+        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
     }
 
     // Start is called before the first frame update
@@ -174,6 +178,7 @@ public class DatabaseDirector : MonoBehaviour
         // 通知音 meter controller
         // resizingモード window director
         windowDirector.UpdateScreenSize();
+        workingDirector.UpdateWorkMeterMax(saveData.progressMeterMax);
 
     }
 
@@ -183,6 +188,8 @@ public class DatabaseDirector : MonoBehaviour
         ExportSaveData();
 
         //変更の通知
+
+        workingDirector.ChangeProjectOfCurrentWork();
     }
 
     public void ApplyProjectDelete(string _name)

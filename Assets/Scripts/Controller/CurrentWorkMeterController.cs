@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class CurrentWorkMeterController : MonoBehaviour
 {
     [SerializeField]
-    private int maxMinute = 1;
+    private float maxMinute = 1;
     private int loopCount = 0;
     [SerializeField]
     ClockLabelController clockLabelCtrler;
@@ -14,6 +14,8 @@ public class CurrentWorkMeterController : MonoBehaviour
     private AudioSource audioSource_;
     [SerializeField]
     private AudioClip audioClip;
+
+    private DatabaseDirector databaseDirector;
 
     Image image_;
 
@@ -30,8 +32,11 @@ public class CurrentWorkMeterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        clockLabelCtrler.ChangeWorkMaxLabel(maxMinute);
+        //clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
 
+        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        maxMinute = databaseDirector.FetchProgressMeterMax();
+        clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
     }
 
     // Update is called once per frame
@@ -57,7 +62,23 @@ public class CurrentWorkMeterController : MonoBehaviour
         }
     }
 
-    public void ChangeColor(Color _color)
+    /// <summary>
+    /// 設定更新用 workingDirectorから呼ばれる
+    /// loopCountも更新が必要
+    /// </summary>
+    /// <param name="_maxMinute"></param>
+    public void UpdateWorkMax(float _maxMinute, int _elapsedTime)
+    {
+        maxMinute = _maxMinute;
+        loopCount = (int) (_elapsedTime / (maxMinute * 60.0f));
+        clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
+    }
+
+    /// <summary>
+    /// 設定更新用
+    /// </summary>
+    /// <param name="_color"></param>
+    public void UpdateColor(Color _color)
     {
         image_.color = _color;
     }
