@@ -12,6 +12,8 @@ public class DatabaseDirector : MonoBehaviour
     WorkingDirector workingDirector;
     [SerializeField]
     CurrentWorkMeterController currentWorkMeterCtrler;
+    [SerializeField]
+    ProjectDropdownController projectDropdownCtrler;
 
     void Awake()
     {
@@ -55,7 +57,8 @@ public class DatabaseDirector : MonoBehaviour
             notificationSoundPath = jsonSaveData.notificationSoundPath,
             progressMeterMax = jsonSaveData.progressMeterMax,
             twoResizingStages = jsonSaveData.twoResizingStages,
-            threeResizingStages = jsonSaveData.threeResizingStages
+            threeResizingStages = jsonSaveData.threeResizingStages,
+            selectedProject = jsonSaveData.selectedProject
         };
         Enum.TryParse(jsonSaveData.resizingModeString, out saveData.resizingMode);
 
@@ -73,7 +76,8 @@ public class DatabaseDirector : MonoBehaviour
             progressMeterMax = saveData.progressMeterMax,
             resizingModeString = saveData.resizingMode.ToString(),
             twoResizingStages = saveData.twoResizingStages,
-            threeResizingStages = saveData.threeResizingStages
+            threeResizingStages = saveData.threeResizingStages,
+            selectedProject = saveData.selectedProject
         };
         //Debug.Log(jsonSaveData.twoResizingStages.small);
         //Debug.Log(jsonSaveData.twoResizingStages.medium);
@@ -190,6 +194,7 @@ public class DatabaseDirector : MonoBehaviour
         //変更の通知
 
         workingDirector.ChangeProjectOfCurrentWork();
+        projectDropdownCtrler.UpdateItems();
     }
 
     public void ApplyProjectDelete(string _name)
@@ -201,6 +206,12 @@ public class DatabaseDirector : MonoBehaviour
         ExportSaveData();
 
         //変更の通知
+        projectDropdownCtrler.UpdateItems();
+    }
+
+    public void SetSelectedProject(string _name)
+    {
+        saveData.selectedProject = _name;
     }
 
     #region fetching_data_functions
@@ -231,6 +242,9 @@ public class DatabaseDirector : MonoBehaviour
 
     public ThreeResizingData FetchThreeResizingStages()
         => saveData.threeResizingStages;
+
+    public string FetchSelectedProject()
+        => saveData.selectedProject;
 
     //public List<WorkData> FetchTodayWorks()
     //{

@@ -14,6 +14,7 @@ public class JsonSaveData
     public string resizingModeString;
     public TwoResizingData twoResizingStages;
     public ThreeResizingData threeResizingStages;
+    public string selectedProject;
 
     public List<ProjectData> ConvertProjectsToLoadedFormat()
     {
@@ -47,6 +48,7 @@ public class LoadedSaveData
     public ResizingMode resizingMode;
     public TwoResizingData twoResizingStages;
     public ThreeResizingData threeResizingStages;
+    public string selectedProject;
 
     public List<JsonProjectData> ConvertProjectsToJsonFormat()
     {
