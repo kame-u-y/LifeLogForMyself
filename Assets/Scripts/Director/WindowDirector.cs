@@ -17,11 +17,18 @@ public class WindowDirector : MonoBehaviour
     [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
     public static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int cx, int cy, int wFlags);
     [DllImport("user32.dll", EntryPoint = "GetCursorPos")]
-    public static extern bool GetCursorPos(out Point lpPoint);
+    private static extern bool GetCursorPos(out POINT lpPoint);
     [DllImport("user32.dll", EntryPoint = "GetWindowRect")]
     private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
     [DllImport("user32.dll", EntryPoint = "GetSystemMetrics")]
     private static extern int GetSystemMetrics(int nIndex);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct POINT
+    {
+        public int x;
+        public int y;
+    }
     
     [StructLayout(LayoutKind.Sequential)]
     private struct RECT
@@ -31,6 +38,8 @@ public class WindowDirector : MonoBehaviour
         public int right;
         public int bottom;
     }
+
+
 
     IntPtr window;
     string windowName = "LifeLogForMyself";
@@ -217,7 +226,7 @@ public class WindowDirector : MonoBehaviour
     private void MoveWindow()
     {
         var window = FindWindow(null, windowName);
-        Point mousePoint;
+        POINT mousePoint;
         RECT windowRect;
 
         GetCursorPos(out mousePoint);
@@ -226,7 +235,7 @@ public class WindowDirector : MonoBehaviour
 
         int width = canvasResizingMonitor.GetPScreenWidth();
         int height = canvasResizingMonitor.GetPScreenHeight();
-        SetWindowPos(window, HWND_TOPMOST, mousePoint.X - dragStartX, mousePoint.Y - dragStartY, width, height, 0);
+        SetWindowPos(window, HWND_TOPMOST, mousePoint.x - dragStartX, mousePoint.y - dragStartY, width, height, 0);
 
         // ウィンドウサイズが消滅する
         //SetWindowPos(window, HWND_TOP, mousePoint.X - dragStartX, mousePoint.Y - dragStartY, (int)windowRect.width, (int)windowRect.height, 0);

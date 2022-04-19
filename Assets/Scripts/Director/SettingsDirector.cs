@@ -23,6 +23,8 @@ public class SettingsDirector : MonoBehaviour
     #region general settings data
     private float progressMeterMax = 0;
 
+    [SerializeField]
+    private TextMeshProUGUI soundPathLabel;
     private string notificationSoundPath;
 
     [SerializeField]
@@ -185,6 +187,13 @@ public class SettingsDirector : MonoBehaviour
         SetAnySettingsChanged(true);
     }
 
+    public void UpdateNotificationSoundPath()
+    {
+        notificationSoundPath = OpenFileName.ShowDialog();
+        soundPathLabel.text = notificationSoundPath;
+    }
+
+
     public void UpdateResizingMode(bool _v)
     {
         if (_v)
@@ -258,6 +267,7 @@ public class SettingsDirector : MonoBehaviour
 
         databaseDirector.ApplySettings(
             progressMeterMax,
+            notificationSoundPath,
             resizingMode,
             twoResizingStages,
             threeResizingStages);

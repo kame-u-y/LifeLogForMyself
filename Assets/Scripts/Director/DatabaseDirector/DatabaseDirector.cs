@@ -153,12 +153,14 @@ public class DatabaseDirector : MonoBehaviour
 
     public void ApplySettings(
         float _progressBarMax,
+        string _notificationSoundPath,
         ResizingMode _resizingMode,
         TwoResizingData _twoResizingData,
         ThreeResizingData _threeResizingData)
     //List<ProjectData> _projects)
     {
         saveData.progressMeterMax = _progressBarMax;
+        saveData.notificationSoundPath = _notificationSoundPath;
         saveData.resizingMode = _resizingMode;
         saveData.twoResizingStages = _twoResizingData;
         saveData.threeResizingStages = _threeResizingData;

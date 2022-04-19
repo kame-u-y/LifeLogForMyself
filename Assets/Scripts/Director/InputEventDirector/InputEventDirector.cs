@@ -58,8 +58,10 @@ public class InputEventDirector : MonoBehaviour
     Button projectsTabButton;
     [SerializeField]
     GameObject generalSettings;
-    InputField progressBarMax;
+    InputField progressMeterMax;
 
+    [SerializeField]
+    Button notificationSoundPath;
     [SerializeField]
     ToggleGroup settingResizingMode;
     [SerializeField]
@@ -127,7 +129,7 @@ public class InputEventDirector : MonoBehaviour
         #region settings
         generalTabButton = settingsTab.transform.Find("General").GetComponent<Button>();
         projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();
-        progressBarMax = generalSettings.transform
+        progressMeterMax = generalSettings.transform
             .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
 
         string topScope = "ItemValue";
@@ -237,8 +239,10 @@ public class InputEventDirector : MonoBehaviour
         projectsTabButton.onClick.AddListener(
             () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.Projects));
         // general settings
-        progressBarMax.onValueChanged.AddListener(
+        progressMeterMax.onValueChanged.AddListener(
             _v => settingsDirector.UpdateProgressBarMax(int.Parse(_v)));
+        notificationSoundPath.onClick.AddListener(
+            () => settingsDirector.UpdateNotificationSoundPath());
         Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();
         foreach (var toggle in toggles)
         {
