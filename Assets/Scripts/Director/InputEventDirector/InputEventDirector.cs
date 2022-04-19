@@ -27,7 +27,7 @@ public class InputEventDirector : MonoBehaviour
     [SerializeField]
     Dropdown projectDropdown;
     [SerializeField]
-    Button background;
+    Button mainBackground;
     #endregion
 
     #region popup
@@ -52,6 +52,8 @@ public class InputEventDirector : MonoBehaviour
     #endregion
 
     #region settings
+    [SerializeField]
+    Button settingsBackground;
     [SerializeField]
     GameObject settingsTab;
     Button generalTabButton;
@@ -161,23 +163,12 @@ public class InputEventDirector : MonoBehaviour
         toggleClockModeButton.onClick.AddListener(gameDirector.ChangeClockMode);
         projectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
-        background.onClick.AddListener(windowDirector.OnResizingButtonClick);
+        mainBackground.onClick.AddListener(windowDirector.OnResizingButtonClick);
         #endregion
 
         #region drag
-        EventTrigger trigger = background.gameObject.GetComponent<EventTrigger>();
-        AddEventTrigger(
-            trigger,
-            EventTriggerType.BeginDrag,
-            (_eventData) => windowDirector.OnTargetBeginDrag(_eventData));
-        AddEventTrigger(
-            trigger,
-            EventTriggerType.Drag,
-            (_eventData) => windowDirector.OnTargetDrag(_eventData));
-        AddEventTrigger(
-            trigger,
-            EventTriggerType.EndDrag,
-            (_eventData) => windowDirector.OnTargetEndDrag(_eventData));
+        AddDragEvent(mainBackground.gameObject);
+        AddDragEvent(settingsBackground.gameObject);
         #endregion
 
         #region popup
@@ -284,6 +275,23 @@ public class InputEventDirector : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+    }
+
+    private void AddDragEvent(GameObject _obj)
+    {
+        EventTrigger trigger = _obj.GetComponent<EventTrigger>();
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.BeginDrag,
+            (_eventData) => windowDirector.OnTargetBeginDrag(_eventData));
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.Drag,
+            (_eventData) => windowDirector.OnTargetDrag(_eventData));
+        AddEventTrigger(
+            trigger,
+            EventTriggerType.EndDrag,
+            (_eventData) => windowDirector.OnTargetEndDrag(_eventData));
     }
 
     private void AddEventTrigger(

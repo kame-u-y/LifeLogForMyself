@@ -10,6 +10,13 @@ using UnityEngine.UI;
 
 public class GameDirector : MonoBehaviour
 {
+    [SerializeField]
+    private bool debugMode = false;
+    public bool DebugMode
+    {
+        get => debugMode;
+    }
+
     [HideInInspector]
     public bool isClock12h = false;
 

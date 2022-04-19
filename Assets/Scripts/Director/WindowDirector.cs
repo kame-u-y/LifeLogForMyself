@@ -94,6 +94,8 @@ public class WindowDirector : MonoBehaviour
 
     private void DeleteWindowTitleBar()
     {
+        if (gameDirector.DebugMode) return;
+     
         const int GWL_STYLE = -16;
         int style = GetWindowLong(window, GWL_STYLE);
         style &= ~WS_DLGFRAME;
@@ -102,6 +104,7 @@ public class WindowDirector : MonoBehaviour
 
     private void InitializeWindowRect()
     {
+        if (gameDirector.DebugMode) return;
 
         RECT windowRect;
         GetWindowRect(window, out windowRect);
@@ -138,6 +141,7 @@ public class WindowDirector : MonoBehaviour
 
     private void ResizeScreen()
     {
+        if (gameDirector.DebugMode) return;
         
         Debug.Log("Double Clicked!!");
 
@@ -202,6 +206,8 @@ public class WindowDirector : MonoBehaviour
     /// <param name="_eventData"></param>
     public void OnTargetBeginDrag(BaseEventData _eventData)
     {
+        if (gameDirector.DebugMode) return;
+
         Debug.Log("begin drag");
         Vector2 mousePos = inputEventDirector.GetMousePosition();
         dragStartX = (int)mousePos.x;
@@ -214,17 +220,23 @@ public class WindowDirector : MonoBehaviour
 
     public void OnTargetDrag(BaseEventData _eventData)
     {
+        if (gameDirector.DebugMode) return;
+
         //Debug.Log("drag");
         MoveWindow();
     }
 
     public void OnTargetEndDrag(BaseEventData _eventData)
     {
+        if (gameDirector.DebugMode) return;
+     
         Debug.Log("end drag");
     }
 
     private void MoveWindow()
     {
+        if (gameDirector.DebugMode) return;
+
         var window = FindWindow(null, windowName);
         POINT mousePoint;
         RECT windowRect;
