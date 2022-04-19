@@ -329,7 +329,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 651.99994, y: 0}
   m_SizeDelta: {x: 1304, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &12195136
@@ -8480,6 +8480,7 @@ MonoBehaviour:
   settingsTab: {fileID: 862982104}
   generalSettings: {fileID: 895700558}
   projectsSettings: {fileID: 165438924}
+  soundPathLabel: {fileID: 520452517}
   settingResizingMode: {fileID: 115891437}
   twoStageForms: {fileID: 817478000}
   threeStageForms: {fileID: 1629529355}
@@ -10799,9 +10800,9 @@ RectTransform:
   m_Father: {fileID: 165438925}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 660.8, y: -50}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1321.6, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1035284104
@@ -16700,6 +16701,7 @@ MonoBehaviour:
   popupController: {fileID: 1606645045}
   settingsTab: {fileID: 862982104}
   generalSettings: {fileID: 895700558}
+  notificationSoundPath: {fileID: 683959718}
   settingResizingMode: {fileID: 115891437}
   resizingValueForms: {fileID: 535711894}
   projectSettingsController: {fileID: 786270579}

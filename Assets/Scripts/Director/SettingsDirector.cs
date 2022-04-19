@@ -191,6 +191,7 @@ public class SettingsDirector : MonoBehaviour
     {
         notificationSoundPath = OpenFileName.ShowDialog();
         soundPathLabel.text = notificationSoundPath;
+        SetAnySettingsChanged(true);
     }
 
 
@@ -257,7 +258,7 @@ public class SettingsDirector : MonoBehaviour
     {
         // Œ³‚É–ß‚·
         InitializeGeneralSettings();
-        isAnySettingsChanged = false;
+        SetAnySettingsChanged(false);
     }
 
     public void ApplySettings()
@@ -272,5 +273,7 @@ public class SettingsDirector : MonoBehaviour
             twoResizingStages,
             threeResizingStages);
             //projectSettingsController.GetProjectDataList());
+
+        SetAnySettingsChanged(false);
     }
 }
