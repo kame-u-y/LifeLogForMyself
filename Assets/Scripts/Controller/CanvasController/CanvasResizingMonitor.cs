@@ -104,7 +104,7 @@ public class CanvasResizingMonitor : UIBehaviour
         string buttonMode = "";
         string clockMode = "";
 
-        if (IsStateSwitchingToResized())
+        if (IsStateSwitchingToSmall())
         {
             spriteMode = "Resized_Materials";
             clockNumber.gameObject.SetActive(false);
@@ -113,6 +113,7 @@ public class CanvasResizingMonitor : UIBehaviour
             //Vector3 pos = playEndButton.transform.localPosition;
             //pos.y = 2;
             //playEndButton.rectTransform.localPosition = pos;
+            
         }
         else if (IsStateSwitchingToNormal())
         {
@@ -158,7 +159,7 @@ public class CanvasResizingMonitor : UIBehaviour
         || (IsMoreThanThreshold(pScreenHeight) && IsMoreThanThreshold(Screen.height))
         || (!IsMoreThanThreshold(pScreenHeight) && !IsMoreThanThreshold(Screen.height));
 
-    private bool IsStateSwitchingToResized()
+    private bool IsStateSwitchingToSmall()
         => (IsMoreThanThreshold(pScreenWidth) && !IsMoreThanThreshold(Screen.width))
         || (IsMoreThanThreshold(pScreenHeight) && !IsMoreThanThreshold(Screen.height));
 

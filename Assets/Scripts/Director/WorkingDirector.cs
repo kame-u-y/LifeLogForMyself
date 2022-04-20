@@ -181,6 +181,7 @@ public class WorkingDirector : MonoBehaviour
 
         currentWorkMeterCtrler.InitializeMeter();
         //currentCountText.text = "00:00";
+        pieChartCtrler.EndCurrentWork();
     }
 
     private int GetNowTotalSeconds()

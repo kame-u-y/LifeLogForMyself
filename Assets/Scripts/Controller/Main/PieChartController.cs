@@ -22,6 +22,7 @@ public class PieChartController : MonoBehaviour
         workPiePieces = new List<GameObject>();
 
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        currentWorkPiece = this.transform.Find("CurrentWork").gameObject;
     }
 
     private void Start()
@@ -82,15 +83,9 @@ public class PieChartController : MonoBehaviour
 
         GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("LogWorks").transform);
         newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
-        Color c = new Color(
-            _project.pieColor.r,
-            _project.pieColor.g,
-            _project.pieColor.b);
-        newPiePiece.GetComponent<Image>().color = c;
-
-        CreatePiece(_work, newPiePiece);
-
+        newPiePiece.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
         newPiePiece.GetComponent<PieController>().ProjectName = _project.name;
+        SetupPiece(_work, newPiePiece);
 
         newPiePiece.SetActive(true);
         workPiePieces.Add(newPiePiece);
@@ -98,28 +93,38 @@ public class PieChartController : MonoBehaviour
 
     public void CreateCurrentWorkPiece(WorkData _work, ProjectData _project)
     {
-        currentWorkPiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("CurrentWork").transform);
         currentWorkPiece.transform.localPosition = new Vector3(0, 0, 0);
-        Color c = new Color(
-            _project.pieColor.r,
-            _project.pieColor.g,
-            _project.pieColor.b);
-        currentWorkPiece.GetComponent<Image>().color = c;
+        currentWorkPiece.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
         currentWorkPiece.GetComponent<PieController>().ProjectName = _project.name;
-
-        CreatePiece(_work, currentWorkPiece);
+        SetupPiece(_work, currentWorkPiece);
 
         currentWorkPiece.SetActive(true);
-        //workPiePieces.Add(newPiePiece);
     }
 
     public void UpdateCurrentWorkPiece(WorkData _work)
     {
-        CreatePiece(_work, currentWorkPiece);
+        SetupPiece(_work, currentWorkPiece);
     }
 
+    /// <summary>
+    /// 作業終了時、CurrentWorkPieceのパイ・情報をLogに移す
+    /// </summary>
+    public void EndCurrentWork()
+    {
+        GameObject endPiePiece = Instantiate(currentWorkPiece, this.transform.Find("LogWorks").transform);
+        //endPiePiece.transform.localPosition = new Vector3(0, 0, 0);
+        endPiePiece.GetComponent<PieController>().ProjectName 
+            = currentWorkPiece.GetComponent<PieController>().ProjectName;
+        workPiePieces.Add(endPiePiece);
+        currentWorkPiece.SetActive(false);
+    }
 
-    private void CreatePiece(WorkData _work, GameObject _obj)
+    /// <summary>
+    /// パイの大きさ、回転位置などを設定
+    /// </summary>
+    /// <param name="_work"></param>
+    /// <param name="_obj"></param>
+    private void SetupPiece(WorkData _work, GameObject _obj)
     {
         // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
         int startSec = gameDirector.GetSecondOfClockStart();
