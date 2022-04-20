@@ -14,6 +14,8 @@ public class DatabaseDirector : MonoBehaviour
     CurrentWorkMeterController currentWorkMeterCtrler;
     [SerializeField]
     ProjectDropdownController projectDropdownCtrler;
+    [SerializeField]
+    PieChartController pieChartController;
 
     void Awake()
     {
@@ -195,6 +197,7 @@ public class DatabaseDirector : MonoBehaviour
 
         workingDirector.ChangeProjectOfCurrentWork();
         projectDropdownCtrler.UpdateItems();
+        pieChartController.UpdateTodayColors(FetchProjectList());
     }
 
     public void ApplyProjectDelete(string _name)

@@ -15,6 +15,7 @@ public class PieChartController : MonoBehaviour
     private GameDirector gameDirector;
 
 
+
     private void Awake()
     {
         //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
@@ -53,7 +54,7 @@ public class PieChartController : MonoBehaviour
         });
         worksWithinRange.Sort((a, b) => a.startUnixSec - b.startUnixSec);
 
-        for (int i = worksWithinRange.Count-1; i >= 0; i--)
+        for (int i = worksWithinRange.Count - 1; i >= 0; i--)
         {
             ProjectData p = _projects.Find(v => v.name == worksWithinRange[i].projectName);
             CreateLogWorkPiece(worksWithinRange[i], p);
@@ -66,11 +67,13 @@ public class PieChartController : MonoBehaviour
 
     private void ResetCircle()
     {
+
         GameObject container = this.transform.Find("LogWorks").gameObject;
         for (int i = 0; i < container.transform.childCount; i++)
         {
             Destroy(container.transform.GetChild(i).gameObject);
         }
+        workPiePieces = new List<GameObject>();
     }
 
     private void CreateLogWorkPiece(WorkData _work, ProjectData _project)
@@ -87,6 +90,8 @@ public class PieChartController : MonoBehaviour
 
         CreatePiece(_work, newPiePiece);
 
+        newPiePiece.GetComponent<PieController>().ProjectName = _project.name;
+
         newPiePiece.SetActive(true);
         workPiePieces.Add(newPiePiece);
     }
@@ -100,9 +105,10 @@ public class PieChartController : MonoBehaviour
             _project.pieColor.g,
             _project.pieColor.b);
         currentWorkPiece.GetComponent<Image>().color = c;
+        currentWorkPiece.GetComponent<PieController>().ProjectName = _project.name;
 
         CreatePiece(_work, currentWorkPiece);
-        
+
         currentWorkPiece.SetActive(true);
         //workPiePieces.Add(newPiePiece);
     }
@@ -129,6 +135,18 @@ public class PieChartController : MonoBehaviour
     private float CalculatePieRotationValue(float _rotationMax, int _startOfValue, int _endOfValue, int _startOfAll, int _endOfAll)
         => (float)_rotationMax * (_endOfValue - _startOfValue) / (_endOfAll - _startOfAll);
 
+    /// <summary>
+    /// ê›íËïœçXîΩâfóp
+    /// </summary>
+    public void UpdateTodayColors(List<ProjectData> _projects)
+    {
+        workPiePieces.ForEach(v =>
+        {
+            string pieProjectName = v.GetComponent<PieController>().ProjectName;
+            ColorData pieColor = _projects.Find(p => p.name == pieProjectName).pieColor;
+            v.GetComponent<Image>().color = pieColor.GetWithColorFormat();
+        });
+    }
 
     public void ChangeCurrentColor(Color _color)
     {

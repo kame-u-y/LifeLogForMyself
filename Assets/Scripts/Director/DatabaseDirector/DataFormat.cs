@@ -135,6 +135,9 @@ public class ColorData
     public float r;
     public float g;
     public float b;
+
+    public Color GetWithColorFormat()
+        => new Color(r, g, b);
 }
 
 [System.Serializable]
