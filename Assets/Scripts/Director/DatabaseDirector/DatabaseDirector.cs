@@ -152,8 +152,8 @@ public class DatabaseDirector : MonoBehaviour
             name = "çÏã∆",
             pieColor = new ColorData()
             {
-                r = 255.0f,
-                g = 255.0f,
+                r = 1.0f,
+                g = 1.0f,
                 b = 0.0f
             },
             totalSec = 10000
@@ -278,9 +278,9 @@ public class DatabaseDirector : MonoBehaviour
                     id = 0,
                     name = "No Project",
                     pieColor = new ColorData() {
-                        r = 143,
-                        g = 193,
-                        b = 16
+                        r = 143 / 255.0f,
+                        g = 193 / 255.0f,
+                        b = 16 / 255.0f
                     },
                     notificationMode = NotificationMode.Sound,
                     totalSec = 0

@@ -138,6 +138,9 @@ public class ColorData
 
     public Color GetWithColorFormat()
         => new Color(r, g, b);
+
+    public static ColorData ConvertColorToColorData(Color _c)
+        => new ColorData() { r = _c.r, g = _c.g, b = _c.b };
 }
 
 [System.Serializable]

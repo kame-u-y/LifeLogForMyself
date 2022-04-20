@@ -150,8 +150,8 @@ public class ProjectSettingsController : MonoBehaviour
         var projectNameField = newItem.transform.Find("Values/ProjectName").GetComponent<InputField>();
         projectNameField.text = _project.name;
         // projectColor
-        Color c = new Color(_project.pieColor.r, _project.pieColor.g, _project.pieColor.b);
-        newItem.transform.Find("Values/ProjectColor").GetComponent<Image>().color = c;
+        newItem.transform.Find("Values/ProjectColor").GetComponent<Image>().color
+            = _project.pieColor.GetWithColorFormat();
         //notificationMode
         var dropdown = newItem.transform.Find("Values/NotificationMode").GetComponent<Dropdown>();
         dropdown.value = dropdown.options.FindIndex(v =>
@@ -218,10 +218,7 @@ public class ProjectSettingsController : MonoBehaviour
     /// <param name="_id"></param>
     /// <returns></returns>
     public Color FetchProjectColor(int _id)
-        => new Color(
-            projectItems[_id].projectData.pieColor.r,
-            projectItems[_id].projectData.pieColor.g,
-            projectItems[_id].projectData.pieColor.b);
+        => projectItems[_id].projectData.pieColor.GetWithColorFormat();
 
     /// <summary>
     /// プロジェクトカラーの変更イベント
@@ -233,12 +230,7 @@ public class ProjectSettingsController : MonoBehaviour
 
         projectItems[_id].gameObject_.transform
             .Find("Values/ProjectColor").GetComponent<Image>().color = _c;
-        projectItems[_id].projectData.pieColor = new ColorData()
-        {
-            r = _c.r,
-            g = _c.g,
-            b = _c.b
-        };
+        projectItems[_id].projectData.pieColor = ColorData.ConvertColorToColorData(_c);
         SetAnySettingsChanged(true);
     }
 

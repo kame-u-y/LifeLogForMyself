@@ -66,8 +66,8 @@ public class WorkingDirector : MonoBehaviour
     private void InitializeCurrentWork()
     {
         ProjectData p = databaseDirector.FindProject("No Project");
-        Color c = new Color(p.pieColor.r, p.pieColor.g, p.pieColor.b);
-        currentWorkMeterCtrler.UpdateColor(c);
+        //Color c = new Color(p.pieColor.r, p.pieColor.g, p.pieColor.b);
+        currentWorkMeterCtrler.UpdateColor(p.pieColor.GetWithColorFormat());
     }
 
     private void UpdateWorkTime()
@@ -120,10 +120,11 @@ public class WorkingDirector : MonoBehaviour
     {
         databaseDirector.SetSelectedProject(projectDropdown.captionText.text);
         selectedProject = databaseDirector.FindProject(databaseDirector.FetchSelectedProject());
-        Color c = new Color(
-            selectedProject.pieColor.r,
-            selectedProject.pieColor.g,
-            selectedProject.pieColor.b);
+        //Color c = new Color(
+        //    selectedProject.pieColor.r,
+        //    selectedProject.pieColor.g,
+        //    selectedProject.pieColor.b);
+        Color c = selectedProject.pieColor.GetWithColorFormat();
         currentWorkMeterCtrler.UpdateColor(c);
         
         if (!isWorking) return;
