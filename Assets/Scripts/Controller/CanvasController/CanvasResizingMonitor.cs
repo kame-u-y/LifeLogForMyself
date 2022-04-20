@@ -22,9 +22,9 @@ public class CanvasResizingMonitor : UIBehaviour
     private Image workMeterPlate;
 
     [SerializeField]
-    private GameObject pieLogWorks;
+    private GameObject logPieContainer;
     [SerializeField]
-    private GameObject pieCurrentWorks;
+    private GameObject currentPie;
     [SerializeField]
     private Image currentWorkMeter;
 
@@ -140,6 +140,12 @@ public class CanvasResizingMonitor : UIBehaviour
         frame.sprite = LoadSprite($"{spriteMode}/Base/Frame");
         todayFuturePlate.sprite = LoadSprite($"{spriteMode}/Base/Plate");
         todayPastPlate.sprite = LoadSprite($"{spriteMode}/Base/Plate");
+        for (int i = 0; i < logPieContainer.transform.childCount; i++)
+        {
+            logPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
+                = LoadSprite($"{spriteMode}/Base/Plate");
+        }
+        currentPie.GetComponent<Image>().sprite = LoadSprite($"{spriteMode}/Base/Plate");
         workMeterPlate.sprite = LoadSprite($"{spriteMode}/Base/WorkMeterPlate");
 
         currentWorkMeter.sprite = LoadSprite($"{spriteMode}/Pie/CurrentWorkMeter");

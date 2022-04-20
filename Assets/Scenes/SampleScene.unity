@@ -329,7 +329,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: -652, y: 0}
   m_SizeDelta: {x: 1304, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &12195136
@@ -12649,8 +12649,8 @@ MonoBehaviour:
   todayFuturePlate: {fileID: 1308886536}
   todayPastPlate: {fileID: 1194932634}
   workMeterPlate: {fileID: 289684462}
-  pieLogWorks: {fileID: 0}
-  pieCurrentWorks: {fileID: 0}
+  logPieContainer: {fileID: 326328117}
+  currentPie: {fileID: 444346561}
   currentWorkMeter: {fileID: 690280554}
   cover: {fileID: 269122038}
   playEndButton: {fileID: 995924023}
