@@ -65,7 +65,7 @@ public class WorkingDirector : MonoBehaviour
 
     private void InitializeCurrentWork()
     {
-        ProjectData p = databaseDirector.FindProject("No Project");
+        ProjectData p = databaseDirector.FindProject(ProjectConstants.DefaultProjectName);
         //Color c = new Color(p.pieColor.r, p.pieColor.g, p.pieColor.b);
         currentWorkMeterCtrler.UpdateColor(p.pieColor.GetWithColorFormat());
     }
@@ -131,7 +131,7 @@ public class WorkingDirector : MonoBehaviour
 
         currentWork.projectName = projectDropdown.captionText.text;
         print(selectedProject.name);
-        pieChartCtrler.ChangeCurrentColor(c);
+        pieChartCtrler.ChangeCurrentColor(c, selectedProject.name);
         //currentWorkMeterCtrler.ChangeColor(c);
     }
 

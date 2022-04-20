@@ -38,5 +38,6 @@ public class ProjectDropdownController : MonoBehaviour
 
         string selectedName = databaseDirector.FetchSelectedProject();
         dropdown_.value = dropdown_.options.FindIndex(v => v.text == selectedName);
+        
     }
 }

@@ -148,14 +148,17 @@ public class PieChartController : MonoBehaviour
         workPiePieces.ForEach(v =>
         {
             string pieProjectName = v.GetComponent<PieController>().ProjectName;
-            ColorData pieColor = _projects.Find(p => p.name == pieProjectName).pieColor;
-            v.GetComponent<Image>().color = pieColor.GetWithColorFormat();
+            int id = _projects.FindIndex(p => p.name == pieProjectName);
+            if (id == -1) id = 0;
+
+            v.GetComponent<Image>().color = _projects[id].pieColor.GetWithColorFormat();
         });
     }
 
-    public void ChangeCurrentColor(Color _color)
+    public void ChangeCurrentColor(Color _color, string _projectName)
     {
         currentWorkPiece.GetComponent<Image>().color = _color;
+        currentWorkPiece.GetComponent<PieController>().ProjectName = _projectName;
     }
 
 

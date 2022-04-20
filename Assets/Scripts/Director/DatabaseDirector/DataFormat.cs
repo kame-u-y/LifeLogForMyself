@@ -29,13 +29,18 @@ public class JsonSaveData
                 totalSec = v.totalSec
             };
             Enum.TryParse(v.notificationMode, out newProject.notificationMode);
-            Debug.Log(v.notificationMode +","+newProject.notificationMode);
+            Debug.Log(v.notificationMode + "," + newProject.notificationMode);
 
             loadedProjects.Add(newProject);
         });
 
         return loadedProjects;
     }
+
+    public string GetSelectedOrDefaultProject()
+        => projects.Exists(v => v.name == selectedProject)
+            ? selectedProject
+            : ProjectConstants.DefaultProjectName;
 }
 
 [System.Serializable]
@@ -67,6 +72,12 @@ public class LoadedSaveData
         });
         return jsonProjects;
     }
+
+    public string SetSelectedOrDefaultProject(string _name)
+        => selectedProject = projects.Exists(v => v.name == _name)
+            ? _name
+            : ProjectConstants.DefaultProjectName;
+
 }
 
 // dailyDictionary
@@ -111,7 +122,7 @@ public class ProjectData
     {
         id = 0;
         name = "NewProject";
-        pieColor = new ColorData() { r = 143/255.0f, g = 192/255.0f, b = 15/255.0f };
+        pieColor = new ColorData() { r = 143 / 255.0f, g = 192 / 255.0f, b = 15 / 255.0f };
         notificationMode = NotificationMode.Sound;
         totalSec = 0;
     }

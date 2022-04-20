@@ -60,7 +60,7 @@ public class DatabaseDirector : MonoBehaviour
             progressMeterMax = jsonSaveData.progressMeterMax,
             twoResizingStages = jsonSaveData.twoResizingStages,
             threeResizingStages = jsonSaveData.threeResizingStages,
-            selectedProject = jsonSaveData.selectedProject
+            selectedProject = jsonSaveData.GetSelectedOrDefaultProject()
         };
         Enum.TryParse(jsonSaveData.resizingModeString, out saveData.resizingMode);
 
@@ -205,16 +205,21 @@ public class DatabaseDirector : MonoBehaviour
         var id = saveData.projects.FindIndex(v => v.name == _name);
         if (id == -1) return;
 
+        saveData.SetSelectedOrDefaultProject(_name);
+
         saveData.projects.RemoveAt(id);
         ExportSaveData();
 
         //ïœçXÇÃí ím
         projectDropdownCtrler.UpdateItems();
+        pieChartController.UpdateTodayColors(FetchProjectList());
+
     }
 
     public void SetSelectedProject(string _name)
     {
         saveData.selectedProject = _name;
+        ExportSaveData();
     }
 
     #region fetching_data_functions
@@ -276,7 +281,7 @@ public class DatabaseDirector : MonoBehaviour
                 new ProjectData()
                 {
                     id = 0,
-                    name = "No Project",
+                    name = ProjectConstants.DefaultProjectName,
                     pieColor = new ColorData() {
                         r = 143 / 255.0f,
                         g = 193 / 255.0f,

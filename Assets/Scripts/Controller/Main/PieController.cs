@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PieController : MonoBehaviour
 {
-    private string projectName = "No Project";
+    private string projectName = ProjectConstants.DefaultProjectName;
     public string ProjectName
     {
         get => projectName;
