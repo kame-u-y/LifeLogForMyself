@@ -46,7 +46,6 @@ public class WorkingDirector : MonoBehaviour
         pieChartCtrler.DisplayTodayPieChart(dayData, project);
 
         currentCountText.text = "00:00";
-        InitializeCurrentWork();
     }
 
     // Update is called once per frame
@@ -62,13 +61,6 @@ public class WorkingDirector : MonoBehaviour
             }
             time += Time.deltaTime;
         }
-    }
-
-    private void InitializeCurrentWork()
-    {
-        ProjectData p = databaseDirector.FindProject(ProjectConstants.DefaultProjectName);
-        //Color c = new Color(p.pieColor.r, p.pieColor.g, p.pieColor.b);
-        currentWorkMeterCtrler.UpdateColor(p.pieColor.GetWithColorFormat());
     }
 
     private void UpdateWorkTime()
