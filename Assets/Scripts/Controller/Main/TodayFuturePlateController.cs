@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TodayPastPlateController : MonoBehaviour
+public class TodayFuturePlateController : MonoBehaviour
 {
     GameDirector gameDirector;
     private float time;
@@ -35,18 +35,18 @@ public class TodayPastPlateController : MonoBehaviour
 
     public void UpdatePlate()
     {
-        int startSec = gameDirector.GetSecondOfClockStart();
-        //int startSec = gameDirector.GetSecondOfNow();
+        //int startSec = gameDirector.GetSecondOfClockStart();
+        int startSec = gameDirector.GetSecondOfNow();
         int endSec = gameDirector.GetSecondOfClockEnd();
-        int nowSec = GetNowSecond();
-        //int clockStartSec = gameDirector.GetSecondOfClockStart();
+        //int nowSec = GetNowSecond();
+        int clockStartSec = gameDirector.GetSecondOfClockStart();
 
-        var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
-        //float angle = CalculatePieRotationValue(360.0f, clockStartSec, startSec, clockStartSec, endSec);
-        //this.transform.rotation = Quaternion.Euler(0, 0, -angle);
-        //this.GetComponent<Image>().fillAmount = hoge;
-        this.GetComponent<Image>().fillAmount = 1;
-            //CalculatePieRotationValue(1.0f, startSec, endSec, clockStartSec, endSec);
+        //var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
+        float angle = CalculatePieRotationValue(360.0f, clockStartSec, startSec-5, clockStartSec, endSec);
+
+        this.transform.rotation = Quaternion.Euler(0, 0, -angle);
+        this.GetComponent<Image>().fillAmount = 
+            CalculatePieRotationValue(1.0f, startSec, endSec+5, clockStartSec, endSec);
         //Debug.Log($"past:({hoge})");
 
     }

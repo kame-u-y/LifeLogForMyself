@@ -38,9 +38,10 @@ public class WorkingDirector : MonoBehaviour
         isWorking = false;
         playEndImageCtrler.ChangeButtonImage(isWorking);
 
-        DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        //DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        List<WorkData> dayData = databaseDirector.Fetch24hData();
         if (dayData == null) return;
-
+        Debug.Log(dayData.Count);
         List<ProjectData> project = databaseDirector.FetchProjectList();
         pieChartCtrler.DisplayTodayPieChart(dayData, project);
 
@@ -109,7 +110,8 @@ public class WorkingDirector : MonoBehaviour
 
     public void CallForNeedDisplayTodayPieChart()
     {
-        DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        //DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        List<WorkData> dayData = databaseDirector.Fetch24hData();
         if (dayData == null) return;
 
         List<ProjectData> project = databaseDirector.FetchProjectList();

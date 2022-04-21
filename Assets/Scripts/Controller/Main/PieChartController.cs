@@ -40,25 +40,31 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     /// <param name="_dayData"></param>
     /// <param name="_projects"></param>
-    public void DisplayTodayPieChart(DayData _dayData, List<ProjectData> _projects)
+    public void DisplayTodayPieChart(List<WorkData> _dayData, List<ProjectData> _projects)
     {
         ResetCircle();
 
         // パイチャートを作るよ
         // とりあえず今日の分
         List<WorkData> worksWithinRange = new List<WorkData>();
-        worksWithinRange = _dayData.works.FindAll((v) =>
-        {
-            int startSec = gameDirector.GetSecondOfClockStart();
-            int endSec = gameDirector.GetSecondOfClockEnd();
-            return v.startUnixSec >= startSec && v.endUnixSec <= endSec;
-        });
+        //worksWithinRange = _dayData.FindAll((v) =>
+        //{
+        //    int startSec = gameDirector.GetSecondOfClockStart();
+        //    int endSec = gameDirector.GetSecondOfClockEnd();
+        //    return v.startUnixSec >= startSec && v.endUnixSec <= endSec;
+        //});
+        // 時計一周前から現在までのworksのみ表示
+        worksWithinRange = _dayData.FindAll(
+            v => v.startUnixSec >= gameDirector.GetSecondOfOneClockLapAgo()
+                 && v.endUnixSec <= gameDirector.GetSecondOfNow());
+
         worksWithinRange.Sort((a, b) => a.startUnixSec - b.startUnixSec);
 
         for (int i = worksWithinRange.Count - 1; i >= 0; i--)
         {
-            ProjectData p = _projects.Find(v => v.name == worksWithinRange[i].projectName);
-            CreateLogWorkPiece(worksWithinRange[i], p);
+            int id = _projects.FindIndex(v => v.name == worksWithinRange[i].projectName);
+            if (id == -1) id = 0;
+            CreateLogWorkPiece(worksWithinRange[i], _projects[id]);
             //CreateBlankPiece(_dayData.works[i].startUnixSec - 1);
         }
 
@@ -83,8 +89,9 @@ public class PieChartController : MonoBehaviour
 
         GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("LogWorks").transform);
         newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
+
         newPiePiece.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
-        newPiePiece.GetComponent<PieController>().ProjectName = _project.name;
+        newPiePiece.GetComponent<PieController>().ProjectName = _work.projectName;
         SetupPiece(_work, newPiePiece);
 
         newPiePiece.SetActive(true);
@@ -113,7 +120,7 @@ public class PieChartController : MonoBehaviour
     {
         GameObject endPiePiece = Instantiate(currentWorkPiece, this.transform.Find("LogWorks").transform);
         //endPiePiece.transform.localPosition = new Vector3(0, 0, 0);
-        endPiePiece.GetComponent<PieController>().ProjectName 
+        endPiePiece.GetComponent<PieController>().ProjectName
             = currentWorkPiece.GetComponent<PieController>().ProjectName;
         workPiePieces.Add(endPiePiece);
         currentWorkPiece.SetActive(false);

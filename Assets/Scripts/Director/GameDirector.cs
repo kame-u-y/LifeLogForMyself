@@ -27,6 +27,8 @@ public class GameDirector : MonoBehaviour
     ClockModeButtonController clockModeButtonController;
     [SerializeField]
     TodayPastPlateController todayPastPlateController;
+    [SerializeField]
+    TodayFuturePlateController todayFuturePlateController;
 
     [SerializeField]
     GameObject mainContainer;
@@ -114,18 +116,46 @@ public class GameDirector : MonoBehaviour
         workingDirector.CallForNeedUpdateCurrentWorkPiece();
         clockLabelController.ChangeClockLabels(isClock12h);
         clockModeButtonController.ChangeButtonColor(isClock12h);
-        todayPastPlateController.UpdatePastPlate();
+        todayPastPlateController.UpdatePlate();
+        todayFuturePlateController.UpdatePlate();
     }
 
+
+    /// <summary>
+    /// 今日の午前or午後の時計の始まりのunixSecを取得
+    /// </summary>
+    /// <returns></returns>
     public int GetSecondOfClockStart()
         => isClock12h && !IsAm()
         ? GetSecondOfToday(12, 0, 0)
         : GetSecondOfToday(0, 0, 0);
 
+    /// <summary>
+    /// 今日の午前or午後の時計の終わりのunixSecを取得
+    /// </summary>
+    /// <returns></returns>
     public int GetSecondOfClockEnd()
         => isClock12h && IsAm()
         ? GetSecondOfToday(11, 59, 59)
         : GetSecondOfToday(23, 59, 59);
+
+    /// <summary>
+    /// 現在のunixSecを取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetSecondOfNow()
+        => (int) DateTime.Now
+        .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+    /// <summary>
+    /// 時計一周前(24hまたは12h)のunixSecを取得
+    /// </summary>
+    /// <returns></returns>
+    public int GetSecondOfOneClockLapAgo()
+        => isClock12h
+        ? GetSecondOfAddDaysFromNow(-0.5)
+        : GetSecondOfAddDaysFromNow(-1);
+        
 
 
     private bool IsAm()
@@ -135,6 +165,9 @@ public class GameDirector : MonoBehaviour
         => (int)new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, _h, _m, _s)
             .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
+    private int GetSecondOfAddDaysFromNow(double _offset)
+        => (int)DateTime.Now.AddDays(_offset)
+        .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
     public void Quit()
     {

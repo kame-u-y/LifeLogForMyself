@@ -95,6 +95,9 @@ public class WorkData
     public int startUnixSec;
     public int endUnixSec;
     public string projectName;
+
+    public WorkData ShallowCopy()
+        => (WorkData)this.MemberwiseClone();
 }
 
 // projects

@@ -92,28 +92,58 @@ public class DatabaseDirector : MonoBehaviour
         streamWriter.Close();
     }
 
-
+    /// <summary>
+    /// 作業の終了時保存
+    /// 終了時の日付に保存される
+    /// </summary>
+    /// <param name="_work"></param>
     public void AddEndedWork(WorkData _work)
     {
-        string today = DateTime.Now.ToString("yyyyMMdd");
+        string today = DateTime.Today.ToString("yyyyMMdd");
+        int todayStart = (int)DateTime.Today.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
-
-
+        // 日付ごとの辞書が存在しないとき作成
         if (saveData.dailyDictionary == null)
         {
             saveData.dailyDictionary = new Dictionary<string, DayData>();
         }
-
+        // 今日の辞書項目が存在しないとき作成
         if (!saveData.dailyDictionary.ContainsKey(today))
         {
             saveData.dailyDictionary[today] = new DayData()
             {
                 works = new List<WorkData>()
-                //projects = new List<ProjectData>()
             };
         }
 
-        saveData.dailyDictionary[today].works.Add(_work);
+
+        if (_work.startUnixSec >= todayStart)
+        {
+            // 作業が日をまたがない場合、通常処理
+            saveData.dailyDictionary[today].works.Add(_work);
+        }
+        else
+        {
+            // 作業が日をまたぐ場合、今日と昨日に作業記録を分割
+            string yesterday = DateTime.Today.AddDays(-1).ToString("yyyyMMdd");
+
+            // 昨日の辞書項目が存在しないとき作成
+            if (!saveData.dailyDictionary.ContainsKey(yesterday))
+            {
+                saveData.dailyDictionary[yesterday] = new DayData()
+                {
+                    works = new List<WorkData>()
+                };
+            }
+
+            WorkData yesterdayWork = _work.ShallowCopy();
+            yesterdayWork.endUnixSec = todayStart - 1;
+            saveData.dailyDictionary[yesterday].works.Add(yesterdayWork);
+
+            WorkData todayWork = _work.ShallowCopy();
+            todayWork.startUnixSec = todayStart;
+            saveData.dailyDictionary[today].works.Add(todayWork);
+        }
 
         ExportSaveData();
     }
@@ -223,11 +253,54 @@ public class DatabaseDirector : MonoBehaviour
     }
 
     #region fetching_data_functions
+    /// <summary>
+    /// ログ表示モード用
+    /// </summary>
+    /// <param name="_day"></param>
+    /// <returns></returns>
     public DayData FetchDayData(string _day)
     {
         return saveData.dailyDictionary.ContainsKey(_day)
            ? saveData.dailyDictionary[_day]
            : null;
+    }
+
+    public List<WorkData> Fetch24hData()
+    {
+        List<WorkData> works = new List<WorkData>();
+
+        string today = DateTime.Today.ToString("yyyyMMdd");
+        // 今日のworksを追加
+        if (saveData.dailyDictionary.ContainsKey(today))
+        {
+            works.AddRange(saveData.dailyDictionary[today].works);
+        }
+        // 日をまたぐworkはちぎるので一昨日は相手にしなくてよい
+        string yesterday = DateTime.Today.AddDays(-1).ToString("yyyyMMdd");
+        Debug.Log(yesterday);
+        if (saveData.dailyDictionary.ContainsKey(yesterday))
+        {
+            int nowYesterday = (int) DateTime.Now.AddDays(-1).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            var now = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            Debug.Log(now - nowYesterday);
+            Debug.Log(nowYesterday);
+            
+            // 昨日のworkで終了時間が今から24時間前より後のもののみを取得
+            List<WorkData> yesterdayWorks = saveData.dailyDictionary[yesterday].works
+                .FindAll(v => v.endUnixSec > nowYesterday);
+            Debug.Log(yesterdayWorks.Count);
+            // 24時間前よりも前に開始されたものは開始を24時間前に設定
+            yesterdayWorks.ForEach(v =>
+            {
+                
+                if (v.startUnixSec < nowYesterday)
+                {
+                    v.startUnixSec = nowYesterday;
+                }
+            });
+            works.AddRange(yesterdayWorks);
+        }
+        return works;
     }
 
     public List<ProjectData> FetchProjectList()
