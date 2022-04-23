@@ -329,7 +329,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 651.9999, y: 0}
+  m_AnchoredPosition: {x: 651.99994, y: 0}
   m_SizeDelta: {x: 1304, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &12195136
@@ -5236,6 +5236,7 @@ MonoBehaviour:
   clockModeButtonController: {fileID: 589150627}
   todayPastPlateController: {fileID: 1194932636}
   todayFuturePlateController: {fileID: 31709245}
+  currentWorkMeterController: {fileID: 690280552}
   mainContainer: {fileID: 1729671764}
   settingsContainer: {fileID: 2135172535}
   buttonContainer: {fileID: 618936058}
@@ -8636,7 +8637,7 @@ GameObject:
   - component: {fileID: 817923561}
   - component: {fileID: 817923562}
   m_Layer: 0
-  m_Name: SettingsDirector
+  m_Name: GeneralSettingsDirector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15019,7 +15020,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 539246259}
   m_HandleRect: {fileID: 539246258}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

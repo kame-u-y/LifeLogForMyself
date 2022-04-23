@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class CurrentWorkMeterController : MonoBehaviour
@@ -26,7 +28,7 @@ public class CurrentWorkMeterController : MonoBehaviour
         image_.fillAmount = 1.0f;
 
         audioSource_ = this.gameObject.GetComponent<AudioSource>();
-        audioSource_.clip = audioClip;
+        //audioSource_.clip = audioClip;
     }
 
     // Start is called before the first frame update
@@ -35,12 +37,15 @@ public class CurrentWorkMeterController : MonoBehaviour
         //clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
 
         databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+
         maxMinute = databaseDirector.FetchProgressMeterMax();
         string selectedProject = databaseDirector.FetchSelectedProject();
-        Debug.Log(selectedProject);
+
         ProjectData p = databaseDirector.FindProject(selectedProject);
         UpdateColor(p.pieColor.GetWithColorFormat());
         clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
+
+        UpdateNotificationSound(databaseDirector.FetchNotificationSoundPath());
     }
 
     // Update is called once per frame
@@ -86,4 +91,51 @@ public class CurrentWorkMeterController : MonoBehaviour
     {
         image_.color = _color;
     }
+
+    /// <summary>
+    /// 通知音 設定変更用
+    /// </summary>
+    /// <param name="_path"></param>
+    public void UpdateNotificationSound(string _path)
+    {
+        StartCoroutine(UpdateAudioClip(_path));
+        
+    }
+
+    /// <summary>
+    /// 設定されたローカルの音声ファイルをaudioClipに設定する
+    /// </summary>
+    /// <param name="_path"></param>
+    /// <returns></returns>
+    private IEnumerator UpdateAudioClip(string _path)
+    {
+        string ext = Path.GetExtension(_path);
+
+        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip($"file:///{_path}", extentionDictionary[ext]))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.ConnectionError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                audioSource_.clip = DownloadHandlerAudioClip.GetContent(www);
+            }
+        }
+    }
+
+    private Dictionary<string, AudioType> extentionDictionary = new Dictionary<string, AudioType>()
+    {
+        [".mp3"] = AudioType.MPEG,
+        [".ogg"] = AudioType.OGGVORBIS,
+        [".wav"] = AudioType.WAV,
+        [".aiff"] = AudioType.AIFF,
+        [".aif"] = AudioType.AIFF,
+        [".mod"] = AudioType.MOD,
+        [".it"] = AudioType.IT,
+        [".s3m"] = AudioType.S3M,
+        [".xm"] = AudioType.XM,
+    };
 }

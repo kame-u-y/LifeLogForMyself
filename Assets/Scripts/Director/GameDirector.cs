@@ -29,6 +29,8 @@ public class GameDirector : MonoBehaviour
     TodayPastPlateController todayPastPlateController;
     [SerializeField]
     TodayFuturePlateController todayFuturePlateController;
+    [SerializeField]
+    CurrentWorkMeterController currentWorkMeterController;
 
     [SerializeField]
     GameObject mainContainer;
@@ -120,6 +122,10 @@ public class GameDirector : MonoBehaviour
         todayFuturePlateController.UpdatePlate();
     }
 
+    public void UpdateNotificationSound(string _path)
+    {
+        currentWorkMeterController.UpdateNotificationSound(_path);
+    }
 
     /// <summary>
     /// ¡“ú‚ÌŒß‘OorŒßŒã‚ÌŒv‚Ìn‚Ü‚è‚ÌunixSec‚ğæ“¾

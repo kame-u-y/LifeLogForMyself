@@ -86,7 +86,10 @@ public class WorkingDirector : MonoBehaviour
     /// <param name="_maxMinute"></param>
     public void UpdateWorkMeterMax(float _maxMinute)
     {
-        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
+
+        int elapsed = currentWork != null 
+            ? currentWork.endUnixSec - currentWork.startUnixSec
+            : 0;
         currentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
     }
 
