@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GeneralSettingsDirector : MonoBehaviour
 {
     private DatabaseDirector databaseDirector;
-    private GameDirector gameDirector;
+    private AppDirector appDirector;
 
     [SerializeField]
     private GameObject settingsTab;
@@ -72,7 +72,7 @@ public class GeneralSettingsDirector : MonoBehaviour
     void Start()
     {
         databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
 
         generalTabButton = settingsTab.transform.Find("General").GetComponent<Button>();
         projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();
@@ -275,7 +275,7 @@ public class GeneralSettingsDirector : MonoBehaviour
             twoResizingStages,
             threeResizingStages);
         //projectSettingsController.GetProjectDataList());
-        gameDirector.UpdateNotificationSound(notificationSoundPath);
+        appDirector.UpdateNotificationSound(notificationSoundPath);
 
         SetAnySettingsChanged(false);
     }

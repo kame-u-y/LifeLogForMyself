@@ -8,7 +8,7 @@ using System.Drawing;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class GameDirector : MonoBehaviour
+public class AppDirector : MonoBehaviour
 {
     [SerializeField]
     private bool debugMode = false;
@@ -23,8 +23,8 @@ public class GameDirector : MonoBehaviour
     private WorkingDirector workingDirector;
     [SerializeField]
     ClockLabelController clockLabelController;
-    [SerializeField]
-    ClockModeButtonController clockModeButtonController;
+    //[SerializeField]
+    //ClockModeButtonController clockModeButtonController;
     [SerializeField]
     TodayPastPlateController todayPastPlateController;
     [SerializeField]
@@ -117,7 +117,7 @@ public class GameDirector : MonoBehaviour
         workingDirector.CallForNeedDisplayTodayPieChart();
         workingDirector.CallForNeedUpdateCurrentWorkPiece();
         clockLabelController.ChangeClockLabels(isClock12h);
-        clockModeButtonController.ChangeButtonColor(isClock12h);
+        //clockModeButtonController.ChangeButtonColor(isClock12h);
         todayPastPlateController.UpdatePlate();
         todayFuturePlateController.UpdatePlate();
     }

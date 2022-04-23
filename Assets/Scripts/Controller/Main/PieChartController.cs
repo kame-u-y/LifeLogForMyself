@@ -12,7 +12,7 @@ public class PieChartController : MonoBehaviour
     private List<GameObject> workPiePieces;
     private GameObject currentWorkPiece;
 
-    private GameDirector gameDirector;
+    private AppDirector appDirector;
 
 
 
@@ -21,7 +21,7 @@ public class PieChartController : MonoBehaviour
         //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
         workPiePieces = new List<GameObject>();
 
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
         currentWorkPiece = this.transform.Find("CurrentWork").gameObject;
     }
 
@@ -49,14 +49,14 @@ public class PieChartController : MonoBehaviour
         List<WorkData> worksWithinRange = new List<WorkData>();
         //worksWithinRange = _dayData.FindAll((v) =>
         //{
-        //    int startSec = gameDirector.GetSecondOfClockStart();
-        //    int endSec = gameDirector.GetSecondOfClockEnd();
+        //    int startSec = appDirector.GetSecondOfClockStart();
+        //    int endSec = appDirector.GetSecondOfClockEnd();
         //    return v.startUnixSec >= startSec && v.endUnixSec <= endSec;
         //});
         // 時計一周前から現在までのworksのみ表示
         worksWithinRange = _dayData.FindAll(
-            v => v.startUnixSec >= gameDirector.GetSecondOfOneClockLapAgo()
-                 && v.endUnixSec <= gameDirector.GetSecondOfNow());
+            v => v.startUnixSec >= appDirector.GetSecondOfOneClockLapAgo()
+                 && v.endUnixSec <= appDirector.GetSecondOfNow());
 
         worksWithinRange.Sort((a, b) => a.startUnixSec - b.startUnixSec);
 
@@ -134,8 +134,8 @@ public class PieChartController : MonoBehaviour
     private void SetupPiece(WorkData _work, GameObject _obj)
     {
         // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
-        int startSec = gameDirector.GetSecondOfClockStart();
-        int endSec = gameDirector.GetSecondOfClockEnd();
+        int startSec = appDirector.GetSecondOfClockStart();
+        int endSec = appDirector.GetSecondOfClockEnd();
 
         float angle = CalculatePieRotationValue(360.0f, startSec, _work.startUnixSec, startSec, endSec);
         _obj.transform.rotation = Quaternion.Euler(0, 0, -angle);

@@ -7,11 +7,11 @@ public class CurrentNeedleController : MonoBehaviour
 {
     //[SerializeField]
     //private bool isClock12h = false;
-    GameDirector gameDirector;
+    AppDirector appDirector;
 
     private void Awake()
     {
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
     }
 
     // Start is called before the first frame update
@@ -33,7 +33,7 @@ public class CurrentNeedleController : MonoBehaviour
     void DrawCurrentNeedle()
     {
         DateTime dt = DateTime.Now;
-        float angle = (gameDirector.isClock12h ? 2 : 1) * 360.0f * (dt.Hour * 60.0f + dt.Minute) / (24.0f * 60.0f);
+        float angle = (appDirector.isClock12h ? 2 : 1) * 360.0f * (dt.Hour * 60.0f + dt.Minute) / (24.0f * 60.0f);
         this.transform.rotation = Quaternion.Euler(0, 0, -angle);
     }
 }

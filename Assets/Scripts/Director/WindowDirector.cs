@@ -49,10 +49,11 @@ public class WindowDirector : MonoBehaviour
     const int HWND_TOP = 0;
     const int HWND_TOPMOST = -1;
 
-    GameDirector gameDirector;
+    AppDirector appDirector;
     InputEventDirector inputEventDirector;
     [SerializeField]
     CanvasResizingMonitor canvasResizingMonitor;
+    ResizingDirector resizingDirector;
 
 
     private int touchCount = 0;
@@ -90,9 +91,10 @@ public class WindowDirector : MonoBehaviour
 
     private void Awake()
     {
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
         inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
         databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        resizingDirector = GameObject.Find("ResizingDirector").GetComponent<ResizingDirector>();
     }
 
     // Start is called before the first frame update
@@ -114,7 +116,7 @@ public class WindowDirector : MonoBehaviour
 
     private void DeleteWindowTitleBar()
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         const int GWL_STYLE = -16;
         int style = GetWindowLong(window, GWL_STYLE);
@@ -124,7 +126,7 @@ public class WindowDirector : MonoBehaviour
 
     private void InitializeWindowRect()
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         RECT windowRect;
         GetWindowRect(window, out windowRect);
@@ -176,7 +178,7 @@ public class WindowDirector : MonoBehaviour
         }
         else if (!isDragged && touchCount == 1)
         {
-            gameDirector.ChangeClockMode();
+            appDirector.ChangeClockMode();
         }
         touchCount = 0;
         isDragged = false;
@@ -184,7 +186,7 @@ public class WindowDirector : MonoBehaviour
 
     private void ResizeScreen()
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         Debug.Log("Double Clicked!!");
 
@@ -219,9 +221,11 @@ public class WindowDirector : MonoBehaviour
 
         SetWindowPos(window, HWND_TOPMOST, newPosX, newPosY, resizeSize, resizeSize, 0);
 
-        canvasResizingMonitor.UpdatePSize(resizeSize, resizeSize);
-        Debug.Log(canvasResizingMonitor.GetPScreenWidth());
-        canvasResizingMonitor.SwitchClockImage();
+        //canvasResizingMonitor.UpdatePSize(resizeSize, resizeSize);
+        //Debug.Log(canvasResizingMonitor.GetPScreenWidth());
+        //canvasResizingMonitor.SwitchClockImage();
+        resizingDirector.UpdatePValues(resizeSize, resizeSize);
+        resizingDirector.SwitchClockImage();
 
         Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.localPosition);
         Debug.Log("LocalPosition (ResizeScreen):" + playEndButton.transform.position);
@@ -233,7 +237,7 @@ public class WindowDirector : MonoBehaviour
     /// <param name="_eventData"></param>
     public void OnTargetBeginDrag(BaseEventData _eventData)
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         Debug.Log("begin drag");
         Vector2 mousePos = inputEventDirector.GetMousePosition();
@@ -247,7 +251,7 @@ public class WindowDirector : MonoBehaviour
 
     public void OnTargetDrag(BaseEventData _eventData)
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         //Debug.Log("drag");
         MoveWindow();
@@ -255,14 +259,14 @@ public class WindowDirector : MonoBehaviour
 
     public void OnTargetEndDrag(BaseEventData _eventData)
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         Debug.Log("end drag");
     }
 
     private void MoveWindow()
     {
-        if (gameDirector.DebugMode) return;
+        if (appDirector.DebugMode) return;
 
         var window = FindWindow(null, windowName);
         POINT mousePoint;
@@ -272,8 +276,10 @@ public class WindowDirector : MonoBehaviour
         GetWindowRect(window, out windowRect);
         Debug.Log("windowRect: (" + windowRect.left + ", " + windowRect.top + ")");
 
-        int width = canvasResizingMonitor.GetPScreenWidth();
-        int height = canvasResizingMonitor.GetPScreenHeight();
+        //int width = canvasResizingMonitor.GetPScreenWidth();
+        //int height = canvasResizingMonitor.GetPScreenHeight();
+        int width = resizingDirector.PScreenWidth;
+        int height = resizingDirector.PScreenHeight;
         SetWindowPos(window, HWND_TOPMOST, mousePoint.x - dragStartX, mousePoint.y - dragStartY, width, height, 0);
 
         // ウィンドウサイズが消滅する

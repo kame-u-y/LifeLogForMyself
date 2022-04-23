@@ -14,7 +14,7 @@ public class InputEventDirector : MonoBehaviour
 
     #region director
     WorkingDirector workingDirector;
-    GameDirector gameDirector;
+    AppDirector appDirector;
     WindowDirector windowDirector;
     GeneralSettingsDirector generalSettingsDirector;
     #endregion
@@ -22,8 +22,8 @@ public class InputEventDirector : MonoBehaviour
     #region main
     [SerializeField]
     Button playEndButton;
-    [SerializeField]
-    Button toggleClockModeButton;
+    //[SerializeField]
+    //Button toggleClockModeButton;
     [SerializeField]
     Dropdown projectDropdown;
     [SerializeField]
@@ -95,7 +95,7 @@ public class InputEventDirector : MonoBehaviour
 
         #region load director
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
         windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
         generalSettingsDirector = GameObject.Find("GeneralSettingsDirector").GetComponent<GeneralSettingsDirector>();
         #endregion
@@ -160,7 +160,7 @@ public class InputEventDirector : MonoBehaviour
     {
         #region main
         playEndButton.onClick.AddListener(workingDirector.ToggleWork);
-        toggleClockModeButton.onClick.AddListener(gameDirector.ChangeClockMode);
+        //toggleClockModeButton.onClick.AddListener(appDirector.ChangeClockMode);
         projectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
         mainBackground.onClick.AddListener(windowDirector.OnResizingButtonClick);
@@ -180,16 +180,16 @@ public class InputEventDirector : MonoBehaviour
              () =>
              {
                  generalSettingsDirector.RevertChanges();
-                 gameDirector.SwitchGameMode(GameDirector.GameMode.Main);
+                 appDirector.SwitchGameMode(AppDirector.GameMode.Main);
                  popupController.ClosePopup();
              });
         settingsButton.onClick.AddListener(
              () =>
              {
-                 gameDirector.SwitchGameMode(GameDirector.GameMode.Settings);
+                 appDirector.SwitchGameMode(AppDirector.GameMode.Settings);
                  popupController.ClosePopup();
              });
-        quitButton.onClick.AddListener(gameDirector.Quit);
+        quitButton.onClick.AddListener(appDirector.Quit);
         // color picker
         colorPicker.onValueChanged.AddListener(
             _color =>

@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class TodayPastPlateController : MonoBehaviour
 {
-    GameDirector gameDirector;
+    AppDirector appDirector;
     private float time;
 
     private void Awake()
     {
-        gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
         
     }
 
@@ -35,11 +35,11 @@ public class TodayPastPlateController : MonoBehaviour
 
     public void UpdatePlate()
     {
-        int startSec = gameDirector.GetSecondOfClockStart();
-        //int startSec = gameDirector.GetSecondOfNow();
-        int endSec = gameDirector.GetSecondOfClockEnd();
+        int startSec = appDirector.GetSecondOfClockStart();
+        //int startSec = appDirector.GetSecondOfNow();
+        int endSec = appDirector.GetSecondOfClockEnd();
         int nowSec = GetNowSecond();
-        //int clockStartSec = gameDirector.GetSecondOfClockStart();
+        //int clockStartSec = appDirector.GetSecondOfClockStart();
 
         var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
         //float angle = CalculatePieRotationValue(360.0f, clockStartSec, startSec, clockStartSec, endSec);

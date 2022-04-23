@@ -6,12 +6,12 @@ using UnityEngine.UI;
 public class ClockModeButtonController : MonoBehaviour
 {
 
-    //private GameDirector gameDirector;
+    //private AppDirector appDirector;
 
     // Start is called before the first frame update
     void Start()
     {
-        //gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();    
+        //appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();    
     }
 
     // Update is called once per frame
