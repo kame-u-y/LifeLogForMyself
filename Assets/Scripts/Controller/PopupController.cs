@@ -6,21 +6,33 @@ using UnityEngine.InputSystem;
 
 public class PopupController : MonoBehaviour
 {
+    /// <summary>
+    /// Project Settingsでポップアップを利用した設定変更に使用
+    /// ColorPicker, Deleteに利用
+    /// </summary>
     private int selectedProjectId = -1;
     public int SelectedProjectId { get => selectedProjectId; }
 
     [SerializeField]
-    ProjectSettingsController projectSettingsController;
+    private ProjectSettingsController projectSettingsController;
 
-    GameObject background;
-    GameObject mainMenu;
-    GameObject projectColorPicker;
-    GameObject projectDelete;
+    /// <summary>
+    /// UI表示/非表示用
+    /// </summary>
+    private GameObject background;
+    private GameObject mainMenu;
+    private GameObject projectColorPicker;
+    private GameObject projectDelete;
 
-    ColorPicker colorPicker;
+    /// <summary>
+    /// カラーピッカーアセットを使用
+    /// </summary>
+    private ColorPicker colorPicker;
 
-    //public int GetSelectedProjectId() => selectedProjectId;
-
+    /// <summary>
+    /// ポップアップの種類を定義
+    /// 指定された種類によって表示を変更するため
+    /// </summary>
     public enum PopupMode
     {
         MainMenu,
@@ -39,7 +51,6 @@ public class PopupController : MonoBehaviour
         colorPicker = this.transform.Find("Popup/ProjectColorPicker/Picker 2.0").GetComponent<ColorPicker>();
 
         this.gameObject.SetActive(false);
-
     }
 
     // Update is called once per frame
@@ -48,6 +59,11 @@ public class PopupController : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// ポップアップの表示処理
+    /// PopupModeにより表示を変更
+    /// </summary>
+    /// <param name="_mode"></param>
     public void OpenPopup(PopupMode _mode)
     {
 
@@ -79,6 +95,11 @@ public class PopupController : MonoBehaviour
         this.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// ProjectSettingsのカラーピッカー用のポップアップを表示する
+    /// </summary>
+    /// <param name="_mode"></param>
+    /// <param name="_projectId"></param>
     public void OpenProjectColorPickerPopup(PopupMode _mode, int _projectId)
     {
         selectedProjectId = _projectId;
@@ -88,12 +109,11 @@ public class PopupController : MonoBehaviour
         colorPicker.CurrentColor = color;
     }
 
-    //public void OpenProjectDeletePopup(PopupMode _mode, int _projectId)
-    //{
-    //    selectedProjectId = _projectId;
-    //    OpenPopup(_mode);
-    //}
-
+    /// <summary>
+    /// ProjectSettingsのプロジェクト削除用のポップアップを表示する
+    /// </summary>
+    /// <param name="_mode"></param>
+    /// <param name="_projectId"></param>
     public void OpenProjectDeletePopup(PopupMode _mode, int _projectId)
     {
         selectedProjectId = _projectId;

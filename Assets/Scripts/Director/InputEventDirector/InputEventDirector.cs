@@ -16,7 +16,7 @@ public class InputEventDirector : MonoBehaviour
     WorkingDirector workingDirector;
     GameDirector gameDirector;
     WindowDirector windowDirector;
-    SettingsDirector settingsDirector;
+    GeneralSettingsDirector generalSettingsDirector;
     #endregion
 
     #region main
@@ -97,7 +97,7 @@ public class InputEventDirector : MonoBehaviour
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         gameDirector = GameObject.Find("GameDirector").GetComponent<GameDirector>();
         windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
-        settingsDirector = GameObject.Find("SettingsDirector").GetComponent<SettingsDirector>();
+        generalSettingsDirector = GameObject.Find("GeneralSettingsDirector").GetComponent<GeneralSettingsDirector>();
         #endregion
 
         #region popup
@@ -179,7 +179,7 @@ public class InputEventDirector : MonoBehaviour
         mainButton.onClick.AddListener(
              () =>
              {
-                 settingsDirector.RevertChanges();
+                 generalSettingsDirector.RevertChanges();
                  gameDirector.SwitchGameMode(GameDirector.GameMode.Main);
                  popupController.ClosePopup();
              });
@@ -207,60 +207,45 @@ public class InputEventDirector : MonoBehaviour
                     popupController.SelectedProjectId);
                 popupController.ClosePopup();
             });
-        //// add
-        //newProjectName.onEndEdit.AddListener(
-        //    _v => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
-        //newProjectColorPicker.onClick.AddListener(
-        //    () => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
-        //newProjectNotificationMode.onValueChanged.AddListener(
-        //    _v => Debug.LogWarning("ŽÀ‘•‚µ‚ë"));
-        //additionCancelButton.onClick.AddListener(popupController.ClosePopup);
-        //additionApplyButton.onClick.AddListener(
-        //    () => 
-        //    {
-        //        Debug.LogWarning("ŽÀ‘•‚µ‚ë"); 
-        //        // applyˆ—
-        //        popupController.ClosePopup();
-        //    });
         #endregion
 
         #region settings
         generalTabButton.onClick.AddListener(
-            () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.General));
+            () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.General));
         projectsTabButton.onClick.AddListener(
-            () => settingsDirector.SwitchSettingsMode(SettingsDirector.SettingsMode.Projects));
+            () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.Projects));
         // general settings
         progressMeterMax.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateProgressBarMax(float.Parse(_v)));
+            _v => generalSettingsDirector.UpdateProgressBarMax(float.Parse(_v)));
         notificationSoundPath.onClick.AddListener(
-            () => settingsDirector.UpdateNotificationSoundPath());
+            () => generalSettingsDirector.UpdateNotificationSoundPath());
         Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();
         foreach (var toggle in toggles)
         {
             toggle.onValueChanged.AddListener(
-                _v => settingsDirector.UpdateResizingMode(_v));
+                _v => generalSettingsDirector.UpdateResizingMode(_v));
         }
 
         twoResizingSmall.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateTwoSmall(int.Parse(_v)));
+            _v => generalSettingsDirector.UpdateTwoSmall(int.Parse(_v)));
         twoResizingMedium.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateTwoMedium(int.Parse(_v)));
+            _v => generalSettingsDirector.UpdateTwoMedium(int.Parse(_v)));
 
         threeResizingSmall.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateThreeSmall(int.Parse(_v)));
+            _v => generalSettingsDirector.UpdateThreeSmall(int.Parse(_v)));
         threeResizingMedium.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateThreeMedium(int.Parse(_v)));
+            _v => generalSettingsDirector.UpdateThreeMedium(int.Parse(_v)));
         threeResizingLarge.onValueChanged.AddListener(
-            _v => settingsDirector.UpdateThreeLarge(int.Parse(_v)));
+            _v => generalSettingsDirector.UpdateThreeLarge(int.Parse(_v)));
 
         // projects settings
         projectAdditionButton.onClick.AddListener(
             () => projectSettingsController.AddNewProject());
         // apply
         generalSettingsRevert.onClick.AddListener(
-            () => settingsDirector.RevertChanges());
+            () => generalSettingsDirector.RevertChanges());
         generalSettingsApply.onClick.AddListener(
-            () => settingsDirector.ApplySettings());
+            () => generalSettingsDirector.ApplySettings());
         projectSettingsRevert.onClick.AddListener(
             () => projectSettingsController.RevertProjectChanges());
         projectSettingsApply.onClick.AddListener(

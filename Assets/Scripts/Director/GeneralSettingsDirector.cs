@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsDirector : MonoBehaviour
+public class GeneralSettingsDirector : MonoBehaviour
 {
     private DatabaseDirector databaseDirector;
 
@@ -82,7 +82,7 @@ public class SettingsDirector : MonoBehaviour
         threeResizingStages = new ThreeResizingData();
 
         InitializeGeneralSettings();
-        projectSettingsController.DisplayItems(databaseDirector.FetchProjectList());
+        projectSettingsController.InitializeItems(databaseDirector.FetchProjectList());
 
         
         SetAnySettingsChanged(false);

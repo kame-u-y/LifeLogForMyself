@@ -73,7 +73,7 @@ public class ProjectSettingsController : MonoBehaviour
     /// Project Settingsの表示初期化
     /// </summary>
     /// <param name="_project"></param>
-    public void DisplayItems(List<ProjectData> _projects)
+    public void InitializeItems(List<ProjectData> _projects)
     {
         before = new List<ProjectData>(_projects);
         ResetItems();
@@ -225,9 +225,7 @@ public class ProjectSettingsController : MonoBehaviour
     /// カラーピッカーのポップアップ表示・変更適用
     /// </summary>
     public void UpdateProjectColor(int _id, Color _c)
-    {
-        Debug.Log(projectItems.Count);
-
+    { 
         projectItems[_id].gameObject_.transform
             .Find("Values/ProjectColor").GetComponent<Image>().color = _c;
         projectItems[_id].projectData.pieColor = ColorData.ConvertColorToColorData(_c);
