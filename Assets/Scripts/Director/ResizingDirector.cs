@@ -20,35 +20,7 @@ public class ResizingDirector : MonoBehaviour
 
     private AppDirector appDirector;
     private WorkingDirector workingDirector;
-
-    [SerializeField]
-    private Image frame;
-    [SerializeField]
-    private Image todayFuturePlate;
-    [SerializeField]
-    private Image todayPastPlate;
-    [SerializeField]
-    private Image workMeterPlate;
-
-    [SerializeField]
-    private GameObject logPieContainer;
-    [SerializeField]
-    private GameObject currentPie;
-    [SerializeField]
-    private Image currentWorkMeter;
-
-    [SerializeField]
-    private Image cover;
-    [SerializeField]
-    private Image playEndButton;
-    [SerializeField]
-    private Image clockThorn;
-    [SerializeField]
-    private Image clockNumber;
-    [SerializeField]
-    private GameObject workMeterMax;
-    [SerializeField]
-    private TextMeshProUGUI currentCountText;
+    private ClockDirector clockDirector;
 
     private void Awake()
     {
@@ -60,6 +32,8 @@ public class ResizingDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(ClockDirector.Instance);
+        clockDirector = ClockDirector.Instance;
 
         InitializePValues();
         SwitchClockImage();
@@ -98,6 +72,8 @@ public class ResizingDirector : MonoBehaviour
 
     /// <summary>
     /// ウィンドウの通常状態と縮小状態とで時計の見た目を変更する
+    /// 閾値より小さくor大きくなった瞬間に実行
+    /// ロードするspriteの参照先を変更することで切り替え
     /// </summary>
     public void SwitchClockImage()
     {
@@ -108,59 +84,88 @@ public class ResizingDirector : MonoBehaviour
         if (IsStateSwitchingToSmall())
         {
             spriteMode = "Resized_Materials";
-            clockNumber.gameObject.SetActive(false);
-            workMeterMax.SetActive(false);
-            currentCountText.fontSize = 150;
+            clockDirector.ClockNumber.gameObject.SetActive(false);
+            clockDirector.MeterMaxText.gameObject.SetActive(false);
+            clockDirector.CurrentCountText.fontSize = 150;
         }
         else if (IsStateSwitchingToNormal())
         {
             spriteMode = "Materials";
-            clockNumber.gameObject.SetActive(true);
-            workMeterMax.SetActive(true);
-            currentCountText.fontSize = 100;
+            clockDirector.ClockNumber.gameObject.SetActive(true);
+            clockDirector.MeterMaxText.gameObject.SetActive(true);
+            clockDirector.CurrentCountText.fontSize = 100;
         }
         else
         {
-            //UpdatePSize();
             return;
         }
 
         buttonMode = workingDirector.isWorking ? "End" : "Play";
         clockMode = appDirector.isClock12h ? "12" : "24";
 
-        frame.sprite = LoadSprite($"{spriteMode}/Base/Frame");
-        todayFuturePlate.sprite = LoadSprite($"{spriteMode}/Base/Plate");
-        todayPastPlate.sprite = LoadSprite($"{spriteMode}/Base/Plate");
-        for (int i = 0; i < logPieContainer.transform.childCount; i++)
+        // spriteの変更処理
+        clockDirector.ClockFrame.sprite 
+            = LoadSprite($"{spriteMode}/Base/Frame");
+        clockDirector.TodayFuturePlate.sprite 
+            = LoadSprite($"{spriteMode}/Base/Plate");
+        clockDirector.TodayPastPlate.sprite 
+            = LoadSprite($"{spriteMode}/Base/Plate");
+        for (int i = 0; i < clockDirector.LogPieContainer.transform.childCount; i++)
         {
-            logPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
+            clockDirector.LogPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
                 = LoadSprite($"{spriteMode}/Base/Plate");
         }
-        currentPie.GetComponent<Image>().sprite = LoadSprite($"{spriteMode}/Base/Plate");
-        workMeterPlate.sprite = LoadSprite($"{spriteMode}/Base/WorkMeterPlate");
+        clockDirector.CurrentPie.GetComponent<Image>().sprite 
+            = LoadSprite($"{spriteMode}/Base/Plate");
+        clockDirector.WorkMeterPlate.sprite 
+            = LoadSprite($"{spriteMode}/Base/WorkMeterPlate");
 
-        currentWorkMeter.sprite = LoadSprite($"{spriteMode}/Pie/CurrentWorkMeter");
-        cover.sprite = LoadSprite($"{spriteMode}/Cover/Cover");
+        clockDirector.CurrentWorkMeter.sprite 
+            = LoadSprite($"{spriteMode}/Pie/CurrentWorkMeter");
+        clockDirector.MeterCover.sprite 
+            = LoadSprite($"{spriteMode}/Cover/Cover");
+        clockDirector.PlayEndButton.sprite 
+            = LoadSprite($"{spriteMode}/Cover/{buttonMode}Button");
 
-        playEndButton.sprite = LoadSprite($"{spriteMode}/Cover/{buttonMode}Button");
-
-        clockThorn.sprite = LoadSprite($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
-        clockNumber.sprite = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
-
+        clockDirector.ClockThorn.sprite 
+            = LoadSprite($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
+        clockDirector.ClockNumber.sprite 
+            = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
+        
         UpdatePValues(Screen.width, Screen.height);
     }
 
+    /// <summary>
+    /// ウィンドウのサイズが縦横小さいほう優先で、
+    /// 閾値より小さくなった瞬間にtrue
+    /// </summary>
+    /// <returns></returns>
     private bool IsStateSwitchingToSmall()
         => (IsMoreThanThreshold(pScreenWidth) && !IsMoreThanThreshold(Screen.width))
         || (IsMoreThanThreshold(pScreenHeight) && !IsMoreThanThreshold(Screen.height));
 
+    /// <summary>
+    /// ウィンドウのサイズが縦横小さいほう優先で、
+    /// 閾値より大きくなった瞬間にtrue
+    /// </summary>
+    /// <returns></returns>
     private bool IsStateSwitchingToNormal()
         => (!IsMoreThanThreshold(pScreenWidth) && IsMoreThanThreshold(Screen.width))
         || (!IsMoreThanThreshold(pScreenHeight) && IsMoreThanThreshold(Screen.height));
 
+    /// <summary>
+    /// 与えられた値がスクリーンの閾値より大きい場合true
+    /// </summary>
+    /// <param name="_i"></param>
+    /// <returns></returns>
     private bool IsMoreThanThreshold(int _i)
         => _i > ProjectConstants.ScreenThreshold;
 
+    /// <summary>
+    /// spriteロード用
+    /// </summary>
+    /// <param name="_s"></param>
+    /// <returns></returns>
     private Sprite LoadSprite(string _s)
         => Resources.Load<Sprite>(_s);
 }

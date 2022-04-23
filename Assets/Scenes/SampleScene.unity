@@ -123,6 +123,49 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &2055445
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2055446}
+  - component: {fileID: 2055447}
+  m_Layer: 0
+  m_Name: ResizingDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2055446
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055445}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 534116132}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2055447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2055445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03342307497e1454d969d610672e1bdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8997229
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,7 +372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1304, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &12195136
@@ -1114,7 +1157,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 44115270}
   m_HandleRect: {fileID: 44115269}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5135,6 +5178,8 @@ Transform:
   - {fileID: 963588283}
   - {fileID: 346352989}
   - {fileID: 817923561}
+  - {fileID: 1043331966}
+  - {fileID: 2055446}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5153,7 +5198,6 @@ MonoBehaviour:
   debugMode: 1
   isClock12h: 1
   clockLabelController: {fileID: 196132105}
-  clockModeButtonController: {fileID: 0}
   todayPastPlateController: {fileID: 1194932636}
   todayFuturePlateController: {fileID: 31709245}
   currentWorkMeterController: {fileID: 690280552}
@@ -11063,6 +11107,62 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1043331965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1043331966}
+  - component: {fileID: 1043331967}
+  m_Layer: 0
+  m_Name: ClockDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1043331966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043331965}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 534116132}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1043331967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1043331965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a9792ebd4927a41aee656137f06c7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clockFrame: {fileID: 1087937986}
+  todayFuturePlate: {fileID: 31709246}
+  todayPastPlate: {fileID: 1194932634}
+  workMeterPlate: {fileID: 289684462}
+  logPieContainer: {fileID: 326328117}
+  currentPie: {fileID: 444346564}
+  currentWorkMeter: {fileID: 690280554}
+  meterCover: {fileID: 269122038}
+  playEndButton: {fileID: 995924023}
+  clockThorn: {fileID: 889543467}
+  clockNumber: {fileID: 1980538466}
+  meterMaxText: {fileID: 84042447}
+  currentCountText: {fileID: 1858275130}
 --- !u!1 &1058411370
 GameObject:
   m_ObjectHideFlags: 0
@@ -12521,19 +12621,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ec698b96b7471d4587c482a51d5185f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  frame: {fileID: 1087937986}
-  todayFuturePlate: {fileID: 1308886536}
-  todayPastPlate: {fileID: 1194932634}
-  workMeterPlate: {fileID: 289684462}
-  logPieContainer: {fileID: 326328117}
-  currentPie: {fileID: 444346561}
-  currentWorkMeter: {fileID: 690280554}
-  cover: {fileID: 269122038}
-  playEndButton: {fileID: 995924023}
-  clockThorn: {fileID: 889543467}
-  clockNumber: {fileID: 1980538466}
-  workMeterMax: {fileID: 84042445}
-  currentCountText: {fileID: 1858275130}
 --- !u!1 &1263423390
 GameObject:
   m_ObjectHideFlags: 0
@@ -16747,7 +16834,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playEndButton: {fileID: 995924022}
-  toggleClockModeButton: {fileID: 0}
   projectDropdown: {fileID: 1315218191}
   mainBackground: {fileID: 1970400796}
   popupController: {fileID: 1606645045}
