@@ -54,7 +54,7 @@ public class AppDirector : MonoBehaviour
 
     private void Awake()
     {
-        if (instance = null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -65,12 +65,13 @@ public class AppDirector : MonoBehaviour
             return;
         }
 
-        workingDirector = WorkingDirector.Instance;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        workingDirector = WorkingDirector.Instance;
+
         UpdateClockElements();
 
         mainButton = buttonContainer.transform.Find("MainButton").GetComponent<Button>();

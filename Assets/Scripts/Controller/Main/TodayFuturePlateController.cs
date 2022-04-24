@@ -11,13 +11,13 @@ public class TodayFuturePlateController : MonoBehaviour
 
     private void Awake()
     {
-        appDirector = AppDirector.Instance;
         
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        appDirector = AppDirector.Instance;
     }
 
     // Update is called once per frame
