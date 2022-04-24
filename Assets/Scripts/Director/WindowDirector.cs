@@ -42,12 +42,12 @@ public class WindowDirector : MonoBehaviour
 
 
     IntPtr window;
-    string windowName = "LifeLogForMyself";
-    const int WS_DLGFRAME = 0x00400000;
-    const int SM_CXSCREEN = 0;
-    const int SM_CYSCREEN = 1;
-    const int HWND_TOP = 0;
-    const int HWND_TOPMOST = -1;
+    private string windowName = "LifeLogForMyself";
+    private const int WS_DLGFRAME = 0x00400000;
+    private const int SM_CXSCREEN = 0;
+    private const int SM_CYSCREEN = 1;
+    private const int HWND_TOP = 0;
+    private const int HWND_TOPMOST = -1;
 
     AppDirector appDirector;
     InputEventDirector inputEventDirector;
@@ -89,17 +89,31 @@ public class WindowDirector : MonoBehaviour
         set => largeScreen = value;
     }
 
+    private static WindowDirector instance;
+    public static WindowDirector Instance => instance;
+
     private void Awake()
     {
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
-        inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
-        resizingDirector = GameObject.Find("ResizingDirector").GetComponent<ResizingDirector>();
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        inputEventDirector = InputEventDirector.Instance;
+        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        resizingDirector = ResizingDirector.Instance;
+
         window = FindWindow(null, windowName);
         DeleteWindowTitleBar();
 

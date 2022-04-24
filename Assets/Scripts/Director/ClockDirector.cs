@@ -65,7 +65,6 @@ public class ClockDirector : MonoBehaviour
     public static ClockDirector Instance => instance;
 
 
-
     //private ClockDirector()
     //{
     //    Debug.Log("ê∂ê¨Ç≥ÇÍÇΩÇº");
@@ -73,7 +72,15 @@ public class ClockDirector : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update

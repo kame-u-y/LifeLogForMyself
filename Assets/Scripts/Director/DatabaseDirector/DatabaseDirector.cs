@@ -21,7 +21,7 @@ public class DatabaseDirector : MonoBehaviour
     {
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
-        windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
+        windowDirector = WindowDirector.Instance;
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
     }
 

@@ -56,7 +56,7 @@ public class ProjectSettingsController : MonoBehaviour
     void Start()
     {
         databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
-        inputEventDirector = GameObject.Find("InputEventDirector").GetComponent<InputEventDirector>();
+        inputEventDirector = InputEventDirector.Instance;
 
         projectOrderDictionary = new Dictionary<int, int>();
 

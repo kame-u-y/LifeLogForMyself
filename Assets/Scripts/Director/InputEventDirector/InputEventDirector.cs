@@ -22,8 +22,6 @@ public class InputEventDirector : MonoBehaviour
     #region main
     [SerializeField]
     Button playEndButton;
-    //[SerializeField]
-    //Button toggleClockModeButton;
     [SerializeField]
     Dropdown projectDropdown;
     [SerializeField]
@@ -33,22 +31,6 @@ public class InputEventDirector : MonoBehaviour
     #region popup
     [SerializeField]
     PopupController popupController;
-    Button popupBackground;
-    // main menu
-    Button mainButton;
-    Button settingsButton;
-    Button quitButton;
-    // color picker
-    ColorPicker colorPicker;
-    // delete
-    Button deleteCancelButton;
-    Button deleteApplyButton;
-    // addition
-    //InputField newProjectName;
-    //Button newProjectColorPicker;
-    //Dropdown newProjectNotificationMode;
-    //Button additionCancelButton;
-    //Button additionApplyButton;
     #endregion
 
     #region settings
@@ -56,11 +38,8 @@ public class InputEventDirector : MonoBehaviour
     Button settingsBackground;
     [SerializeField]
     GameObject settingsTab;
-    Button generalTabButton;
-    Button projectsTabButton;
     [SerializeField]
     GameObject generalSettings;
-    InputField progressMeterMax;
 
     [SerializeField]
     Button notificationSoundPath;
@@ -69,89 +48,39 @@ public class InputEventDirector : MonoBehaviour
     [SerializeField]
     GameObject resizingValueForms;
 
-    InputField twoResizingSmall;
-    InputField twoResizingMedium;
-    InputField threeResizingSmall;
-    InputField threeResizingMedium;
-    InputField threeResizingLarge;
 
     [SerializeField]
     ProjectSettingsController projectSettingsController;
     [SerializeField]
     Button projectAdditionButton;
-    // apply
-    Button generalSettingsRevert;
-    Button generalSettingsApply;
     [SerializeField]
     GameObject projectSettings;
-    Button projectSettingsRevert;
-    Button projectSettingsApply;
     #endregion
+
+    private static InputEventDirector instance;
+    public static InputEventDirector Instance => instance;
 
     private void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         myInputActions = new MyInputActions();
         InitializeActionMap(myInputActions.UI);
 
         #region load director
         workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
-        windowDirector = GameObject.Find("WindowDirector").GetComponent<WindowDirector>();
+        windowDirector = WindowDirector.Instance;
         generalSettingsDirector = GameObject.Find("GeneralSettingsDirector").GetComponent<GeneralSettingsDirector>();
-        #endregion
-
-        #region popup
-        popupBackground = popupController.transform
-            .Find("PopupBackground").GetComponent<Button>();
-        // main menu
-        mainButton = popupController.transform
-            .Find("Popup/MainMenu/MainButton").GetComponent<Button>();
-        settingsButton = popupController.transform
-            .Find("Popup/MainMenu/SettingsButton").GetComponent<Button>();
-        quitButton = popupController.transform
-            .Find("Popup/MainMenu/QuitButton").GetComponent<Button>();
-        // color picker
-        colorPicker = popupController.transform
-            .Find("Popup/ProjectColorPicker/Picker 2.0").GetComponent<ColorPicker>();
-        // delete
-        deleteCancelButton = popupController.transform
-            .Find("Popup/ProjectDelete/Buttons/CancelButton").GetComponent<Button>();
-        deleteApplyButton = popupController.transform
-            .Find("Popup/ProjectDelete/Buttons/DeleteButton").GetComponent<Button>();
-        //// addition
-        //newProjectName = popupController.transform
-        //    .Find("Popup/ProjectAddition/ProjectDataForms/ProjectName/ItemValue/InputField").GetComponent<InputField>();
-        //newProjectColorPicker = popupController.transform
-        //    .Find("Popup/ProjectAddition/ProjectDataForms/ProjectColor/ItemValue/Button").GetComponent<Button>();
-        //newProjectNotificationMode = popupController.transform
-        //    .Find("Popup/ProjectAddition/ProjectDataForms/NotificationMode/ItemValue/DropDown").GetComponent<Dropdown>();
-
-        #endregion
-
-        #region settings
-        generalTabButton = settingsTab.transform.Find("General").GetComponent<Button>();
-        projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();
-        progressMeterMax = generalSettings.transform
-            .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
-
-        string topScope = "ItemValue";
-        string bottomScope = "ItemValue/InputField";
-        Func<string, InputField> access = (string s)
-            => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
-        twoResizingSmall = access("TwoStages/Small");
-        twoResizingMedium = access("TwoStages/Medium");
-        threeResizingSmall = access("ThreeStages/Small");
-        threeResizingMedium = access("ThreeStages/Medium");
-        threeResizingLarge = access("ThreeStages/Large");
-
-        generalSettingsRevert = generalSettings.transform
-            .Find("DecisionButton/Revert").GetComponent<Button>();
-        generalSettingsApply = generalSettings.transform
-            .Find("DecisionButton/Apply").GetComponent<Button>();
-        projectSettingsRevert = projectSettings.transform
-           .Find("DecisionButton/Revert").GetComponent<Button>();
-        projectSettingsApply = projectSettings.transform
-            .Find("DecisionButton/Apply").GetComponent<Button>();
         #endregion
     }
 
@@ -160,7 +89,6 @@ public class InputEventDirector : MonoBehaviour
     {
         #region main
         playEndButton.onClick.AddListener(workingDirector.ToggleWork);
-        //toggleClockModeButton.onClick.AddListener(appDirector.ChangeClockMode);
         projectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
         mainBackground.onClick.AddListener(windowDirector.OnResizingButtonClick);
@@ -174,24 +102,34 @@ public class InputEventDirector : MonoBehaviour
         #region popup
         myInputActions.UI.RightClick.performed +=
             (_context) => popupController.OpenPopup(PopupController.PopupMode.MainMenu);
-        popupBackground.onClick.AddListener(popupController.ClosePopup);
+
+        popupController.transform.Find("PopupBackground")
+            .GetComponent<Button>().onClick.AddListener(popupController.ClosePopup);
+
         // main menu
-        mainButton.onClick.AddListener(
+        popupController.transform.Find("Popup/MainMenu/MainButton")
+            .GetComponent<Button>().onClick.AddListener(
              () =>
              {
                  generalSettingsDirector.RevertChanges();
                  appDirector.SwitchGameMode(AppDirector.GameMode.Main);
                  popupController.ClosePopup();
              });
-        settingsButton.onClick.AddListener(
+
+        popupController.transform.Find("Popup/MainMenu/SettingsButton")
+            .GetComponent<Button>().onClick.AddListener(
              () =>
              {
                  appDirector.SwitchGameMode(AppDirector.GameMode.Settings);
                  popupController.ClosePopup();
              });
-        quitButton.onClick.AddListener(appDirector.Quit);
+
+        popupController.transform.Find("Popup/MainMenu/QuitButton")
+            .GetComponent<Button>().onClick.AddListener(appDirector.Quit);
+
         // color picker
-        colorPicker.onValueChanged.AddListener(
+        popupController.transform.Find("Popup/ProjectColorPicker/Picker 2.0")
+            .GetComponent<ColorPicker>().onValueChanged.AddListener(
             _color =>
             {
                 projectSettingsController.UpdateProjectColor(
@@ -199,8 +137,11 @@ public class InputEventDirector : MonoBehaviour
                     _color);
             });
         // delete
-        deleteCancelButton.onClick.AddListener(popupController.ClosePopup);
-        deleteApplyButton.onClick.AddListener(
+        popupController.transform.Find("Popup/ProjectDelete/Buttons/CancelButton")
+            .GetComponent<Button>().onClick.AddListener(popupController.ClosePopup);
+
+        popupController.transform.Find("Popup/ProjectDelete/Buttons/DeleteButton")
+            .GetComponent<Button>().onClick.AddListener(
             () =>
             {
                 projectSettingsController.ApplyProjectDelete(
@@ -210,15 +151,20 @@ public class InputEventDirector : MonoBehaviour
         #endregion
 
         #region settings
-        generalTabButton.onClick.AddListener(
+        settingsTab.transform.Find("General").GetComponent<Button>().onClick.AddListener(
             () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.General));
-        projectsTabButton.onClick.AddListener(
+
+        settingsTab.transform.Find("Projects").GetComponent<Button>().onClick.AddListener(
             () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.Projects));
+
         // general settings
-        progressMeterMax.onValueChanged.AddListener(
+        generalSettings.transform.Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>()
+            .onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateProgressBarMax(float.Parse(_v)));
+
         notificationSoundPath.onClick.AddListener(
             () => generalSettingsDirector.UpdateNotificationSoundPath());
+
         Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();
         foreach (var toggle in toggles)
         {
@@ -226,34 +172,42 @@ public class InputEventDirector : MonoBehaviour
                 _v => generalSettingsDirector.UpdateResizingMode(_v));
         }
 
-        twoResizingSmall.onValueChanged.AddListener(
+        string topScope = "ItemValue";
+        string bottomScope = "ItemValue/InputField";
+        Func<string, InputField> access = (string s)
+            => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
+        
+        access("TwoStages/Small").onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateTwoSmall(int.Parse(_v)));
-        twoResizingMedium.onValueChanged.AddListener(
+        access("TwoStages/Medium").onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateTwoMedium(int.Parse(_v)));
 
-        threeResizingSmall.onValueChanged.AddListener(
+        access("ThreeStages/Small").onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeSmall(int.Parse(_v)));
-        threeResizingMedium.onValueChanged.AddListener(
+        access("ThreeStages/Medium").onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeMedium(int.Parse(_v)));
-        threeResizingLarge.onValueChanged.AddListener(
+        access("ThreeStages/Large").onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeLarge(int.Parse(_v)));
 
         // projects settings
         projectAdditionButton.onClick.AddListener(
             () => projectSettingsController.AddNewProject());
         // apply
-        generalSettingsRevert.onClick.AddListener(
+        generalSettings.transform.Find("DecisionButton/Revert")
+            .GetComponent<Button>().onClick.AddListener(
             () => generalSettingsDirector.RevertChanges());
-        generalSettingsApply.onClick.AddListener(
+        
+        generalSettings.transform.Find("DecisionButton/Apply")
+            .GetComponent<Button>().onClick.AddListener(
             () => generalSettingsDirector.ApplySettings());
-        projectSettingsRevert.onClick.AddListener(
+        
+        projectSettings.transform.Find("DecisionButton/Revert")
+           .GetComponent<Button>().onClick.AddListener(
             () => projectSettingsController.RevertProjectChanges());
-        projectSettingsApply.onClick.AddListener(
-            () =>
-            {
-                Debug.Log("event");
-                projectSettingsController.ApplyProjectChanges();
-            });
+        
+        projectSettings.transform.Find("DecisionButton/Apply")
+            .GetComponent<Button>().onClick.AddListener(
+            () => projectSettingsController.ApplyProjectChanges());
         #endregion
     }
 

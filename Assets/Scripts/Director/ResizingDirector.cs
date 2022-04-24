@@ -22,17 +22,28 @@ public class ResizingDirector : MonoBehaviour
     private WorkingDirector workingDirector;
     private ClockDirector clockDirector;
 
+    private static ResizingDirector instance;
+    public static ResizingDirector Instance => instance;
+
     private void Awake()
     {
-
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(ClockDirector.Instance);
+
+        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
         clockDirector = ClockDirector.Instance;
 
         InitializePValues();
