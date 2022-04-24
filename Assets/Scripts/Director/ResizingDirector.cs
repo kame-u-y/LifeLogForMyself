@@ -35,6 +35,7 @@ public class ResizingDirector : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
     }
 
@@ -42,8 +43,8 @@ public class ResizingDirector : MonoBehaviour
     void Start()
     {
 
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        appDirector = AppDirector.Instance;
+        workingDirector = WorkingDirector.Instance;
         clockDirector = ClockDirector.Instance;
 
         InitializePValues();

@@ -11,7 +11,7 @@ public class TodayFuturePlateController : MonoBehaviour
 
     private void Awake()
     {
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        appDirector = AppDirector.Instance;
         
     }
 

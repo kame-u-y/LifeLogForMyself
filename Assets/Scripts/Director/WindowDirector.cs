@@ -109,9 +109,9 @@ public class WindowDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        appDirector = AppDirector.Instance;
         inputEventDirector = InputEventDirector.Instance;
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        databaseDirector = DatabaseDirector.Instance;
         resizingDirector = ResizingDirector.Instance;
 
         window = FindWindow(null, windowName);

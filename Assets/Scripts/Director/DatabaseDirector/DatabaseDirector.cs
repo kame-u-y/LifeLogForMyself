@@ -17,12 +17,26 @@ public class DatabaseDirector : MonoBehaviour
     [SerializeField]
     PieChartController pieChartController;
 
+    private static DatabaseDirector instance;
+    public static DatabaseDirector Instance => instance;
+
     void Awake()
     {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
         windowDirector = WindowDirector.Instance;
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        workingDirector = WorkingDirector.Instance;
     }
 
     // Start is called before the first frame update

@@ -63,16 +63,28 @@ public class GeneralSettingsDirector : MonoBehaviour
         Projects
     }
 
+    private static GeneralSettingsDirector instance;
+    public static GeneralSettingsDirector Instance => instance;
+
     private void Awake()
     {
-
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        databaseDirector = DatabaseDirector.Instance;
+        appDirector = AppDirector.Instance;
 
         generalTabButton = settingsTab.transform.Find("General").GetComponent<Button>();
         projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();

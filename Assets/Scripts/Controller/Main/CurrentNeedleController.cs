@@ -11,7 +11,7 @@ public class CurrentNeedleController : MonoBehaviour
 
     private void Awake()
     {
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        appDirector = AppDirector.Instance;
     }
 
     // Start is called before the first frame update

@@ -11,7 +11,7 @@ public class ClockModeButtonController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();    
+        //appDirector = AppDirector.Instance;    
     }
 
     // Update is called once per frame

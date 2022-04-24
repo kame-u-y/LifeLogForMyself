@@ -77,10 +77,10 @@ public class InputEventDirector : MonoBehaviour
         InitializeActionMap(myInputActions.UI);
 
         #region load director
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        workingDirector = WorkingDirector.Instance;
+        appDirector = AppDirector.Instance;
         windowDirector = WindowDirector.Instance;
-        generalSettingsDirector = GameObject.Find("GeneralSettingsDirector").GetComponent<GeneralSettingsDirector>();
+        generalSettingsDirector = GeneralSettingsDirector.Instance;
         #endregion
     }
 

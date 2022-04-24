@@ -36,7 +36,7 @@ public class CurrentWorkMeterController : MonoBehaviour
     {
         //clockLabelCtrler.UpdateWorkMaxLabel(maxMinute);
 
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        databaseDirector = DatabaseDirector.Instance;
 
         maxMinute = databaseDirector.FetchProgressMeterMax();
         string selectedProject = databaseDirector.FetchSelectedProject();

@@ -14,7 +14,7 @@ public class ProjectDropdownController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        databaseDirector = DatabaseDirector.Instance;
         dropdown_ = this.GetComponent<Dropdown>();
         UpdateItems();
     }

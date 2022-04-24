@@ -18,10 +18,10 @@ public class PieChartController : MonoBehaviour
 
     private void Awake()
     {
-        //databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        //databaseDirector = DatabaseDirector.Instance;
         workPiePieces = new List<GameObject>();
 
-        appDirector = GameObject.Find("AppDirector").GetComponent<AppDirector>();
+        appDirector = AppDirector.Instance;
         currentWorkPiece = this.transform.Find("CurrentWork").gameObject;
     }
 

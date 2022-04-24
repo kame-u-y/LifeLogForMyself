@@ -55,7 +55,7 @@ public class ProjectSettingsController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        databaseDirector = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        databaseDirector = DatabaseDirector.Instance;
         inputEventDirector = InputEventDirector.Instance;
 
         projectOrderDictionary = new Dictionary<int, int>();

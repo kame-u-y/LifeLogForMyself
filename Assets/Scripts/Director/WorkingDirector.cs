@@ -25,10 +25,23 @@ public class WorkingDirector : MonoBehaviour
 
     DatabaseDirector databaseDirector;
 
+    private static WorkingDirector instance;
+    public static WorkingDirector Instance => instance;
+
     void Awake()
     {
-        databaseDirector
-            = GameObject.Find("DatabaseDirector").GetComponent<DatabaseDirector>();
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        databaseDirector = DatabaseDirector.Instance;
     }
 
     // Start is called before the first frame update

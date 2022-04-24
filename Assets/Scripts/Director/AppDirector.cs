@@ -49,9 +49,23 @@ public class AppDirector : MonoBehaviour
         WatchLog
     }
 
+    private static AppDirector instance;
+    public static AppDirector Instance => instance;
+
     private void Awake()
     {
-        workingDirector = GameObject.Find("WorkingDirector").GetComponent<WorkingDirector>();
+        if (instance = null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        workingDirector = WorkingDirector.Instance;
     }
 
     // Start is called before the first frame update
