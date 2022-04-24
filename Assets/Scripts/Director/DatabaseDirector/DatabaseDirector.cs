@@ -7,16 +7,14 @@ using UnityEngine;
 public class DatabaseDirector : MonoBehaviour
 {
     string filePath;
-    LoadedSaveData saveData;
-    WindowDirector windowDirector;
-    WorkingDirector workingDirector;
-    [SerializeField]
-    CurrentWorkMeterController currentWorkMeterCtrler;
-    [SerializeField]
-    ProjectDropdownController projectDropdownCtrler;
-    [SerializeField]
-    PieChartController pieChartController;
+    private LoadedSaveData saveData;
+    private WindowDirector windowDirector;
+    private WorkingDirector workingDirector;
+    private MainUIDirector mainUIDirector;
 
+    /// <summary>
+    /// シングルトン
+    /// </summary>
     private static DatabaseDirector instance;
     public static DatabaseDirector Instance => instance;
 
@@ -35,13 +33,14 @@ public class DatabaseDirector : MonoBehaviour
 
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
-        windowDirector = WindowDirector.Instance;
-        workingDirector = WorkingDirector.Instance;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        windowDirector = WindowDirector.Instance;
+        workingDirector = WorkingDirector.Instance;
+        mainUIDirector = MainUIDirector.Instance;
         //SaveSampleWorkData();
         //SaveSampleProjectData();
     }
@@ -240,8 +239,8 @@ public class DatabaseDirector : MonoBehaviour
         //変更の通知
 
         workingDirector.ChangeProjectOfCurrentWork();
-        projectDropdownCtrler.UpdateItems();
-        pieChartController.UpdateTodayColors(FetchProjectList());
+        mainUIDirector.ProjectDropdownCtrler.UpdateItems();
+        mainUIDirector.PieChartController.UpdateTodayColors(FetchProjectList());
     }
 
     public void ApplyProjectDelete(string _name)
@@ -255,8 +254,8 @@ public class DatabaseDirector : MonoBehaviour
         ExportSaveData();
 
         //変更の通知
-        projectDropdownCtrler.UpdateItems();
-        pieChartController.UpdateTodayColors(FetchProjectList());
+        mainUIDirector.ProjectDropdownCtrler.UpdateItems();
+        mainUIDirector.PieChartController.UpdateTodayColors(FetchProjectList());
 
     }
 

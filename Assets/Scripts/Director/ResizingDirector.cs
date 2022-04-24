@@ -20,7 +20,7 @@ public class ResizingDirector : MonoBehaviour
 
     private AppDirector appDirector;
     private WorkingDirector workingDirector;
-    private ClockDirector clockDirector;
+    private MainUIDirector mainUIDirector;
 
     private static ResizingDirector instance;
     public static ResizingDirector Instance => instance;
@@ -45,7 +45,7 @@ public class ResizingDirector : MonoBehaviour
 
         appDirector = AppDirector.Instance;
         workingDirector = WorkingDirector.Instance;
-        clockDirector = ClockDirector.Instance;
+        mainUIDirector = MainUIDirector.Instance;
 
         InitializePValues();
         SwitchClockImage();
@@ -96,16 +96,16 @@ public class ResizingDirector : MonoBehaviour
         if (IsStateSwitchingToSmall())
         {
             spriteMode = "Resized_Materials";
-            clockDirector.ClockNumber.gameObject.SetActive(false);
-            clockDirector.MeterMaxText.gameObject.SetActive(false);
-            clockDirector.CurrentCountText.fontSize = 150;
+            mainUIDirector.ClockNumberImage.gameObject.SetActive(false);
+            mainUIDirector.MeterMaxTMP.gameObject.SetActive(false);
+            mainUIDirector.CurrentCountTMP.fontSize = 150;
         }
         else if (IsStateSwitchingToNormal())
         {
             spriteMode = "Materials";
-            clockDirector.ClockNumber.gameObject.SetActive(true);
-            clockDirector.MeterMaxText.gameObject.SetActive(true);
-            clockDirector.CurrentCountText.fontSize = 100;
+            mainUIDirector.ClockNumberImage.gameObject.SetActive(true);
+            mainUIDirector.MeterMaxTMP.gameObject.SetActive(true);
+            mainUIDirector.CurrentCountTMP.fontSize = 100;
         }
         else
         {
@@ -116,32 +116,32 @@ public class ResizingDirector : MonoBehaviour
         clockMode = appDirector.isClock12h ? "12" : "24";
 
         // spriteÇÃïœçXèàóù
-        clockDirector.ClockFrame.sprite 
+        mainUIDirector.ClockFrameImage.sprite 
             = LoadSprite($"{spriteMode}/Base/Frame");
-        clockDirector.TodayFuturePlate.sprite 
+        mainUIDirector.TodayFuturePlateImage.sprite 
             = LoadSprite($"{spriteMode}/Base/Plate");
-        clockDirector.TodayPastPlate.sprite 
+        mainUIDirector.TodayPastPlateImage.sprite 
             = LoadSprite($"{spriteMode}/Base/Plate");
-        for (int i = 0; i < clockDirector.LogPieContainer.transform.childCount; i++)
+        for (int i = 0; i < mainUIDirector.LogPieContainer.transform.childCount; i++)
         {
-            clockDirector.LogPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
+            mainUIDirector.LogPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
                 = LoadSprite($"{spriteMode}/Base/Plate");
         }
-        clockDirector.CurrentPie.GetComponent<Image>().sprite 
+        mainUIDirector.CurrentPieImage.GetComponent<Image>().sprite 
             = LoadSprite($"{spriteMode}/Base/Plate");
-        clockDirector.WorkMeterPlate.sprite 
+        mainUIDirector.WorkMeterPlateImage.sprite 
             = LoadSprite($"{spriteMode}/Base/WorkMeterPlate");
 
-        clockDirector.CurrentWorkMeter.sprite 
+        mainUIDirector.WorkMeterImage.sprite 
             = LoadSprite($"{spriteMode}/Pie/CurrentWorkMeter");
-        clockDirector.MeterCover.sprite 
+        mainUIDirector.MeterCoverImage.sprite 
             = LoadSprite($"{spriteMode}/Cover/Cover");
-        clockDirector.PlayEndButton.sprite 
+        mainUIDirector.PlayEndButtonImage.sprite 
             = LoadSprite($"{spriteMode}/Cover/{buttonMode}Button");
 
-        clockDirector.ClockThorn.sprite 
+        mainUIDirector.ClockThornImage.sprite 
             = LoadSprite($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
-        clockDirector.ClockNumber.sprite 
+        mainUIDirector.ClockNumberImage.sprite 
             = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
         
         UpdatePValues(Screen.width, Screen.height);

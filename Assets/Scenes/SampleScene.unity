@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 44115270}
   m_HandleRect: {fileID: 44115269}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -9818,9 +9818,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5156e45d4ff379648b89e399b536b239, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentWorkMeterCtrler: {fileID: 690280552}
-  projectDropdownCtrler: {fileID: 1315218190}
-  pieChartController: {fileID: 1482504433}
 --- !u!1 &971485102
 GameObject:
   m_ObjectHideFlags: 0
@@ -11118,7 +11115,7 @@ GameObject:
   - component: {fileID: 1043331966}
   - component: {fileID: 1043331967}
   m_Layer: 0
-  m_Name: ClockDirector
+  m_Name: MainUIDirector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11150,19 +11147,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a9792ebd4927a41aee656137f06c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clockFrame: {fileID: 1087937986}
-  todayFuturePlate: {fileID: 31709246}
-  todayPastPlate: {fileID: 1194932634}
-  workMeterPlate: {fileID: 289684462}
-  logPieContainer: {fileID: 326328117}
-  currentPie: {fileID: 444346564}
-  currentWorkMeter: {fileID: 690280554}
-  meterCover: {fileID: 269122038}
-  playEndButton: {fileID: 995924023}
-  clockThorn: {fileID: 889543467}
-  clockNumber: {fileID: 1980538466}
-  meterMaxText: {fileID: 84042447}
-  currentCountText: {fileID: 1858275130}
+  clockFrameImage: {fileID: 1087937986}
+  todayFuturePlateImage: {fileID: 31709246}
+  todayPastPlateImage: {fileID: 1194932634}
+  workMeterPlateImage: {fileID: 289684462}
+  pieChartController: {fileID: 1482504433}
+  workMeterImage: {fileID: 690280554}
+  meterCoverImage: {fileID: 269122038}
+  playEndButtonImage: {fileID: 995924023}
+  clockThornImage: {fileID: 889543467}
+  clockNumberImage: {fileID: 1980538466}
+  meterMaxTMP: {fileID: 84042447}
+  currentCountTMP: {fileID: 1858275130}
+  projectDropdownCtrler: {fileID: 1315218190}
 --- !u!1 &1058411370
 GameObject:
   m_ObjectHideFlags: 0
@@ -14891,7 +14888,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 539246259}
   m_HandleRect: {fileID: 539246258}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
