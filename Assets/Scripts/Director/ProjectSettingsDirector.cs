@@ -96,6 +96,7 @@ public class ProjectSettingsDirector : MonoBehaviour
     {
         ResetItems();
         projectItems = new List<ProjectItemData>();
+        projectOrderDictionary = new Dictionary<int, int>();
         beforeChangeData.ForEach(v => CreateItem(v));
 
         SetAnySettingsChanged(false);
@@ -154,11 +155,7 @@ public class ProjectSettingsDirector : MonoBehaviour
 
     private GameObject SetUpProjectItem(ProjectData _project)
     {
-        GameObject newItem = Instantiate(
-            itemTemplate,
-            Vector3.zero,
-            Quaternion.identity,
-            settingsUIDirector.ProjectItemContainer);
+        GameObject newItem = Instantiate(itemTemplate, settingsUIDirector.ProjectItemContainer);
 
         // index
         SettingsUIDirector.SetProjectIndex(newItem, projectItems.Count);
@@ -403,6 +400,7 @@ public class ProjectSettingsDirector : MonoBehaviour
         }
 
         databaseDirector.ApplyProjectSettings(sortedProjects);
+        beforeChangeData = GetProjectDataList();
 
         SetAnySettingsChanged(false);
     }
