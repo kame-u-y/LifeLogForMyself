@@ -50,7 +50,7 @@ public class WindowDirector : MonoBehaviour
     private AppDirector appDirector;
     private InputEventDirector inputEventDirector;
     private ResizingDirector resizingDirector;
-    private MainUIDirector mainUIDirector;
+    //private MainUIDirector mainUIDirector;
     private DatabaseDirector databaseDirector;
     
     [SerializeField]
@@ -94,7 +94,7 @@ public class WindowDirector : MonoBehaviour
         inputEventDirector = InputEventDirector.Instance;
         databaseDirector = DatabaseDirector.Instance;
         resizingDirector = ResizingDirector.Instance;
-        mainUIDirector = MainUIDirector.Instance;
+        //mainUIDirector = MainUIDirector.Instance;
 
         window = FindWindow(null, windowName);
         DeleteWindowTitleBar();

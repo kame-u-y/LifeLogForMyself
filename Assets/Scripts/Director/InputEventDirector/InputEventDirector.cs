@@ -13,48 +13,18 @@ public class InputEventDirector : MonoBehaviour
     private MyInputActions myInputActions;
 
     #region director
-    WorkingDirector workingDirector;
-    AppDirector appDirector;
-    WindowDirector windowDirector;
-    GeneralSettingsDirector generalSettingsDirector;
-    #endregion
-
-    #region main
-    [SerializeField]
-    Button playEndButton;
-    [SerializeField]
-    Dropdown projectDropdown;
-    [SerializeField]
-    Button mainBackground;
+    private WorkingDirector workingDirector;
+    private AppDirector appDirector;
+    private WindowDirector windowDirector;
+    private MainUIDirector mainUIDirector;
+    private SettingsUIDirector settingsUIDirector;
+    private GeneralSettingsDirector generalSettingsDirector;
+    private ProjectSettingsDirector projectSettingsDirector;
     #endregion
 
     #region popup
     [SerializeField]
     PopupController popupController;
-    #endregion
-
-    #region settings
-    [SerializeField]
-    Button settingsBackground;
-    [SerializeField]
-    GameObject settingsTab;
-    [SerializeField]
-    GameObject generalSettings;
-
-    [SerializeField]
-    Button notificationSoundPath;
-    [SerializeField]
-    ToggleGroup settingResizingMode;
-    [SerializeField]
-    GameObject resizingValueForms;
-
-
-    [SerializeField]
-    ProjectSettingsController projectSettingsController;
-    [SerializeField]
-    Button projectAdditionButton;
-    [SerializeField]
-    GameObject projectSettings;
     #endregion
 
     private static InputEventDirector instance;
@@ -80,7 +50,10 @@ public class InputEventDirector : MonoBehaviour
         workingDirector = WorkingDirector.Instance;
         appDirector = AppDirector.Instance;
         windowDirector = WindowDirector.Instance;
+        mainUIDirector = MainUIDirector.Instance;
+        settingsUIDirector = SettingsUIDirector.Instance;
         generalSettingsDirector = GeneralSettingsDirector.Instance;
+        projectSettingsDirector = ProjectSettingsDirector.Instance;
         #endregion
     }
 
@@ -88,15 +61,15 @@ public class InputEventDirector : MonoBehaviour
     private void Start()
     {
         #region main
-        playEndButton.onClick.AddListener(workingDirector.ToggleWork);
-        projectDropdown.onValueChanged.AddListener(
+        mainUIDirector.PlayEndButton.onClick.AddListener(workingDirector.ToggleWork);
+        mainUIDirector.ProjectDropdown.onValueChanged.AddListener(
             (v) => workingDirector.ChangeProjectOfCurrentWork());
-        mainBackground.onClick.AddListener(windowDirector.OnResizingButtonClick);
+        mainUIDirector.BackgroundButton.onClick.AddListener(windowDirector.OnResizingButtonClick);
         #endregion
 
         #region drag
-        AddDragEvent(mainBackground.gameObject);
-        AddDragEvent(settingsBackground.gameObject);
+        AddDragEvent(mainUIDirector.BackgroundButton.gameObject);
+        AddDragEvent(settingsUIDirector.BackgroundButton.gameObject);
         #endregion
 
         #region popup
@@ -132,7 +105,7 @@ public class InputEventDirector : MonoBehaviour
             .GetComponent<ColorPicker>().onValueChanged.AddListener(
             _color =>
             {
-                projectSettingsController.UpdateProjectColor(
+                projectSettingsDirector.UpdateProjectColor(
                     popupController.SelectedProjectId,
                     _color);
             });
@@ -144,70 +117,66 @@ public class InputEventDirector : MonoBehaviour
             .GetComponent<Button>().onClick.AddListener(
             () =>
             {
-                projectSettingsController.ApplyProjectDelete(
+                projectSettingsDirector.ApplyProjectDelete(
                     popupController.SelectedProjectId);
                 popupController.ClosePopup();
             });
         #endregion
 
         #region settings
-        settingsTab.transform.Find("General").GetComponent<Button>().onClick.AddListener(
+        settingsUIDirector.GeneralTabButton.onClick.AddListener(
             () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.General));
 
-        settingsTab.transform.Find("Projects").GetComponent<Button>().onClick.AddListener(
+        settingsUIDirector.ProjectsTabButton.onClick.AddListener(
             () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.Projects));
 
         // general settings
-        generalSettings.transform.Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>()
-            .onValueChanged.AddListener(
+        settingsUIDirector.MeterMaxInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateProgressBarMax(float.Parse(_v)));
 
-        notificationSoundPath.onClick.AddListener(
+        settingsUIDirector.SoundPathButton.onClick.AddListener(
             () => generalSettingsDirector.UpdateNotificationSoundPath());
 
-        Toggle[] toggles = settingResizingMode.GetComponentsInChildren<Toggle>();
+        Toggle[] toggles = settingsUIDirector.ResizingModeToggleGroup.GetComponentsInChildren<Toggle>();
         foreach (var toggle in toggles)
         {
             toggle.onValueChanged.AddListener(
                 _v => generalSettingsDirector.UpdateResizingMode(_v));
         }
 
-        string topScope = "ItemValue";
-        string bottomScope = "ItemValue/InputField";
-        Func<string, InputField> access = (string s)
-            => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
+        //string topScope = "ItemValue";
+        //string bottomScope = "ItemValue/InputField";
+        //Func<string, InputField> access = (string s)
+        //    => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
         
-        access("TwoStages/Small").onValueChanged.AddListener(
+        settingsUIDirector.TwoSmallInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateTwoSmall(int.Parse(_v)));
-        access("TwoStages/Medium").onValueChanged.AddListener(
+        settingsUIDirector.TwoMediumInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateTwoMedium(int.Parse(_v)));
 
-        access("ThreeStages/Small").onValueChanged.AddListener(
+        settingsUIDirector.ThreeSmallInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeSmall(int.Parse(_v)));
-        access("ThreeStages/Medium").onValueChanged.AddListener(
+        settingsUIDirector.ThreeMediumInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeMedium(int.Parse(_v)));
-        access("ThreeStages/Large").onValueChanged.AddListener(
+        settingsUIDirector.ThreeLargeInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateThreeLarge(int.Parse(_v)));
 
         // projects settings
-        projectAdditionButton.onClick.AddListener(
-            () => projectSettingsController.AddNewProject());
-        // apply
-        generalSettings.transform.Find("DecisionButton/Revert")
-            .GetComponent<Button>().onClick.AddListener(
+        settingsUIDirector.ProjectAdditionButton.onClick.AddListener(
+            () => projectSettingsDirector.AddNewProject());
+
+        // apply revert
+        settingsUIDirector.GeneralSettingRevertButton.onClick.AddListener(
             () => generalSettingsDirector.RevertChanges());
         
-        generalSettings.transform.Find("DecisionButton/Apply")
-            .GetComponent<Button>().onClick.AddListener(
+        settingsUIDirector.GeneralSettingApplyButton.onClick.AddListener(
             () => generalSettingsDirector.ApplySettings());
         
-        projectSettings.transform.Find("DecisionButton/Revert")
-           .GetComponent<Button>().onClick.AddListener(
-            () => projectSettingsController.RevertProjectChanges());
+        settingsUIDirector.ProjectSettingRevertButton.onClick.AddListener(
+            () => projectSettingsDirector.RevertProjectChanges());
         
-        projectSettings.transform.Find("DecisionButton/Apply")
-            .GetComponent<Button>().onClick.AddListener(
-            () => projectSettingsController.ApplyProjectChanges());
+        settingsUIDirector.ProjectSettingApplyButton.onClick.AddListener(
+            () => projectSettingsDirector.ApplyProjectChanges());
         #endregion
     }
 
@@ -247,19 +216,29 @@ public class InputEventDirector : MonoBehaviour
     public Vector2 GetMousePosition()
         => myInputActions.UI.Point.ReadValue<Vector2>();
 
+    /// <summary>
+    /// 生成されるプロジェクト設定のアイテムへイベント登録
+    /// </summary>
+    /// <param name="_item">個々のプロジェクト設定のGameObject</param>
+    /// <param name="_id">Hierarchy上の並び順に依らないプロジェクト設定情報管理用id</param>
     public void AddProjectSettingItemEvents(GameObject _item, int _id)
     {
-        _item.transform.Find("Values/ProjectName").GetComponent<InputField>().onValueChanged.AddListener(
-            _v => projectSettingsController.UpdateProjectName(_v, _id));
-        _item.transform.Find("Values/ProjectColor").GetComponent<Button>().onClick.AddListener(
+        SettingsUIDirector.GetProjectNameInputField(_item).onValueChanged.AddListener(
+            _v => projectSettingsDirector.UpdateProjectName(_v, _id));
+
+        SettingsUIDirector.GetProjectColorButton(_item).onClick.AddListener(
             () => popupController.OpenProjectColorPickerPopup(PopupController.PopupMode.ProjectColorPicker, _id));
-        _item.transform.Find("Values/NotificationMode").GetComponent<Dropdown>().onValueChanged.AddListener(
-            _v => projectSettingsController.UpdateNotificationMode(_id));
-        _item.transform.Find("Values/MoveUpper/Button").GetComponent<Button>().onClick.AddListener(
-            () => projectSettingsController.MoveUpperItem(_id));
-        _item.transform.Find("Values/MoveLower/Button").GetComponent<Button>().onClick.AddListener(
-            () => projectSettingsController.MoveLowerItem(_id));
-        _item.transform.Find("Values/Delete/Button").GetComponent<Button>().onClick.AddListener(
+
+        SettingsUIDirector.GetProjectNotifModeDropdown(_item).onValueChanged.AddListener(
+            _v => projectSettingsDirector.UpdateNotifMode(_id));
+
+        SettingsUIDirector.GetProjectMoveUpperButton(_item).onClick.AddListener(
+            () => projectSettingsDirector.MoveUpperItem(_id));
+
+        SettingsUIDirector.GetProjectMoveLowerButton(_item).onClick.AddListener(
+            () => projectSettingsDirector.MoveLowerItem(_id));
+
+        SettingsUIDirector.GetProjectDeleteButton(_item).onClick.AddListener(
             () => popupController.OpenProjectDeletePopup(PopupController.PopupMode.ProjectDelete, _id));
     }
 

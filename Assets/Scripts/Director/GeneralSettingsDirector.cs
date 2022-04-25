@@ -9,41 +9,19 @@ public class GeneralSettingsDirector : MonoBehaviour
 {
     private DatabaseDirector databaseDirector;
     private AppDirector appDirector;
-
-    [SerializeField]
-    private GameObject settingsTab;
-    private Button generalTabButton;
-    private Button projectsTabButton;
-    [SerializeField]
-    private GameObject generalSettings;
-    [SerializeField]
-    private GameObject projectsSettings;
-
-    //private List<GameObject> projectList;
+    private SettingsUIDirector settingsUIDirector;
 
     #region general settings data
     private float progressMeterMax = 0;
 
-    [SerializeField]
-    private TextMeshProUGUI soundPathLabel;
     private string notificationSoundPath;
 
-    [SerializeField]
-    private ToggleGroup settingResizingMode;
     private ResizingMode resizingMode;
-    
-    [SerializeField]
-    private GameObject twoStageForms;
-    [SerializeField]
-    private GameObject threeStageForms;
+
 
     private TwoResizingData twoResizingStages;
     private ThreeResizingData threeResizingStages;
     #endregion
-
-
-    [SerializeField]
-    private ProjectSettingsController projectSettingsController;
 
     private bool isAnySettingsChanged = false;
     public bool IsAnySettingsChanged
@@ -51,11 +29,6 @@ public class GeneralSettingsDirector : MonoBehaviour
         get => isAnySettingsChanged;
         set => isAnySettingsChanged = value;
     }
-    // revert apply
-    [SerializeField]
-    Button settingRevertButton;
-    [SerializeField]
-    Button settingApplyButton;
 
     public enum SettingsMode
     {
@@ -63,6 +36,9 @@ public class GeneralSettingsDirector : MonoBehaviour
         Projects
     }
 
+    /// <summary>
+    /// シングルトン
+    /// </summary>
     private static GeneralSettingsDirector instance;
     public static GeneralSettingsDirector Instance => instance;
 
@@ -85,9 +61,7 @@ public class GeneralSettingsDirector : MonoBehaviour
     {
         databaseDirector = DatabaseDirector.Instance;
         appDirector = AppDirector.Instance;
-
-        generalTabButton = settingsTab.transform.Find("General").GetComponent<Button>();
-        projectsTabButton = settingsTab.transform.Find("Projects").GetComponent<Button>();
+        settingsUIDirector = SettingsUIDirector.Instance;
 
         SwitchSettingsMode(SettingsMode.General);
 
@@ -96,9 +70,7 @@ public class GeneralSettingsDirector : MonoBehaviour
         threeResizingStages = new ThreeResizingData();
 
         InitializeGeneralSettings();
-        projectSettingsController.InitializeItems(databaseDirector.FetchProjectList());
 
-        
         SetAnySettingsChanged(false);
     }
 
@@ -113,22 +85,22 @@ public class GeneralSettingsDirector : MonoBehaviour
         if (_mode == SettingsMode.General)
         {
             bool b = true;
-            generalSettings.SetActive(b);
-            projectsSettings.SetActive(!b);
+            settingsUIDirector.GeneralSettingContainer.SetActive(b);
+            settingsUIDirector.ProjectsSettingContainer.SetActive(!b);
 
-            generalTabButton.interactable = !b;
-            projectsTabButton.interactable = b;
+            settingsUIDirector.GeneralTabButton.interactable = !b;
+            settingsUIDirector.ProjectsTabButton.interactable = b;
 
             //IsAnySettingsChanged = false;
         }
         else if (_mode == SettingsMode.Projects)
         {
             bool b = true;
-            generalSettings.SetActive(!b);
-            projectsSettings.SetActive(b);
+            settingsUIDirector.GeneralSettingContainer.SetActive(!b);
+            settingsUIDirector.ProjectsSettingContainer.SetActive(b);
 
-            generalTabButton.interactable = b;
-            projectsTabButton.interactable = !b;
+            settingsUIDirector.GeneralTabButton.interactable = b;
+            settingsUIDirector.ProjectsTabButton.interactable = !b;
 
             SetAnySettingsChanged(false);
         }
@@ -137,19 +109,19 @@ public class GeneralSettingsDirector : MonoBehaviour
     private void InitializeGeneralSettings()
     {
         progressMeterMax = databaseDirector.FetchProgressMeterMax();
-        InputField meterMax = generalSettings.transform
+        InputField meterMax = settingsUIDirector.GeneralSettingContainer.transform
             .Find("ProgressBarMax/ItemValue/InputField").GetComponent<InputField>();
         Debug.Log(databaseDirector.FetchProgressMeterMax());
         meterMax.text = progressMeterMax.ToString();
 
         // notification sound path
         notificationSoundPath = databaseDirector.FetchNotificationSoundPath();
-        TextMeshProUGUI soundPath = generalSettings.transform
+        TextMeshProUGUI soundPath = settingsUIDirector.GeneralSettingContainer.transform
             .Find("NotificationSound/ItemValue/Text (TMP)").GetComponent<TextMeshProUGUI>();
         soundPath.text = notificationSoundPath;
 
         // resizing mode
-        ToggleGroup resizeModeGroup = generalSettings.transform
+        ToggleGroup resizeModeGroup = settingsUIDirector.GeneralSettingContainer.transform
             .Find("ResizingMode/ItemValue/ModeToggleGroup").GetComponent<ToggleGroup>();
         Toggle[] toggles = resizeModeGroup.GetComponentsInChildren<Toggle>();
         //resizeModeGroup.SetAllTogglesOff();
@@ -166,14 +138,15 @@ public class GeneralSettingsDirector : MonoBehaviour
         string topScope = "ResizingValueForms/ItemValue";
         string bottomScope = "ItemValue/InputField";
         Func<string, InputField> access = (string s)
-            => generalSettings.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
+            => settingsUIDirector.GeneralSettingContainer
+                .transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
 
         InputField twoSmall = access("TwoStages/Small");
         InputField twoMedium = access("TwoStages/Medium");
         twoResizingStages = databaseDirector.FetchTwoResizingStages().ShallowCopy();
         twoSmall.text = twoResizingStages.small.ToString();
         twoMedium.text = twoResizingStages.medium.ToString();
-        
+
 
         InputField threeSmall = access("ThreeStages/Small");
         InputField threeMedium = access("ThreeStages/Medium");
@@ -185,13 +158,13 @@ public class GeneralSettingsDirector : MonoBehaviour
 
         if (resizingMode == ResizingMode.TwoStages)
         {
-            twoStageForms.SetActive(true);
-            threeStageForms.SetActive(false);
+            settingsUIDirector.TwoStageFormContainer.SetActive(true);
+            settingsUIDirector.ThreeStageFormContainer.SetActive(false);
         }
         else if (resizingMode == ResizingMode.ThreeStages)
         {
-            twoStageForms.SetActive(false);
-            threeStageForms.SetActive(true);
+            settingsUIDirector.TwoStageFormContainer.SetActive(false);
+            settingsUIDirector.ThreeStageFormContainer.SetActive(true);
         }
     }
 
@@ -204,31 +177,32 @@ public class GeneralSettingsDirector : MonoBehaviour
     public void UpdateNotificationSoundPath()
     {
         notificationSoundPath = OpenFileName.ShowDialog();
-        soundPathLabel.text = notificationSoundPath;
+        settingsUIDirector.SoundPathTMP.text = notificationSoundPath;
         SetAnySettingsChanged(true);
     }
 
 
     public void UpdateResizingMode(bool _v)
     {
-        if (_v)
-        {
-            resizingMode = settingResizingMode.GetFirstActiveToggle()
-                .GetComponent<ResizingModeToggleController>().resizingMode;
-            // 設定の表示変更
-            if (resizingMode == ResizingMode.TwoStages)
-            {
-                twoStageForms.SetActive(true);
-                threeStageForms.SetActive(false);
-            }
-            else if (resizingMode == ResizingMode.ThreeStages)
-            {
-                twoStageForms.SetActive(false);
-                threeStageForms.SetActive(true);
-            }
+        // トグル オンのときだけ処理
+        if (!_v) return;
 
-            SetAnySettingsChanged(true);
+        resizingMode = settingsUIDirector.ResizingModeToggleGroup.GetFirstActiveToggle()
+            .GetComponent<ResizingModeToggleController>().resizingMode;
+        // 設定の表示変更
+        if (resizingMode == ResizingMode.TwoStages)
+        {
+            settingsUIDirector.TwoStageFormContainer.SetActive(true);
+            settingsUIDirector.ThreeStageFormContainer.SetActive(false);
         }
+        else if (resizingMode == ResizingMode.ThreeStages)
+        {
+            settingsUIDirector.TwoStageFormContainer.SetActive(false);
+            settingsUIDirector.ThreeStageFormContainer.SetActive(true);
+        }
+
+        SetAnySettingsChanged(true);
+
     }
 
 
@@ -243,7 +217,7 @@ public class GeneralSettingsDirector : MonoBehaviour
         twoResizingStages.medium = _v;
         SetAnySettingsChanged(true);
     }
-    
+
     // ThreeStages
     public void UpdateThreeSmall(int _v)
     {
@@ -260,12 +234,12 @@ public class GeneralSettingsDirector : MonoBehaviour
         threeResizingStages.large = _v;
         SetAnySettingsChanged(true);
     }
-     
+
     private void SetAnySettingsChanged(bool _b)
     {
         IsAnySettingsChanged = _b;
-        settingRevertButton.interactable = _b;
-        settingApplyButton.interactable = _b;
+        settingsUIDirector.GeneralSettingRevertButton.interactable = _b;
+        settingsUIDirector.GeneralSettingApplyButton.interactable = _b;
     }
 
     public void RevertChanges()

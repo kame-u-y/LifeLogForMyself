@@ -372,7 +372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
   m_SizeDelta: {x: 1304, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &12195136
@@ -3470,7 +3470,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasResizingMonitor: {fileID: 1259169749}
-  playEndButton: {fileID: 269122036}
 --- !u!1 &352276157
 GameObject:
   m_ObjectHideFlags: 0
@@ -5180,6 +5179,8 @@ Transform:
   - {fileID: 817923561}
   - {fileID: 1043331966}
   - {fileID: 2055446}
+  - {fileID: 777653493}
+  - {fileID: 1171149606}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8127,6 +8128,64 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771894669}
   m_CullTransparentMesh: 1
+--- !u!1 &777653492
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 777653493}
+  - component: {fileID: 777653494}
+  m_Layer: 0
+  m_Name: SettingsUIDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &777653493
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777653492}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 534116132}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &777653494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 777653492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f06b371a7b19743b56ba871d130db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  backgroundButton: {fileID: 1016513099}
+  settingsTabContainer: {fileID: 862982104}
+  projectsSettingContainer: {fileID: 165438924}
+  generalSettingContainer: {fileID: 895700558}
+  soundPathButton: {fileID: 683959718}
+  soundPathTMP: {fileID: 520452517}
+  resizingModeToggleGroup: {fileID: 115891437}
+  twoStageFormContainer: {fileID: 817478000}
+  threeStageFormContainer: {fileID: 1629529355}
+  generalSettingRevertButton: {fileID: 710259489}
+  generalSettingApplyButton: {fileID: 1741059634}
+  projectItemContainer: {fileID: 786270578}
+  projectAdditionButton: {fileID: 1900614043}
+  projectSettingRevertButton: {fileID: 592200936}
+  projectSettingApplyButton: {fileID: 1994020827}
 --- !u!1 &779075194
 GameObject:
   m_ObjectHideFlags: 0
@@ -8174,7 +8233,6 @@ GameObject:
   m_Component:
   - component: {fileID: 786270578}
   - component: {fileID: 786270580}
-  - component: {fileID: 786270579}
   m_Layer: 5
   m_Name: Projects
   m_TagString: Untagged
@@ -8201,21 +8259,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &786270579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 786270577}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe850224fa9235341b751f2af2bc8d14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemTemplate: {fileID: 1030657377}
-  settingRevertButton: {fileID: 592200936}
-  settingApplyButton: {fileID: 1994020827}
 --- !u!114 &786270580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8499,16 +8542,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5586177f26120f4c86a1d0f866d0eba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  settingsTab: {fileID: 862982104}
-  generalSettings: {fileID: 895700558}
-  projectsSettings: {fileID: 165438924}
-  soundPathLabel: {fileID: 520452517}
-  settingResizingMode: {fileID: 115891437}
-  twoStageForms: {fileID: 817478000}
-  threeStageForms: {fileID: 1629529355}
-  projectSettingsController: {fileID: 786270579}
-  settingRevertButton: {fileID: 710259489}
-  settingApplyButton: {fileID: 1741059634}
 --- !u!1 &841981644
 GameObject:
   m_ObjectHideFlags: 0
@@ -11147,6 +11180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a9792ebd4927a41aee656137f06c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundButton: {fileID: 1970400796}
   clockFrameImage: {fileID: 1087937986}
   todayFuturePlateImage: {fileID: 31709246}
   todayPastPlateImage: {fileID: 1194932634}
@@ -11603,7 +11637,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1160246199}
   m_Layer: 5
-  m_Name: ProjectSettingContainer
+  m_Name: ProjectSelectContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11630,6 +11664,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1171149605
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1171149606}
+  - component: {fileID: 1171149607}
+  m_Layer: 0
+  m_Name: ProjectSettingsDirector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1171149606
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171149605}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 534116132}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1171149607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171149605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe850224fa9235341b751f2af2bc8d14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemTemplate: {fileID: 1030657377}
 --- !u!1 &1184859128
 GameObject:
   m_ObjectHideFlags: 0
@@ -16830,19 +16908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4255549427a57b2479ed6d6dc54083e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playEndButton: {fileID: 995924022}
-  projectDropdown: {fileID: 1315218191}
-  mainBackground: {fileID: 1970400796}
   popupController: {fileID: 1606645045}
-  settingsBackground: {fileID: 1016513099}
-  settingsTab: {fileID: 862982104}
-  generalSettings: {fileID: 895700558}
-  notificationSoundPath: {fileID: 683959718}
-  settingResizingMode: {fileID: 115891437}
-  resizingValueForms: {fileID: 535711894}
-  projectSettingsController: {fileID: 786270579}
-  projectAdditionButton: {fileID: 1900614043}
-  projectSettings: {fileID: 165438924}
 --- !u!4 &1583677524
 Transform:
   m_ObjectHideFlags: 0
@@ -17230,7 +17296,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3f992a0c82177d4ebebb8e49dd5738b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectSettingsController: {fileID: 786270579}
 --- !u!1 &1617189691
 GameObject:
   m_ObjectHideFlags: 0

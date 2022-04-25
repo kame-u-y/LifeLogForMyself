@@ -13,8 +13,7 @@ public class PopupController : MonoBehaviour
     private int selectedProjectId = -1;
     public int SelectedProjectId { get => selectedProjectId; }
 
-    [SerializeField]
-    private ProjectSettingsController projectSettingsController;
+    private ProjectSettingsDirector projectSettingsDirector;
 
     /// <summary>
     /// UI表示/非表示用
@@ -38,6 +37,11 @@ public class PopupController : MonoBehaviour
         MainMenu,
         ProjectColorPicker,
         ProjectDelete
+    }
+
+    private void Awake()
+    {
+        projectSettingsDirector = ProjectSettingsDirector.Instance;
     }
 
     // Start is called before the first frame update
@@ -103,7 +107,7 @@ public class PopupController : MonoBehaviour
     public void OpenProjectColorPickerPopup(PopupMode _mode, int _projectId)
     {
         selectedProjectId = _projectId;
-        Color color = projectSettingsController.FetchProjectColor(_projectId);
+        Color color = projectSettingsDirector.FetchProjectColor(_projectId);
         OpenPopup(_mode);
         // OpenPopupより後じゃないとカラーピッカーの適切に初期色が設定できない
         colorPicker.CurrentColor = color;

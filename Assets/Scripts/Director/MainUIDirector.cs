@@ -9,6 +9,9 @@ using UnityEngine.UI;
 /// </summary>
 public class MainUIDirector : MonoBehaviour
 {
+    [SerializeField]
+    private Button backgroundButton;
+    public Button BackgroundButton => backgroundButton;
 
     [SerializeField]
     private Image clockFrameImage;
@@ -51,6 +54,9 @@ public class MainUIDirector : MonoBehaviour
     private Image playEndButtonImage;
     public Image PlayEndButtonImage => playEndButtonImage;
 
+    private Button playEndButton;
+    public Button PlayEndButton => playEndButton;
+
     [SerializeField]
     private Image clockThornImage;
     public Image ClockThornImage => clockThornImage;
@@ -70,6 +76,9 @@ public class MainUIDirector : MonoBehaviour
     [SerializeField]
     private ProjectDropdownController projectDropdownCtrler;
     public ProjectDropdownController ProjectDropdownCtrler => projectDropdownCtrler;
+
+    private Dropdown projectDropdown;
+    public Dropdown ProjectDropdown => projectDropdown;
 
     /// <summary>
     /// ƒVƒ“ƒOƒ‹ƒgƒ“
@@ -94,6 +103,10 @@ public class MainUIDirector : MonoBehaviour
 
         logPieContainer = pieChartController.transform.Find("LogWorks").gameObject;
         currentPieImage = pieChartController.transform.Find("CurrentWork").GetComponent<Image>();
+
+        playEndButton = playEndButtonImage.GetComponent<Button>();
+
+        projectDropdown = projectDropdownCtrler.GetComponent<Dropdown>();
     }
 
     // Start is called before the first frame update
