@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PopupDirector : MonoBehaviour
+public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
 {
     /// <summary>
     /// Project Settingsでポップアップを利用した設定変更に使用
@@ -28,23 +28,24 @@ public class PopupDirector : MonoBehaviour
     }
 
     // シングルトン
-    private static PopupDirector instance;
-    public static PopupDirector Instance => instance;
+    //private static PopupDirector instance;
+    //public static PopupDirector Instance => instance;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+    //private void Awake()
+    //{
 
-    }
+    //    //if (instance == null)
+    //    //{
+    //    //    instance = this;
+    //    //    DontDestroyOnLoad(gameObject);
+    //    //}
+    //    //else
+    //    //{
+    //    //    Destroy(gameObject);
+    //    //    return;
+    //    //}
+
+    //}
 
     // Start is called before the first frame update
     void Start()

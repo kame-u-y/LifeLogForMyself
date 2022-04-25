@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ResizingDirector : MonoBehaviour
+public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
 {
     private int pScreenWidth;
     public int PScreenWidth
@@ -22,21 +22,22 @@ public class ResizingDirector : MonoBehaviour
     private WorkingDirector workingDirector;
     private MainUIDirector mainUIDirector;
 
-    private static ResizingDirector instance;
-    public static ResizingDirector Instance => instance;
+    //private static ResizingDirector instance;
+    //public static ResizingDirector Instance => instance;
 
-    private void Awake()
+    new private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
     }
 
     // Start is called before the first frame update
@@ -112,7 +113,7 @@ public class ResizingDirector : MonoBehaviour
             return;
         }
 
-        buttonMode = workingDirector.isWorking ? "End" : "Play";
+        buttonMode = workingDirector.IsWorking ? "End" : "Play";
         clockMode = appDirector.isClock12h ? "12" : "24";
 
         // spriteÇÃïœçXèàóù

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// メイン画面のUIへのアクセスを管理する
 /// </summary>
-public class MainUIDirector : MonoBehaviour
+public class MainUIDirector : SingletonMonoBehaviourFast<MainUIDirector>
 {
     [SerializeField]
     private Button backgroundButton;
@@ -30,8 +30,8 @@ public class MainUIDirector : MonoBehaviour
     public Image WorkMeterPlateImage => workMeterPlateImage;
 
     [SerializeField]
-    private PieChartController pieChartController;
-    public PieChartController PieChartController => pieChartController;
+    private PieChartController pieChartCtrler;
+    public PieChartController PieChartCtrler => pieChartCtrler;
 
     private GameObject logPieContainer;
     public GameObject LogPieContainer => logPieContainer;
@@ -56,6 +56,9 @@ public class MainUIDirector : MonoBehaviour
 
     private Button playEndButton;
     public Button PlayEndButton => playEndButton;
+
+    private PlayEndImageController playEndImageCtrler;
+    public PlayEndImageController PlayEndImageCtrler => playEndImageCtrler;
 
     [SerializeField]
     private Image clockThornImage;
@@ -83,28 +86,30 @@ public class MainUIDirector : MonoBehaviour
     /// <summary>
     /// シングルトン
     /// </summary>
-    private static MainUIDirector instance;
-    public static MainUIDirector Instance => instance;
+    //private static MainUIDirector instance;
+    //public static MainUIDirector Instance => instance;
 
 
-    private void Awake()
+    new  void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //}
 
         currentWorkMeterCtrler = workMeterImage.GetComponent<CurrentWorkMeterController>();
 
-        logPieContainer = pieChartController.transform.Find("LogWorks").gameObject;
-        currentPieImage = pieChartController.transform.Find("CurrentWork").GetComponent<Image>();
+        logPieContainer = pieChartCtrler.transform.Find("LogWorks").gameObject;
+        currentPieImage = pieChartCtrler.transform.Find("CurrentWork").GetComponent<Image>();
 
         playEndButton = playEndButtonImage.GetComponent<Button>();
+        playEndImageCtrler = playEndButtonImage.GetComponent<PlayEndImageController>();
 
         projectDropdown = projectDropdownCtrler.GetComponent<Dropdown>();
     }

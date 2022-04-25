@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PopupUIDirector : MonoBehaviour
+public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
 {
     [SerializeField]
     private GameObject popupContainer;
@@ -49,21 +49,22 @@ public class PopupUIDirector : MonoBehaviour
     public Button ProjectDeleteButton => projectDeleteButton;
 
     //ƒVƒ“ƒOƒ‹ƒgƒ“
-    private static PopupUIDirector instance;
-    public static PopupUIDirector Instance => instance;
+    //private static PopupUIDirector instance;
+    //public static PopupUIDirector Instance => instance;
 
-    private void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
         mainButton = mainMenuContainer.transform.Find("MainButton").GetComponent<Button>();
         settingButton = mainMenuContainer.transform.Find("SettingsButton").GetComponent<Button>();

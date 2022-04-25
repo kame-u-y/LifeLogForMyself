@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class DatabaseDirector : MonoBehaviour
+public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
 {
     string filePath;
     private LoadedSaveData saveData;
@@ -15,21 +15,22 @@ public class DatabaseDirector : MonoBehaviour
     /// <summary>
     /// シングルトン
     /// </summary>
-    private static DatabaseDirector instance;
-    public static DatabaseDirector Instance => instance;
+    //private static DatabaseDirector instance;
+    //public static DatabaseDirector Instance => instance;
 
-    void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
@@ -38,6 +39,7 @@ public class DatabaseDirector : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         windowDirector = WindowDirector.Instance;
         workingDirector = WorkingDirector.Instance;
         mainUIDirector = MainUIDirector.Instance;
@@ -240,7 +242,7 @@ public class DatabaseDirector : MonoBehaviour
 
         workingDirector.ChangeProjectOfCurrentWork();
         mainUIDirector.ProjectDropdownCtrler.UpdateItems();
-        mainUIDirector.PieChartController.UpdateTodayColors(FetchProjectList());
+        mainUIDirector.PieChartCtrler.UpdateTodayColors(FetchProjectList());
     }
 
     public void ApplyProjectDelete(string _name)
@@ -255,7 +257,7 @@ public class DatabaseDirector : MonoBehaviour
 
         //変更の通知
         mainUIDirector.ProjectDropdownCtrler.UpdateItems();
-        mainUIDirector.PieChartController.UpdateTodayColors(FetchProjectList());
+        mainUIDirector.PieChartCtrler.UpdateTodayColors(FetchProjectList());
 
     }
 
@@ -293,11 +295,11 @@ public class DatabaseDirector : MonoBehaviour
         Debug.Log(yesterday);
         if (saveData.dailyDictionary.ContainsKey(yesterday))
         {
-            int nowYesterday = (int) DateTime.Now.AddDays(-1).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            int nowYesterday = (int)DateTime.Now.AddDays(-1).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             var now = (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             Debug.Log(now - nowYesterday);
             Debug.Log(nowYesterday);
-            
+
             // 昨日のworkで終了時間が今から24時間前より後のもののみを取得
             List<WorkData> yesterdayWorks = saveData.dailyDictionary[yesterday].works
                 .FindAll(v => v.endUnixSec > nowYesterday);
@@ -305,7 +307,7 @@ public class DatabaseDirector : MonoBehaviour
             // 24時間前よりも前に開始されたものは開始を24時間前に設定
             yesterdayWorks.ForEach(v =>
             {
-                
+
                 if (v.startUnixSec < nowYesterday)
                 {
                     v.startUnixSec = nowYesterday;

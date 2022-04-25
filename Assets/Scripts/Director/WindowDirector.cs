@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class WindowDirector : MonoBehaviour
+public class WindowDirector : SingletonMonoBehaviourFast<WindowDirector>
 {
     [DllImport("user32.dll", EntryPoint = "FindWindow")]
     private static extern IntPtr FindWindow(System.String className, System.String windowName);
@@ -70,22 +70,22 @@ public class WindowDirector : MonoBehaviour
 
     /// <summary>
     /// ƒVƒ“ƒOƒ‹ƒgƒ“
-    /// </summary>
-    private static WindowDirector instance;
-    public static WindowDirector Instance => instance;
+    ///// </summary>
+    //private static WindowDirector instance;
+    //public static WindowDirector Instance => instance;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
+    //private void Awake()
+    //{
+    //    if (instance == null)
+    //    {
+    //        instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     // Start is called before the first frame update
     void Start()

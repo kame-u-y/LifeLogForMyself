@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class InputEventDirector : MonoBehaviour
+public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
 {
     private MyInputActions myInputActions;
 
@@ -25,21 +25,22 @@ public class InputEventDirector : MonoBehaviour
     #endregion
 
 
-    private static InputEventDirector instance;
-    public static InputEventDirector Instance => instance;
+    //private static InputEventDirector instance;
+    //public static InputEventDirector Instance => instance;
 
-    private void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
         myInputActions = new MyInputActions();
         InitializeActionMap(myInputActions.UI);

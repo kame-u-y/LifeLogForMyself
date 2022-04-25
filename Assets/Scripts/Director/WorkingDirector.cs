@@ -5,66 +5,63 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WorkingDirector : MonoBehaviour
+public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
 {
-    public bool isWorking = false;
+    DatabaseDirector databaseDirector;
+    MainUIDirector mainUIDirector;
+
+    //[SerializeField]
+    //PlayEndImageController playEndImageCtrler;
+    //[SerializeField]
+    //PieChartController pieChartCtrler;
+    //[SerializeField]
+    //Dropdown mainUIDirector.ProjectDropdown;
+    //[SerializeField]
+    //CurrentWorkMeterController mainUIDirector.CurrentWorkMeterCtrler;
+    //[SerializeField]
+    //TextMeshProUGUI mainUIDirector.CurrentCountTMP;
+
+    public bool IsWorking { get; protected set; } = false;
+
     private WorkData currentWork;
     private ProjectData selectedProject;
     private float time;
 
-    [SerializeField]
-    PlayEndImageController playEndImageCtrler;
-    [SerializeField]
-    PieChartController pieChartCtrler;
-    [SerializeField]
-    Dropdown projectDropdown;
-    [SerializeField]
-    CurrentWorkMeterController currentWorkMeterCtrler;
-    [SerializeField]
-    TextMeshProUGUI currentCountText;
 
-    DatabaseDirector databaseDirector;
 
-    private static WorkingDirector instance;
-    public static WorkingDirector Instance => instance;
+    //private static WorkingDirector instance;
+    //public static WorkingDirector Instance => instance;
 
-    void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
+        base.Awake();
         databaseDirector = DatabaseDirector.Instance;
+        mainUIDirector = MainUIDirector.Instance;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
+
         // 再生中を検出出来たら面白そうだけど、まあアカウント作らんとならんくなるな
-        isWorking = false;
-        playEndImageCtrler.ChangeButtonImage(isWorking);
+        IsWorking = false;
+        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
 
         //DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
         List<WorkData> dayData = databaseDirector.Fetch24hData();
         if (dayData == null) return;
         Debug.Log(dayData.Count);
         List<ProjectData> project = databaseDirector.FetchProjectList();
-        pieChartCtrler.DisplayTodayPieChart(dayData, project);
+        mainUIDirector.PieChartCtrler.DisplayTodayPieChart(dayData, project);
 
-        currentCountText.text = "00:00";
+        mainUIDirector.CurrentCountTMP.text = "00:00";
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (isWorking)
+        if (IsWorking)
         {
             // 1秒ごとに更新
             if (time >= 1.0f)
@@ -80,15 +77,15 @@ public class WorkingDirector : MonoBehaviour
     {
         //nowUnixSec = GetNowTotalSeconds();
         currentWork.endUnixSec = GetNowTotalSeconds();
-        pieChartCtrler.UpdateCurrentWorkPiece(currentWork);
+        mainUIDirector.PieChartCtrler.UpdateCurrentWorkPiece(currentWork);
         int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
         print("now:" + elapsed);
-        currentWorkMeterCtrler.UpdateMeter(elapsed);
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateMeter(elapsed);
 
         int h = elapsed / 3600;
         int m = (elapsed % 3600) / 60;
         int s = elapsed % 60;
-        currentCountText.text = h > 0
+        mainUIDirector.CurrentCountTMP.text = h > 0
             ? $"{String.Format("{0:00}", h)}:{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}"
             : $"{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}";
     }
@@ -103,7 +100,7 @@ public class WorkingDirector : MonoBehaviour
         int elapsed = currentWork != null 
             ? currentWork.endUnixSec - currentWork.startUnixSec
             : 0;
-        currentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
     }
 
     /// <summary>
@@ -112,8 +109,8 @@ public class WorkingDirector : MonoBehaviour
     /// </summary>
     public void CallForNeedUpdateCurrentWorkPiece()
     {
-        if (!isWorking) return;
-        pieChartCtrler.UpdateCurrentWorkPiece(currentWork);
+        if (!IsWorking) return;
+        mainUIDirector.PieChartCtrler.UpdateCurrentWorkPiece(currentWork);
     }
 
     public void CallForNeedDisplayTodayPieChart()
@@ -123,33 +120,33 @@ public class WorkingDirector : MonoBehaviour
         if (dayData == null) return;
 
         List<ProjectData> project = databaseDirector.FetchProjectList();
-        pieChartCtrler.DisplayTodayPieChart(dayData, project);
+        mainUIDirector.PieChartCtrler.DisplayTodayPieChart(dayData, project);
     }
 
     public void ChangeProjectOfCurrentWork()
     {
-        databaseDirector.SetSelectedProject(projectDropdown.captionText.text);
+        databaseDirector.SetSelectedProject(mainUIDirector.ProjectDropdown.captionText.text);
         selectedProject = databaseDirector.FindProject(databaseDirector.FetchSelectedProject());
         //Color c = new Color(
         //    selectedProject.pieColor.r,
         //    selectedProject.pieColor.g,
         //    selectedProject.pieColor.b);
         Color c = selectedProject.pieColor.GetWithColorFormat();
-        currentWorkMeterCtrler.UpdateColor(c);
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(c);
         
-        if (!isWorking) return;
+        if (!IsWorking) return;
 
-        currentWork.projectName = projectDropdown.captionText.text;
+        currentWork.projectName = mainUIDirector.ProjectDropdown.captionText.text;
         print(selectedProject.name);
-        pieChartCtrler.ChangeCurrentColor(c, selectedProject.name);
-        //currentWorkMeterCtrler.ChangeColor(c);
+        mainUIDirector.PieChartCtrler.ChangeCurrentColor(c, selectedProject.name);
+        //mainUIDirector.CurrentWorkMeterCtrler.ChangeColor(c);
     }
 
 
 
     public void ToggleWork()
     {
-        if (isWorking)
+        if (IsWorking)
             EndWork();
         else
             StartWork();
@@ -157,7 +154,7 @@ public class WorkingDirector : MonoBehaviour
 
     private void StartWork()
     {
-        isWorking = true;
+        IsWorking = true;
         //startUnixSec = GetNowTotalSeconds();
         //nowUnixSec = startUnixSec;
         currentWork = new WorkData()
@@ -165,34 +162,34 @@ public class WorkingDirector : MonoBehaviour
             id = 0,
             startUnixSec = GetNowTotalSeconds(),
             endUnixSec = GetNowTotalSeconds(),
-            projectName = projectDropdown.captionText.text
+            projectName = mainUIDirector.ProjectDropdown.captionText.text
         };
         selectedProject = databaseDirector.FindProject(currentWork.projectName);
 
-        playEndImageCtrler.ChangeButtonImage(isWorking);
-        pieChartCtrler.CreateCurrentWorkPiece(currentWork, selectedProject);
+        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
+        mainUIDirector.PieChartCtrler.CreateCurrentWorkPiece(currentWork, selectedProject);
 
         //Color c = new Color(
         //    selectedProject.pieColor.r / 255.0f,
         //    selectedProject.pieColor.g / 255.0f,
         //    selectedProject.pieColor.b / 255.0f);
-        //pieChartCtrler.ChangeCurrentColor(c);
+        //mainUIDirector.PieChartCtrler.ChangeCurrentColor(c);
 
         time = 0;
     }
 
     private void EndWork()
     {
-        isWorking = false;
+        IsWorking = false;
         // todo: データを記録
         databaseDirector.AddEndedWork(currentWork);
 
-        playEndImageCtrler.ChangeButtonImage(isWorking);
+        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
         time = 0;
 
-        currentWorkMeterCtrler.InitializeMeter();
-        //currentCountText.text = "00:00";
-        pieChartCtrler.EndCurrentWork();
+        mainUIDirector.CurrentWorkMeterCtrler.InitializeMeter();
+        //mainUIDirector.CurrentCountTMP.text = "00:00";
+        mainUIDirector.PieChartCtrler.EndCurrentWork();
     }
 
     private int GetNowTotalSeconds()

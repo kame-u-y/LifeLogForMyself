@@ -8,7 +8,7 @@ using System.Drawing;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class AppDirector : MonoBehaviour
+public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
 {
     [SerializeField]
     private bool debugMode = false;
@@ -49,21 +49,14 @@ public class AppDirector : MonoBehaviour
         WatchLog
     }
 
-    private static AppDirector instance;
-    public static AppDirector Instance => instance;
+    //private static AppDirector instance;
+    //public static AppDirector Instance {
+        
+    //}
 
-    private void Awake()
+    new private void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
 
     }
 

@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 2055447}
   m_Layer: 0
   m_Name: ResizingDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3471,7 +3471,7 @@ GameObject:
   - component: {fileID: 346352990}
   m_Layer: 0
   m_Name: WindowDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4661,7 +4661,7 @@ GameObject:
   - component: {fileID: 451010985}
   m_Layer: 0
   m_Name: PopupDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5231,7 +5231,7 @@ GameObject:
   - component: {fileID: 534116133}
   m_Layer: 0
   m_Name: AppDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8216,7 +8216,7 @@ GameObject:
   - component: {fileID: 777653494}
   m_Layer: 0
   m_Name: SettingsUIDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8587,7 +8587,7 @@ GameObject:
   - component: {fileID: 817923562}
   m_Layer: 0
   m_Name: GeneralSettingsDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9896,7 +9896,7 @@ GameObject:
   - component: {fileID: 963588284}
   m_Layer: 0
   m_Name: DatabaseDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11225,7 +11225,7 @@ GameObject:
   - component: {fileID: 1043331967}
   m_Layer: 0
   m_Name: MainUIDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11261,7 +11261,7 @@ MonoBehaviour:
   todayFuturePlateImage: {fileID: 31709246}
   todayPastPlateImage: {fileID: 1194932634}
   workMeterPlateImage: {fileID: 289684462}
-  pieChartController: {fileID: 1482504433}
+  pieChartCtrler: {fileID: 1482504433}
   workMeterImage: {fileID: 690280554}
   meterCoverImage: {fileID: 269122038}
   playEndButtonImage: {fileID: 995924023}
@@ -11752,7 +11752,7 @@ GameObject:
   - component: {fileID: 1171149607}
   m_Layer: 0
   m_Name: ProjectSettingsDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11860,7 +11860,7 @@ GameObject:
   - component: {fileID: 1185742613}
   m_Layer: 0
   m_Name: PopupUIDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15091,7 +15091,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 539246259}
   m_HandleRect: {fileID: 539246258}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -16538,7 +16538,7 @@ GameObject:
   - component: {fileID: 1561513835}
   m_Layer: 0
   m_Name: WorkingDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16555,12 +16555,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed1ad86b6038ee4f97be1e6b7a825e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isWorking: 0
-  playEndImageCtrler: {fileID: 995924021}
-  pieChartCtrler: {fileID: 1482504433}
-  projectDropdown: {fileID: 1315218191}
-  currentWorkMeterCtrler: {fileID: 690280552}
-  currentCountText: {fileID: 1858275130}
 --- !u!4 &1561513836
 Transform:
   m_ObjectHideFlags: 0
@@ -17016,7 +17010,7 @@ GameObject:
   - component: {fileID: 1583677523}
   m_Layer: 0
   m_Name: InputEventDirector
-  m_TagString: Untagged
+  m_TagString: Director
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

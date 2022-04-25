@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ProjectSettingsDirector : MonoBehaviour
+public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSettingsDirector>
 {
     DatabaseDirector databaseDirector;
     InputEventDirector inputEventDirector;
@@ -39,22 +39,23 @@ public class ProjectSettingsDirector : MonoBehaviour
     private bool isAnySettingsChanged = false;
 
     // シリアライズ
-    private static ProjectSettingsDirector instance;
-    public static ProjectSettingsDirector Instance => instance;
+    //private static ProjectSettingsDirector instance;
+    //public static ProjectSettingsDirector Instance => instance;
 
 
-    private void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
 
         projectItems = new List<ProjectItemData>();
     }

@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SettingsUIDirector : MonoBehaviour
+public class SettingsUIDirector : SingletonMonoBehaviourFast<SettingsUIDirector>
 {
     [SerializeField]
     private Button backgroundButton;
@@ -99,21 +99,23 @@ public class SettingsUIDirector : MonoBehaviour
     /// <summary>
     /// ƒVƒ“ƒOƒ‹ƒgƒ“
     /// </summary>
-    private static SettingsUIDirector instance;
-    public static SettingsUIDirector Instance => instance;
+    //private static SettingsUIDirector instance;
+    //public static SettingsUIDirector Instance => instance;
 
-    private void Awake()
+    new void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
+        //if (instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(gameObject);
+        //    return;
+        //}
+
 
         generalTabButton = settingsTabContainer.transform.Find("General").GetComponent<Button>();
         projectTabButton = settingsTabContainer.transform.Find("Projects").GetComponent<Button>();
