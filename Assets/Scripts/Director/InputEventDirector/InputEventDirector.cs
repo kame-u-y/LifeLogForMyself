@@ -76,11 +76,9 @@ public class InputEventDirector : MonoBehaviour
         myInputActions.UI.RightClick.performed +=
             (_context) => popupDirector.OpenPopup(PopupDirector.PopupMode.MainMenu);
 
-        //popupDirector.transform.Find("PopupBackground").GetComponent<Button>()
         popupUIDirector.OuterBackgroundButton.onClick.AddListener(popupDirector.ClosePopup);
 
         // main menu
-        //popupDirector.transform.Find("Popup/MainMenu/MainButton").GetComponent<Button>()
         popupUIDirector.MainButton.onClick.AddListener(
              () =>
              {
@@ -89,7 +87,6 @@ public class InputEventDirector : MonoBehaviour
                  popupDirector.ClosePopup();
              });
 
-        //popupDirector.transform.Find("Popup/MainMenu/SettingsButton").GetComponent<Button>()
         popupUIDirector.SettingButton.onClick.AddListener(
              () =>
              {
@@ -97,11 +94,9 @@ public class InputEventDirector : MonoBehaviour
                  popupDirector.ClosePopup();
              });
 
-        //popupDirector.transform.Find("Popup/MainMenu/QuitButton").GetComponent<Button>()
         popupUIDirector.QuitButton.onClick.AddListener(appDirector.Quit);
 
         // color picker
-        //popupDirector.transform.Find("Popup/ProjectColorPicker/Picker 2.0").GetComponent<ColorPicker>()
         popupUIDirector.ProjectColorPicker.onValueChanged.AddListener(
             _color =>
             {
@@ -110,11 +105,9 @@ public class InputEventDirector : MonoBehaviour
                     _color);
             });
         // delete
-        //popupDirector.transform.Find("Popup/ProjectDelete/Buttons/CancelButton").GetComponent<Button>()
         popupUIDirector.ProjectDeleteCancelButton.onClick.AddListener(
             popupDirector.ClosePopup);
 
-        //popupDirector.transform.Find("Popup/ProjectDelete/Buttons/DeleteButton").GetComponent<Button>()
         popupUIDirector.ProjectDeleteButton.onClick.AddListener(
             () =>
             {
@@ -145,11 +138,6 @@ public class InputEventDirector : MonoBehaviour
                 _v => generalSettingsDirector.UpdateResizingMode(_v));
         }
 
-        //string topScope = "ItemValue";
-        //string bottomScope = "ItemValue/InputField";
-        //Func<string, InputField> access = (string s)
-        //    => resizingValueForms.transform.Find($"{topScope}/{s}/{bottomScope}").GetComponent<InputField>();
-        
         settingsUIDirector.TwoSmallInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateTwoSmall(int.Parse(_v)));
         settingsUIDirector.TwoMediumInput.onValueChanged.AddListener(

@@ -17,19 +17,6 @@ public class PopupDirector : MonoBehaviour
     private PopupUIDirector popupUIDirector;
 
     /// <summary>
-    /// UI表示/非表示用
-    /// </summary>
-    //private GameObject background;
-    //private GameObject mainMenu;
-    //private GameObject projectColorPicker;
-    //private GameObject projectDelete;
-
-    /// <summary>
-    /// カラーピッカーアセットを使用
-    /// </summary>
-    //private ColorPicker colorPicker;
-
-    /// <summary>
     /// ポップアップの種類を定義
     /// 指定された種類によって表示を変更するため
     /// </summary>
@@ -64,12 +51,6 @@ public class PopupDirector : MonoBehaviour
     {
         projectSettingsDirector = ProjectSettingsDirector.Instance;
         popupUIDirector = PopupUIDirector.Instance;
-        //background = this.transform.Find("Popup/Image").gameObject;
-        //mainMenu = this.transform.Find("Popup/MainMenu").gameObject;
-        //projectColorPicker = this.transform.Find("Popup/ProjectColorPicker").gameObject;
-        //projectDelete = this.transform.Find("Popup/ProjectDelete").gameObject;
-
-        //colorPicker = this.transform.Find("Popup/ProjectColorPicker/Picker 2.0").GetComponent<ColorPicker>();
 
         popupUIDirector.PopupContainer.SetActive(false);
     }
@@ -98,30 +79,6 @@ public class PopupDirector : MonoBehaviour
 
         popupUIDirector.ProjectDeleteContainer
             .SetActive(_mode == PopupMode.ProjectDelete);
-
-        //if (_mode == PopupMode.MainMenu)
-        //{
-        //    bool b = true;
-        //    mainMenu.SetActive(b);
-        //    projectColorPicker.SetActive(!b);
-        //    projectDelete.SetActive(!b);
-        //}
-        //else if (_mode == PopupMode.ProjectColorPicker)
-        //{
-        //    bool b = true;
-        //    //background.SetActive(!b);
-        //    mainMenu.SetActive(!b);
-        //    projectColorPicker.SetActive(b);
-        //    projectDelete.SetActive(!b);
-        //}
-        //else if (_mode == PopupMode.ProjectDelete)
-        //{
-        //    bool b = true;
-        //    //background.SetActive(b);
-        //    mainMenu.SetActive(!b);
-        //    projectColorPicker.SetActive(!b);
-        //    projectDelete.SetActive(b);
-        //}
 
         popupUIDirector.PopupContainer.SetActive(true);
     }
