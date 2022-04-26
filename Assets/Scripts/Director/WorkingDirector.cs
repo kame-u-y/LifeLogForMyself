@@ -20,6 +20,19 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     /// </summary>
     private float time;
 
+    private int activeStart = 0;
+    //private int activeSec = 0;
+
+    private int restStart = 0;
+    //private int restSec = 0;
+
+    private enum PomodoroState
+    {
+        Active,
+        Rest,
+    }
+    private PomodoroState pomodoroState;
+
 
     new void Awake()
     {
@@ -93,6 +106,12 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
         mainUIDirector.PieChartCtrler.CreateCurrentPie(currentWork, currentProject);
 
+        if (currentProject.notificationMode == NotificationMode.Pomodoro)
+        {
+            activeStart = currentWork.startUnixSec;
+            pomodoroState = PomodoroState.Active;
+        }
+
         time = 0;
     }
 
@@ -101,24 +120,73 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     /// </summary>
     private void ProceedCurrentWork()
     {
-        currentWork.endUnixSec = GetNowTotalSeconds();
+        int nowTotalSeconds = GetNowTotalSeconds();
+        int elapsedSec = 0;
 
-        // 経過時間
-        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
-        print("now:" + elapsed);
+        currentWork.endUnixSec = nowTotalSeconds;
 
         // 作業中のログの更新
         mainUIDirector.PieChartCtrler.UpdateCurrentPie(currentWork);
+
         // メーターの更新
-        mainUIDirector.CurrentWorkMeterCtrler.UpdateMeter(elapsed);
+        if (currentProject.notificationMode == NotificationMode.Pomodoro)
+        {
+            if (pomodoroState == PomodoroState.Active)
+            {
+                elapsedSec = nowTotalSeconds - activeStart;
+                UpdatePomodoroActive(elapsedSec, nowTotalSeconds);
+            }
+            else if (pomodoroState == PomodoroState.Rest)
+            {
+                elapsedSec = nowTotalSeconds - restStart;
+                UpdatePomodoroRest(elapsedSec, nowTotalSeconds);
+            }
+        }
+        else
+        {
+            elapsedSec = currentWork.endUnixSec - currentWork.startUnixSec;
+            print("now:" + elapsedSec);
+            mainUIDirector.CurrentWorkMeterCtrler.UpdateActiveMeter(elapsedSec);
+        }
+
         // 作業時間表示の更新（1時間を超えたら桁を増やす）
-        int h = elapsed / 3600;
-        int m = (elapsed % 3600) / 60;
-        int s = elapsed % 60;
+        int h = elapsedSec / 3600;
+        int m = (elapsedSec % 3600) / 60;
+        int s = elapsedSec % 60;
         mainUIDirector.CurrentCountTMP.text = h > 0
             ? $"{String.Format("{0:00}", h)}:{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}"
             : $"{String.Format("{0:00}", m)}:{String.Format("{0:00}", s)}";
     }
+
+    private void UpdatePomodoroActive(int _elapsedSec, int _nowTotalSec)
+    {
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateActiveMeter(_elapsedSec);
+
+        if (_elapsedSec >= mainUIDirector.CurrentWorkMeterCtrler.MaxMinite * 60.0f)
+        {
+            // ポモドーロ Restへの変更処理
+            restStart = _nowTotalSec;
+            pomodoroState = PomodoroState.Rest;
+            mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(
+                mainUIDirector.CurrentWorkMeterCtrler.RestMeterColor);
+        }
+
+    }
+
+    private void UpdatePomodoroRest(int _elapsedSec, int _nowTotalSec)
+    {
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateRestMeter(_elapsedSec);
+
+        if (_elapsedSec >= mainUIDirector.CurrentWorkMeterCtrler.MaxRestMinute * 60.0f)
+        {
+            // ポモドーロ Activeへの変更処理
+            activeStart = _nowTotalSec;
+            pomodoroState = PomodoroState.Active;
+            mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(
+                currentProject.pieColor.GetWithColorFormat());
+        }
+    }
+
 
     /// <summary>
     /// 作業の終了処理
@@ -132,7 +200,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
         mainUIDirector.CurrentWorkMeterCtrler.InitializeMeter();
         mainUIDirector.PieChartCtrler.EndCurrentWork();
-        
+
         time = 0;
     }
 
@@ -144,7 +212,9 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     /// <param name="_maxMinute"></param>
     public void UpdateWorkMeterMax(float _maxMinute)
     {
-        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
+        int elapsed = currentWork == null
+            ? 0
+            : currentWork.endUnixSec - currentWork.startUnixSec;
         mainUIDirector.CurrentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
     }
 
@@ -176,16 +246,21 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         string selectedProject = mainUIDirector.ProjectDropdown.captionText.text;
         databaseDirector.SetSelectedProject(selectedProject);
         currentProject = databaseDirector.FindProject(selectedProject);
+        Debug.Log("notif:" + currentProject.notificationMode);
 
         Color c = currentProject.pieColor.GetWithColorFormat();
         mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(c);
 
-        if (!IsWorking)
+        if (IsWorking)
         {
-            return;
+            currentWork.projectName = selectedProject;
+            mainUIDirector.PieChartCtrler.UpdateCurrentPieColor(c, currentProject.name);
+            if (currentProject.notificationMode == NotificationMode.Pomodoro)
+            {
+                activeStart = GetNowTotalSeconds();
+                pomodoroState = PomodoroState.Active;
+            }
         }
-        currentWork.projectName = selectedProject;
-        mainUIDirector.PieChartCtrler.UpdateCurrentPieColor(c, currentProject.name);
     }
 
 

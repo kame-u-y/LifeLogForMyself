@@ -9,6 +9,8 @@ public class CurrentWorkMeterController : MonoBehaviour
 {
     [SerializeField]
     private float maxMinute = 1;
+    public float MaxMinite => maxMinute;
+
     private int loopCount = 0;
     [SerializeField]
     ClockLabelController clockLabelCtrler;
@@ -19,7 +21,13 @@ public class CurrentWorkMeterController : MonoBehaviour
 
     private DatabaseDirector databaseDirector;
 
-    Image image_;
+    private Image image_;
+
+    private readonly Color REST_METER_COLOR = new Color(0.9f, 0.9f, 0.9f);
+    public Color RestMeterColor => REST_METER_COLOR;
+
+    private const float MAX_REST_MINUTE = 5.0f;
+    public float MaxRestMinute => MAX_REST_MINUTE;
 
     private void Awake()
     {
@@ -60,7 +68,7 @@ public class CurrentWorkMeterController : MonoBehaviour
         loopCount = 0;
     }
 
-    public void UpdateMeter(int _elapsedTime)
+    public void UpdateActiveMeter(int _elapsedTime)
     {
         var ratio = (float)(1.0f * _elapsedTime / (maxMinute * 60.0f));
         image_.fillAmount = ratio % 1.0f;
@@ -68,6 +76,16 @@ public class CurrentWorkMeterController : MonoBehaviour
         {
             audioSource_.Play();
             loopCount++;
+        }
+    }
+
+    public void UpdateRestMeter(int _elapsedTime)
+    {
+        var ratio = (float)(1.0f * _elapsedTime / (MAX_REST_MINUTE * 60.0f));
+        image_.fillAmount = ratio % 1.0f;
+        if (ratio >= 1)
+        {
+            audioSource_.Play();
         }
     }
 

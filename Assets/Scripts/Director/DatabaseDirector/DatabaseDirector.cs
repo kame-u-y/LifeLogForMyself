@@ -241,8 +241,10 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
         //ïœçXÇÃí ím
 
         workingDirector.UpdateCurrentPie();
+        workingDirector.SwitchCurrentProject();
         mainUIDirector.ProjectDropdownCtrler.UpdateItems();
         mainUIDirector.PieChartCtrler.UpdateTodayColors(FetchProjectList());
+        
     }
 
     public void ApplyProjectDelete(string _name)
