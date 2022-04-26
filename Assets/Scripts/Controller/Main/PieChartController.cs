@@ -6,23 +6,22 @@ using UnityEngine.UI;
 
 public class PieChartController : MonoBehaviour
 {
+    private AppDirector appDirector;
+    private MainUIDirector mainUIDirector;
+
     [SerializeField]
     private GameObject CircleImage;
 
-    private List<GameObject> workPiePieces;
-    private GameObject currentWorkPiece;
-
-    private AppDirector appDirector;
-
-
+    private List<GameObject> logPieList;
+    private GameObject currentPie;
 
     private void Awake()
     {
-        //databaseDirector = DatabaseDirector.Instance;
-        workPiePieces = new List<GameObject>();
+        logPieList = new List<GameObject>();
+        currentPie = this.transform.Find("CurrentWork").gameObject;
 
         appDirector = AppDirector.Instance;
-        currentWorkPiece = this.transform.Find("CurrentWork").gameObject;
+        mainUIDirector = MainUIDirector.Instance;
     }
 
     private void Start()
@@ -40,77 +39,90 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     /// <param name="_dayData"></param>
     /// <param name="_projects"></param>
-    public void DisplayTodayPieChart(List<WorkData> _dayData, List<ProjectData> _projects)
+    public void UpdateLogPieChart(List<WorkData> _dayData, List<ProjectData> _projects)
     {
         ResetCircle();
 
-        // パイチャートを作るよ
-        // とりあえず今日の分
         List<WorkData> worksWithinRange = new List<WorkData>();
-        //worksWithinRange = _dayData.FindAll((v) =>
-        //{
-        //    int startSec = appDirector.GetSecondOfClockStart();
-        //    int endSec = appDirector.GetSecondOfClockEnd();
-        //    return v.startUnixSec >= startSec && v.endUnixSec <= endSec;
-        //});
-        // 時計一周前から現在までのworksのみ表示
-        worksWithinRange = _dayData.FindAll(
-            v => v.startUnixSec >= appDirector.GetSecondOfOneClockLapAgo()
-                 && v.endUnixSec <= appDirector.GetSecondOfNow());
+
+        // 時計ぐるっと1周以内のlogWorkを選別
+        worksWithinRange = _dayData.FindAll(w => IsWithinOneClockLapAgo(w));
 
         worksWithinRange.Sort((a, b) => a.startUnixSec - b.startUnixSec);
 
         for (int i = worksWithinRange.Count - 1; i >= 0; i--)
         {
             int id = _projects.FindIndex(v => v.name == worksWithinRange[i].projectName);
-            if (id == -1) id = 0;
-            CreateLogWorkPiece(worksWithinRange[i], _projects[id]);
-            //CreateBlankPiece(_dayData.works[i].startUnixSec - 1);
+            if (id == -1)
+            {
+                id = 0;
+            }
+            CreateLogPie(worksWithinRange[i], _projects[id]);
         }
-
-        // パイチャートの幅は基本的にはendUnixSecで決定する
-
     }
 
+    /// <summary>
+    /// LogPieの初期化処理
+    /// </summary>
     private void ResetCircle()
     {
-
-        GameObject container = this.transform.Find("LogWorks").gameObject;
+        GameObject container = mainUIDirector.LogPieContainer;
         for (int i = 0; i < container.transform.childCount; i++)
         {
             Destroy(container.transform.GetChild(i).gameObject);
         }
-        workPiePieces = new List<GameObject>();
+        logPieList = new List<GameObject>();
     }
 
-    private void CreateLogWorkPiece(WorkData _work, ProjectData _project)
+    /// <summary>
+    /// 時計ぐるっと1周以内のWorkDataはtrue
+    /// 1周以内に開始し、終了したものを取得する
+    /// （保存時に、1周より前に開始し、1周以内に終了したものは0:00で分割される）
+    /// ？？？？？↑関係なくね？現在時刻から24時間以内なら、0:00での分割とか意味ないじゃんね
+    /// </summary>
+    /// <param name="w"></param>
+    /// <returns></returns>
+    private bool IsWithinOneClockLapAgo(WorkData w)
+        => w.startUnixSec >= appDirector.GetSecondOfOneClockLapAgo()
+        && w.endUnixSec <= appDirector.GetSecondOfNow();
+
+    /// <summary>
+    /// LogPieの生成
+    /// </summary>
+    /// <param name="_work"></param>
+    /// <param name="_project"></param>
+    private void CreateLogPie(WorkData _work, ProjectData _project)
     {
-        if (_project == null) return;
+        GameObject newPie = Instantiate(
+            CircleImage,
+            Vector3.zero, 
+            Quaternion.identity, 
+            mainUIDirector.LogPieContainer.transform);
 
-        GameObject newPiePiece = Instantiate(CircleImage, Vector3.zero, Quaternion.identity, this.transform.Find("LogWorks").transform);
-        newPiePiece.transform.localPosition = new Vector3(0, 0, 0);
+        newPie.transform.localPosition = new Vector3(0, 0, 0);
+        newPie.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
+        // _workが持つ本当のprojectNameを指定
+        newPie.GetComponent<PieController>().ProjectName = _work.projectName; 
+        SetupPie(_work, newPie);
 
-        newPiePiece.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
-        newPiePiece.GetComponent<PieController>().ProjectName = _work.projectName;
-        SetupPiece(_work, newPiePiece);
-
-        newPiePiece.SetActive(true);
-        workPiePieces.Add(newPiePiece);
+        newPie.SetActive(true);
+        logPieList.Add(newPie);
     }
 
-    public void CreateCurrentWorkPiece(WorkData _work, ProjectData _project)
+    public void CreateCurrentPie(WorkData _work, ProjectData _project)
     {
-        currentWorkPiece.transform.localPosition = new Vector3(0, 0, 0);
-        currentWorkPiece.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
-        currentWorkPiece.GetComponent<PieController>().ProjectName = _project.name;
-        SetupPiece(_work, currentWorkPiece);
+        currentPie.transform.localPosition = new Vector3(0, 0, 0);
+        currentPie.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();
+        // _workが持つ本当のprojectNameを指定
+        currentPie.GetComponent<PieController>().ProjectName = _work.projectName;
+        SetupPie(_work, currentPie);
 
-        currentWorkPiece.SetActive(true);
+        currentPie.SetActive(true);
     }
 
-    public void UpdateCurrentWorkPiece(WorkData _work)
+    public void UpdateCurrentPie(WorkData _work)
     {
-        SetupPiece(_work, currentWorkPiece);
+        SetupPie(_work, currentPie);
     }
 
     /// <summary>
@@ -118,12 +130,13 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     public void EndCurrentWork()
     {
-        GameObject endPiePiece = Instantiate(currentWorkPiece, this.transform.Find("LogWorks").transform);
-        //endPiePiece.transform.localPosition = new Vector3(0, 0, 0);
+        GameObject endPiePiece = Instantiate(currentPie, this.transform.Find("LogWorks").transform);
+        
         endPiePiece.GetComponent<PieController>().ProjectName
-            = currentWorkPiece.GetComponent<PieController>().ProjectName;
-        workPiePieces.Add(endPiePiece);
-        currentWorkPiece.SetActive(false);
+            = currentPie.GetComponent<PieController>().ProjectName;
+        
+        currentPie.SetActive(false);
+        logPieList.Add(endPiePiece);
     }
 
     /// <summary>
@@ -131,7 +144,7 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     /// <param name="_work"></param>
     /// <param name="_obj"></param>
-    private void SetupPiece(WorkData _work, GameObject _obj)
+    private void SetupPie(WorkData _work, GameObject _obj)
     {
         // (endUnixSec - 今日の始め) / (今日の終わり - 今日の始め)
         int startSec = appDirector.GetSecondOfClockStart();
@@ -144,7 +157,12 @@ public class PieChartController : MonoBehaviour
             = CalculatePieRotationValue(1.0f, _work.startUnixSec, _work.endUnixSec, startSec, endSec);
     }
 
-    private float CalculatePieRotationValue(float _rotationMax, int _startOfValue, int _endOfValue, int _startOfAll, int _endOfAll)
+    private float CalculatePieRotationValue(
+        float _rotationMax, 
+        int _startOfValue, 
+        int _endOfValue, 
+        int _startOfAll, 
+        int _endOfAll)
         => (float)_rotationMax * (_endOfValue - _startOfValue) / (_endOfAll - _startOfAll);
 
     /// <summary>
@@ -152,7 +170,7 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     public void UpdateTodayColors(List<ProjectData> _projects)
     {
-        workPiePieces.ForEach(v =>
+        logPieList.ForEach(v =>
         {
             string pieProjectName = v.GetComponent<PieController>().ProjectName;
             int id = _projects.FindIndex(p => p.name == pieProjectName);
@@ -162,10 +180,10 @@ public class PieChartController : MonoBehaviour
         });
     }
 
-    public void ChangeCurrentColor(Color _color, string _projectName)
+    public void UpdateCurrentPieColor(Color _color, string _projectName)
     {
-        currentWorkPiece.GetComponent<Image>().color = _color;
-        currentWorkPiece.GetComponent<PieController>().ProjectName = _projectName;
+        currentPie.GetComponent<Image>().color = _color;
+        currentPie.GetComponent<PieController>().ProjectName = _projectName;
     }
 
 

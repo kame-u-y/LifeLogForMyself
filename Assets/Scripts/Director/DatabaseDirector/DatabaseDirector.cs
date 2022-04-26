@@ -240,7 +240,7 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
 
         //ïœçXÇÃí ím
 
-        workingDirector.ChangeProjectOfCurrentWork();
+        workingDirector.UpdateCurrentPie();
         mainUIDirector.ProjectDropdownCtrler.UpdateItems();
         mainUIDirector.PieChartCtrler.UpdateTodayColors(FetchProjectList());
     }

@@ -10,51 +10,40 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     DatabaseDirector databaseDirector;
     MainUIDirector mainUIDirector;
 
-    //[SerializeField]
-    //PlayEndImageController playEndImageCtrler;
-    //[SerializeField]
-    //PieChartController pieChartCtrler;
-    //[SerializeField]
-    //Dropdown mainUIDirector.ProjectDropdown;
-    //[SerializeField]
-    //CurrentWorkMeterController mainUIDirector.CurrentWorkMeterCtrler;
-    //[SerializeField]
-    //TextMeshProUGUI mainUIDirector.CurrentCountTMP;
+    private WorkData currentWork;
+    private ProjectData currentProject;
 
     public bool IsWorking { get; protected set; } = false;
 
-    private WorkData currentWork;
-    private ProjectData selectedProject;
+    /// <summary>
+    /// 作業中、一定間隔ごとに実行するためのカウント
+    /// </summary>
     private float time;
 
-
-
-    //private static WorkingDirector instance;
-    //public static WorkingDirector Instance => instance;
 
     new void Awake()
     {
         base.Awake();
+
         databaseDirector = DatabaseDirector.Instance;
         mainUIDirector = MainUIDirector.Instance;
-
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
         // 再生中を検出出来たら面白そうだけど、まあアカウント作らんとならんくなるな
         IsWorking = false;
+        // 再生/停止ボタンの表示初期化
         mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
-
-        //DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
+        // ログの表示
         List<WorkData> dayData = databaseDirector.Fetch24hData();
-        if (dayData == null) return;
-        Debug.Log(dayData.Count);
-        List<ProjectData> project = databaseDirector.FetchProjectList();
-        mainUIDirector.PieChartCtrler.DisplayTodayPieChart(dayData, project);
-
+        if (dayData != null)
+        {
+            List<ProjectData> project = databaseDirector.FetchProjectList();
+            mainUIDirector.PieChartCtrler.UpdateLogPieChart(dayData, project);
+        }
+        // 作業時間の表示
         mainUIDirector.CurrentCountTMP.text = "00:00";
     }
 
@@ -66,22 +55,63 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
             // 1秒ごとに更新
             if (time >= 1.0f)
             {
-                UpdateWorkTime();
+                ProceedCurrentWork();
                 time = 0.0f;
             }
             time += Time.deltaTime;
         }
     }
 
-    private void UpdateWorkTime()
+    /// <summary>
+    /// 開始/終了ボタンクリック時のイベント
+    /// 作業の開始/終了
+    /// </summary>
+    public void ToggleWork()
     {
-        //nowUnixSec = GetNowTotalSeconds();
+        if (IsWorking)
+            EndWork();
+        else
+            StartWork();
+    }
+
+    /// <summary>
+    /// 作業開始処理
+    /// </summary>
+    private void StartWork()
+    {
+        IsWorking = true;
+
+        currentWork = new WorkData()
+        {
+            id = 0,
+            startUnixSec = GetNowTotalSeconds(),
+            endUnixSec = GetNowTotalSeconds(),
+            projectName = mainUIDirector.ProjectDropdown.captionText.text
+        };
+        currentProject = databaseDirector.FindProject(currentWork.projectName);
+
+        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
+        mainUIDirector.PieChartCtrler.CreateCurrentPie(currentWork, currentProject);
+
+        time = 0;
+    }
+
+    /// <summary>
+    /// 作業の進行処理
+    /// </summary>
+    private void ProceedCurrentWork()
+    {
         currentWork.endUnixSec = GetNowTotalSeconds();
-        mainUIDirector.PieChartCtrler.UpdateCurrentWorkPiece(currentWork);
+
+        // 経過時間
         int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
         print("now:" + elapsed);
-        mainUIDirector.CurrentWorkMeterCtrler.UpdateMeter(elapsed);
 
+        // 作業中のログの更新
+        mainUIDirector.PieChartCtrler.UpdateCurrentPie(currentWork);
+        // メーターの更新
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateMeter(elapsed);
+        // 作業時間表示の更新（1時間を超えたら桁を増やす）
         int h = elapsed / 3600;
         int m = (elapsed % 3600) / 60;
         int s = elapsed % 60;
@@ -91,15 +121,30 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     }
 
     /// <summary>
+    /// 作業の終了処理
+    /// </summary>
+    private void EndWork()
+    {
+        IsWorking = false;
+
+        databaseDirector.AddEndedWork(currentWork);
+
+        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
+        mainUIDirector.CurrentWorkMeterCtrler.InitializeMeter();
+        mainUIDirector.PieChartCtrler.EndCurrentWork();
+        
+        time = 0;
+    }
+
+
+
+    /// <summary>
     /// 設定更新用
     /// </summary>
     /// <param name="_maxMinute"></param>
     public void UpdateWorkMeterMax(float _maxMinute)
     {
-
-        int elapsed = currentWork != null 
-            ? currentWork.endUnixSec - currentWork.startUnixSec
-            : 0;
+        int elapsed = currentWork.endUnixSec - currentWork.startUnixSec;
         mainUIDirector.CurrentWorkMeterCtrler.UpdateWorkMax(_maxMinute, elapsed);
     }
 
@@ -107,90 +152,42 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     /// 外部から描画の更新が必要な場合に呼ばれる
     /// isClock12hの変更通知
     /// </summary>
-    public void CallForNeedUpdateCurrentWorkPiece()
+    public void UpdateCurrentPie()
     {
         if (!IsWorking) return;
-        mainUIDirector.PieChartCtrler.UpdateCurrentWorkPiece(currentWork);
+        mainUIDirector.PieChartCtrler.UpdateCurrentPie(currentWork);
     }
 
-    public void CallForNeedDisplayTodayPieChart()
+    /// <summary>
+    /// 外部から
+    /// </summary>
+    public void UpdateLogPieChart()
     {
-        //DayData dayData = databaseDirector.FetchDayData(DateTime.Now.ToString("yyyyMMdd"));
         List<WorkData> dayData = databaseDirector.Fetch24hData();
-        if (dayData == null) return;
-
-        List<ProjectData> project = databaseDirector.FetchProjectList();
-        mainUIDirector.PieChartCtrler.DisplayTodayPieChart(dayData, project);
-    }
-
-    public void ChangeProjectOfCurrentWork()
-    {
-        databaseDirector.SetSelectedProject(mainUIDirector.ProjectDropdown.captionText.text);
-        selectedProject = databaseDirector.FindProject(databaseDirector.FetchSelectedProject());
-        //Color c = new Color(
-        //    selectedProject.pieColor.r,
-        //    selectedProject.pieColor.g,
-        //    selectedProject.pieColor.b);
-        Color c = selectedProject.pieColor.GetWithColorFormat();
-        mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(c);
-        
-        if (!IsWorking) return;
-
-        currentWork.projectName = mainUIDirector.ProjectDropdown.captionText.text;
-        print(selectedProject.name);
-        mainUIDirector.PieChartCtrler.ChangeCurrentColor(c, selectedProject.name);
-        //mainUIDirector.CurrentWorkMeterCtrler.ChangeColor(c);
-    }
-
-
-
-    public void ToggleWork()
-    {
-        if (IsWorking)
-            EndWork();
-        else
-            StartWork();
-    }
-
-    private void StartWork()
-    {
-        IsWorking = true;
-        //startUnixSec = GetNowTotalSeconds();
-        //nowUnixSec = startUnixSec;
-        currentWork = new WorkData()
+        if (dayData != null)
         {
-            id = 0,
-            startUnixSec = GetNowTotalSeconds(),
-            endUnixSec = GetNowTotalSeconds(),
-            projectName = mainUIDirector.ProjectDropdown.captionText.text
-        };
-        selectedProject = databaseDirector.FindProject(currentWork.projectName);
-
-        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
-        mainUIDirector.PieChartCtrler.CreateCurrentWorkPiece(currentWork, selectedProject);
-
-        //Color c = new Color(
-        //    selectedProject.pieColor.r / 255.0f,
-        //    selectedProject.pieColor.g / 255.0f,
-        //    selectedProject.pieColor.b / 255.0f);
-        //mainUIDirector.PieChartCtrler.ChangeCurrentColor(c);
-
-        time = 0;
+            List<ProjectData> project = databaseDirector.FetchProjectList();
+            mainUIDirector.PieChartCtrler.UpdateLogPieChart(dayData, project);
+        }
     }
 
-    private void EndWork()
+    public void SwitchCurrentProject()
     {
-        IsWorking = false;
-        // todo: データを記録
-        databaseDirector.AddEndedWork(currentWork);
+        string selectedProject = mainUIDirector.ProjectDropdown.captionText.text;
+        databaseDirector.SetSelectedProject(selectedProject);
+        currentProject = databaseDirector.FindProject(selectedProject);
 
-        mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
-        time = 0;
+        Color c = currentProject.pieColor.GetWithColorFormat();
+        mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(c);
 
-        mainUIDirector.CurrentWorkMeterCtrler.InitializeMeter();
-        //mainUIDirector.CurrentCountTMP.text = "00:00";
-        mainUIDirector.PieChartCtrler.EndCurrentWork();
+        if (!IsWorking)
+        {
+            return;
+        }
+        currentWork.projectName = selectedProject;
+        mainUIDirector.PieChartCtrler.UpdateCurrentPieColor(c, currentProject.name);
     }
+
 
     private int GetNowTotalSeconds()
         => (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;

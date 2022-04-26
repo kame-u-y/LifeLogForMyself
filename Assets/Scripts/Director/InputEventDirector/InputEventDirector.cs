@@ -24,23 +24,9 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
     private PopupUIDirector popupUIDirector;
     #endregion
 
-
-    //private static InputEventDirector instance;
-    //public static InputEventDirector Instance => instance;
-
     new void Awake()
     {
         base.Awake();
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
 
         myInputActions = new MyInputActions();
         InitializeActionMap(myInputActions.UI);
@@ -64,7 +50,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         #region main
         mainUIDirector.PlayEndButton.onClick.AddListener(workingDirector.ToggleWork);
         mainUIDirector.ProjectDropdown.onValueChanged.AddListener(
-            (v) => workingDirector.ChangeProjectOfCurrentWork());
+            (v) => workingDirector.UpdateCurrentPie());
         mainUIDirector.BackgroundButton.onClick.AddListener(windowDirector.OnResizingButtonClick);
         #endregion
 

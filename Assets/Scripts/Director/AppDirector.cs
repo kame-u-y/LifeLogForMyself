@@ -83,32 +83,28 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     {
         if (_mode == GameMode.Main)
         {
-            bool b = true;
             mainContainer.transform.localScale = Vector3.one;
             settingsContainer.transform.localScale = Vector3.zero;
-            // watchLogContainer.SetActive(false);
 
+            bool b = true;
             mainButton.interactable = !b;
             settingsButton.interactable = b;
         }
         else if (_mode == GameMode.Settings)
         {
-            bool b = true;
             mainContainer.transform.localScale = Vector3.zero;
             settingsContainer.transform.localScale = Vector3.one;
 
-            // watchLogContainer.SetActive(false);
-
+            bool b = true;
             mainButton.interactable = b;
             settingsButton.interactable = !b;
         }
         else if (_mode == GameMode.WatchLog)
         {
-            bool b = true;
             mainContainer.transform.localScale = Vector3.zero;
             settingsContainer.transform.localScale = Vector3.zero;
-            // watchLogContainer.SetActive(true);
 
+            bool b = true;
             mainButton.interactable = b;
             settingsButton.interactable = b;
         }
@@ -122,8 +118,8 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
 
     private void UpdateClockElements()
     {
-        workingDirector.CallForNeedDisplayTodayPieChart();
-        workingDirector.CallForNeedUpdateCurrentWorkPiece();
+        workingDirector.UpdateLogPieChart();
+        workingDirector.UpdateCurrentPie();
         clockLabelController.ChangeClockLabels(isClock12h);
         //clockModeButtonController.ChangeButtonColor(isClock12h);
         todayPastPlateController.UpdatePlate();
