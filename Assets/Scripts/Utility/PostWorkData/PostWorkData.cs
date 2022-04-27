@@ -39,12 +39,13 @@ public class PostWorkData : MonoBehaviour
         //PostWork(year, month, day, hour, minute, second, hour, minute+10, second, "ì«èë");
         int y = 2022;
         int M = 4;
-        int d = 26;
+        int d = 28;
         int h = DateTime.Now.Hour;
         int m = DateTime.Now.Minute;
         int s = DateTime.Now.Second;
-        PostWork(y, M, d, h, m+2, s, h, m+7, s, "ì«èë");
-        PostWork(y, M, d, h, m+9, s, h, m+14, s, "ì«èë");
+        PostWork(2022, 4, 27, 20, 0, s, 20, 30, s, "kintore");
+        PostWork(2022, 4, 27, 8, 30, s, 9, 0, s, "äJî≠");
+        PostWork(2022, 4, 28, 3, 15, s, 3, 30, s, "âpåÍ");
     }
 
     // Update is called once per frame

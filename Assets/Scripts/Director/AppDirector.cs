@@ -168,7 +168,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         
 
 
-    private bool IsAm()
+    public bool IsAm()
         => DateTime.Now.Hour < 12;
 
     private int GetSecondOfToday(int _h, int _m, int _s)

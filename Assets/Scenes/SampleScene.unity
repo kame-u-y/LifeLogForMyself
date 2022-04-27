@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 44115270}
   m_HandleRect: {fileID: 44115269}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5275,7 +5275,6 @@ MonoBehaviour:
   debugMode: 1
   isClock12h: 1
   clockLabelController: {fileID: 196132105}
-  todayPastPlateController: {fileID: 0}
   todayFuturePlateController: {fileID: 31709245}
   currentWorkMeterController: {fileID: 690280552}
   mainContainer: {fileID: 1729671764}

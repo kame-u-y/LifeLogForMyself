@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
 {
+    AppDirector appDirector;
     DatabaseDirector databaseDirector;
     MainUIDirector mainUIDirector;
 
@@ -38,6 +39,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     {
         base.Awake();
 
+        appDirector = AppDirector.Instance;
         databaseDirector = DatabaseDirector.Instance;
         mainUIDirector = MainUIDirector.Instance;
     }
@@ -55,6 +57,11 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         {
             List<ProjectData> project = databaseDirector.FetchProjectList();
             mainUIDirector.PieChartCtrler.CreateLogPieChart(dayData, project);
+
+            if (appDirector.isClock12h)
+            {
+                mainUIDirector.PieChartCtrler.SwitchAMPM(!appDirector.IsAm());
+            }
         }
         // 作業時間の表示
         mainUIDirector.CurrentCountTMP.text = "00:00";
@@ -68,6 +75,31 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         {
             // 時系列データに応じて、24h前のログデータを縮める
             mainUIDirector.PieChartCtrler.UpdateLogPie(GetNowTotalSeconds());
+
+            // 24時だったならば、データを一新する
+            if (GetNowTotalSeconds() == GetTodayTotalSeconds())
+            {
+                // ログの表示
+                List<WorkData> dayData = databaseDirector.Fetch24hData();
+                if (dayData != null)
+                {
+                    List<ProjectData> project = databaseDirector.FetchProjectList();
+                    mainUIDirector.PieChartCtrler.CreateLogPieChart(dayData, project);
+                }
+                if (appDirector.isClock12h)
+                {
+                    mainUIDirector.PieChartCtrler.SwitchAMPM(false);
+                }
+            }
+            // 12時ならば昨日の午後のログを表示
+            else if (GetNowTotalSeconds() == Get12hTotalSeconds())
+            {
+                if (appDirector.isClock12h)
+                {
+                    mainUIDirector.PieChartCtrler.SwitchAMPM(true);
+                }
+            }
+
             if (IsWorking)
             {
                 ProceedCurrentWork();
@@ -240,6 +272,10 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         {
             List<ProjectData> project = databaseDirector.FetchProjectList();
             mainUIDirector.PieChartCtrler.CreateLogPieChart(dayData, project);
+            if (appDirector.isClock12h)
+            {
+                mainUIDirector.PieChartCtrler.SwitchAMPM(!appDirector.IsAm());
+            }
         }
     }
 
@@ -268,4 +304,10 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
 
     private int GetNowTotalSeconds()
         => (int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+    private int GetTodayTotalSeconds()
+        => (int)DateTime.Today.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
+    private int Get12hTotalSeconds()
+        => (int)DateTime.Today.AddHours(12).Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 }
