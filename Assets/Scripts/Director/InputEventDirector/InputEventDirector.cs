@@ -50,7 +50,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         #region main
         mainUIDirector.PlayEndButton.onClick.AddListener(workingDirector.ToggleWork);
         mainUIDirector.ProjectDropdown.onValueChanged.AddListener(
-            (v) => workingDirector.UpdateCurrentPie());
+            (v) => workingDirector.SwitchCurrentProject());
         mainUIDirector.BackgroundButton.onClick.AddListener(windowDirector.OnResizingButtonClick);
         #endregion
 

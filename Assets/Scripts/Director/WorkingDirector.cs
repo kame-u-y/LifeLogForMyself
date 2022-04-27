@@ -54,7 +54,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         if (dayData != null)
         {
             List<ProjectData> project = databaseDirector.FetchProjectList();
-            mainUIDirector.PieChartCtrler.UpdateLogPieChart(dayData, project);
+            mainUIDirector.PieChartCtrler.CreateLogPieChart(dayData, project);
         }
         // 作業時間の表示
         mainUIDirector.CurrentCountTMP.text = "00:00";
@@ -63,16 +63,18 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     // Update is called once per frame
     void Update()
     {
-        if (IsWorking)
+        // 1秒ごとに更新
+        if (time >= 1.0f)
         {
-            // 1秒ごとに更新
-            if (time >= 1.0f)
+            // 時系列データに応じて、24h前のログデータを縮める
+            mainUIDirector.PieChartCtrler.UpdateLogPie(GetNowTotalSeconds());
+            if (IsWorking)
             {
                 ProceedCurrentWork();
-                time = 0.0f;
             }
-            time += Time.deltaTime;
+                time = 0.0f;
         }
+            time += Time.deltaTime;
     }
 
     /// <summary>
@@ -146,7 +148,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         {
             elapsedSec = currentWork.endUnixSec - currentWork.startUnixSec;
             print("now:" + elapsedSec);
-            mainUIDirector.CurrentWorkMeterCtrler.UpdateActiveMeter(elapsedSec);
+            mainUIDirector.CurrentWorkMeterCtrler.UpdateMeter(elapsedSec);
         }
 
         // 作業時間表示の更新（1時間を超えたら桁を増やす）
@@ -199,7 +201,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
 
         mainUIDirector.PlayEndImageCtrler.ChangeButtonImage(IsWorking);
         mainUIDirector.CurrentWorkMeterCtrler.InitializeMeter();
-        mainUIDirector.PieChartCtrler.EndCurrentWork();
+        mainUIDirector.PieChartCtrler.EndCurrentWork(currentWork);
 
         time = 0;
     }
@@ -237,7 +239,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
         if (dayData != null)
         {
             List<ProjectData> project = databaseDirector.FetchProjectList();
-            mainUIDirector.PieChartCtrler.UpdateLogPieChart(dayData, project);
+            mainUIDirector.PieChartCtrler.CreateLogPieChart(dayData, project);
         }
     }
 
@@ -250,7 +252,7 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
 
         Color c = currentProject.pieColor.GetWithColorFormat();
         mainUIDirector.CurrentWorkMeterCtrler.UpdateColor(c);
-
+        
         if (IsWorking)
         {
             currentWork.projectName = selectedProject;

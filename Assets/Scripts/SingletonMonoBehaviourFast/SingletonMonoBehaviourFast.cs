@@ -7,7 +7,7 @@ public class SingletonMonoBehaviourFast<T> : MonoBehaviour where T : SingletonMo
 {
     protected static readonly string[] findTags =
     {
-        "Directory",
+        "Director",
     };
 
     protected static T instance;

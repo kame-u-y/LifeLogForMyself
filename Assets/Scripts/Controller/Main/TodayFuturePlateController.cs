@@ -11,13 +11,13 @@ public class TodayFuturePlateController : MonoBehaviour
 
     private void Awake()
     {
+        appDirector = AppDirector.Instance;
         
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        appDirector = AppDirector.Instance;
     }
 
     // Update is called once per frame
@@ -35,20 +35,15 @@ public class TodayFuturePlateController : MonoBehaviour
 
     public void UpdatePlate()
     {
-        //int startSec = appDirector.GetSecondOfClockStart();
         int startSec = appDirector.GetSecondOfNow();
         int endSec = appDirector.GetSecondOfClockEnd();
-        //int nowSec = GetNowSecond();
         int clockStartSec = appDirector.GetSecondOfClockStart();
 
-        //var hoge = (float)(1.0f * (nowSec - startSec) / (endSec - startSec));
         float angle = CalculatePieRotationValue(360.0f, clockStartSec, startSec-5, clockStartSec, endSec);
 
         this.transform.rotation = Quaternion.Euler(0, 0, -angle);
         this.GetComponent<Image>().fillAmount = 
             CalculatePieRotationValue(1.0f, startSec, endSec+5, clockStartSec, endSec);
-        //Debug.Log($"past:({hoge})");
-
     }
 
     private bool IsAm()

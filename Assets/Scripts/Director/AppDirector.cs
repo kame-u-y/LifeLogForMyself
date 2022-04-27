@@ -25,8 +25,8 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     ClockLabelController clockLabelController;
     //[SerializeField]
     //ClockModeButtonController clockModeButtonController;
-    [SerializeField]
-    TodayPastPlateController todayPastPlateController;
+    //[SerializeField]
+    //TodayPastPlateController todayPastPlateController;
     [SerializeField]
     TodayFuturePlateController todayFuturePlateController;
     [SerializeField]
@@ -58,12 +58,12 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     {
         base.Awake();
 
+        workingDirector = WorkingDirector.Instance;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        workingDirector = WorkingDirector.Instance;
 
         UpdateClockElements();
 
@@ -122,7 +122,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         workingDirector.UpdateCurrentPie();
         clockLabelController.ChangeClockLabels(isClock12h);
         //clockModeButtonController.ChangeButtonColor(isClock12h);
-        todayPastPlateController.UpdatePlate();
+        //todayPastPlateController.UpdatePlate();
         todayFuturePlateController.UpdatePlate();
     }
 

@@ -12,25 +12,9 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
     private WorkingDirector workingDirector;
     private MainUIDirector mainUIDirector;
 
-    /// <summary>
-    /// ƒVƒ“ƒOƒ‹ƒgƒ“
-    /// </summary>
-    //private static DatabaseDirector instance;
-    //public static DatabaseDirector Instance => instance;
-
     new void Awake()
     {
         base.Awake();
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
 
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();

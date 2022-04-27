@@ -68,7 +68,8 @@ public class CurrentWorkMeterController : MonoBehaviour
         loopCount = 0;
     }
 
-    public void UpdateActiveMeter(int _elapsedTime)
+
+    public void UpdateMeter(int _elapsedTime)
     {
         var ratio = (float)(1.0f * _elapsedTime / (maxMinute * 60.0f));
         image_.fillAmount = ratio % 1.0f;
@@ -76,6 +77,16 @@ public class CurrentWorkMeterController : MonoBehaviour
         {
             audioSource_.Play();
             loopCount++;
+        }
+    }
+
+    public void UpdateActiveMeter(int _elapsedTime)
+    {
+        var ratio = (float)(1.0f * _elapsedTime / (maxMinute * 60.0f));
+        image_.fillAmount = ratio % 1.0f;
+        if (ratio >= 1)
+        {
+            audioSource_.Play();
         }
     }
 
