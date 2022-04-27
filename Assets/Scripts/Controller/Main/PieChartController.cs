@@ -220,89 +220,23 @@ public class PieChartController : MonoBehaviour
     public void SwitchAMPM(bool _toPM)
     {
         // •\Ž¦E”ñ•\Ž¦‚ÌØ‚è‘Ö‚¦
-
-
-
         int yesterdayNoon = GetYesterday12hTotalSeconds();
-        //int yesterdayAfternoonId = timeSequence24h.FindIndex(v => v.start >= yesterdayNoon || v.end >= yesterdayNoon);
-
         int today = GetTodayTotalSeconds();
-        //int todayId = timeSequence24h.FindIndex(v =>
-        //{
-        //    Debug.Log(v.start + ", " + v.end);
-        //    return v.start >= today || v.end >= today;
-        //});
-
         int todayNoon = GetToday12hTotalSeconds();
-        //int todayAfternoonId = timeSequence24h.FindIndex(v =>
-        //{
-        //    Debug.Log(v.start + ", " + v.end);
-        //    return v.start >= todayNoon || v.end >= todayNoon;
-        //});
 
-        //if (_toPM)
-        //{
-            logPieList.ForEach(pie =>
-            {
-                int start = pie.workData.startUnixSec;
-                int end = pie.workData.endUnixSec;
-                bool isYesterdayAfterNoon =
-                    (start >= yesterdayNoon || end >= yesterdayNoon)
-                    && (start < today && end < today);
-                bool isTodayAfterNoon =
-                    (start >= todayNoon || end >= todayNoon);
+        logPieList.ForEach(pie =>
+        {
+            int start = pie.workData.startUnixSec;
+            int end = pie.workData.endUnixSec;
+            bool isYesterdayAfterNoon =
+                (start >= yesterdayNoon || end >= yesterdayNoon)
+                && (start < today && end < today);
+            bool isTodayAfterNoon =
+                (start >= todayNoon || end >= todayNoon);
 
-                bool isAfterNoonLog = isYesterdayAfterNoon || isTodayAfterNoon;
-                pie.gameObject_.SetActive(_toPM ? isAfterNoonLog : !isAfterNoonLog);
-            });
-        //}
-        //else
-        //{
-        //    logPieList.ForEach(pie =>
-        //    {
-        //        int start = pie.workData.startUnixSec;
-        //        int end = pie.workData.endUnixSec;
-        //        bool is
-        //    });
-        //}
-
-
-
-        //Debug.Log(yesterdayNoon);
-        //Debug.Log(yesterdayAfternoonId);
-        //Debug.Log(today);
-        //Debug.Log(todayId);
-        //Debug.Log(todayNoon);
-        //Debug.Log(todayAfternoonId);
-
-        //timeSequence24h.ForEach(v => Debug.Log($"t:{v.start},{v.end}"));
-        //logPieList.ForEach(v => Debug.Log($"p:{v.workData.startUnixSec},{v.workData.endUnixSec}"));
-
-        //if (_toPM)
-        //{
-        //    for (int i = 0; i < timeSequence24h.Count; i++)
-        //    {
-        //        bool isYesterdayPM = i >= yesterdayAfternoonId && i < todayId;
-        //        bool isTodayPM = todayAfternoonId != -1
-        //            ? i >= todayAfternoonId
-        //            : false;
-        //        Debug.Log(isYesterdayPM || isTodayPM);
-        //        logPieList[i].gameObject_.SetActive(isYesterdayPM || isTodayPM);
-        //    }
-        //    Debug.Log("toPM");
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < timeSequence24h.Count; i++)
-        //    {
-        //        bool isYesterdayAM = i < yesterdayAfternoonId;
-        //        bool isTodayAM = todayAfternoonId != -1
-        //            ? i >= todayId && i < todayAfternoonId
-        //            : i >= todayId;
-        //        logPieList[i].gameObject_.SetActive(isYesterdayAM || isTodayAM);
-        //    }
-        //    Debug.Log("toAM");
-        //}
+            bool isAfterNoonLog = isYesterdayAfterNoon || isTodayAfterNoon;
+            pie.gameObject_.SetActive(_toPM ? isAfterNoonLog : !isAfterNoonLog);
+        });
     }
 
     private int GetYesterday12hTotalSeconds()
