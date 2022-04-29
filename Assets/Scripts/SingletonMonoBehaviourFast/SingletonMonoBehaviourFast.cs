@@ -10,7 +10,7 @@ public class SingletonMonoBehaviourFast<T> : MonoBehaviour where T : SingletonMo
         "Director",
     };
 
-    protected static T instance;
+    private static T instance;
     public static T Instance
     {
         get

@@ -25,6 +25,9 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
     private Button mainButton;
     public Button MainButton => mainButton;
 
+    private Button watchLogButton;
+    public Button WatchLogButton => watchLogButton;
+
     private Button settingButton;
     public Button SettingButton => settingButton;
 
@@ -48,25 +51,13 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
     private Button projectDeleteButton;
     public Button ProjectDeleteButton => projectDeleteButton;
 
-    //ƒVƒ“ƒOƒ‹ƒgƒ“
-    //private static PopupUIDirector instance;
-    //public static PopupUIDirector Instance => instance;
-
+    
     new void Awake()
     {
         base.Awake();
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
 
         mainButton = mainMenuContainer.transform.Find("MainButton").GetComponent<Button>();
+        watchLogButton = mainMenuContainer.transform.Find("WatchLogButton").GetComponent<Button>();
         settingButton = mainMenuContainer.transform.Find("SettingsButton").GetComponent<Button>();
         quitButton = mainMenuContainer.transform.Find("QuitButton").GetComponent<Button>();
 

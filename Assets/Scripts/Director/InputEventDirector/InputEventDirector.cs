@@ -22,6 +22,8 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
     private ProjectSettingsDirector projectSettingsDirector;
     private PopupDirector popupDirector;
     private PopupUIDirector popupUIDirector;
+    private LogDirector logDirector;
+    private LogUIDirector logUIDirector;
     #endregion
 
     new void Awake()
@@ -41,6 +43,8 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         projectSettingsDirector = ProjectSettingsDirector.Instance;
         popupDirector = PopupDirector.Instance;
         popupUIDirector = PopupUIDirector.Instance;
+        logDirector = LogDirector.Instance;
+        logUIDirector = LogUIDirector.Instance;
         #endregion
     }
 
@@ -56,7 +60,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
 
         #region drag
         AddDragEvent(mainUIDirector.BackgroundButton.gameObject);
-        AddDragEvent(settingsUIDirector.BackgroundButton.gameObject);
+        //AddDragEvent(settingsUIDirector.BackgroundButton.gameObject);
         #endregion
 
         #region popup
@@ -73,6 +77,14 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                  appDirector.SwitchGameMode(AppDirector.GameMode.Main);
                  popupDirector.ClosePopup();
              });
+
+        popupUIDirector.WatchLogButton.onClick.AddListener(
+            () =>
+            {
+                generalSettingsDirector.RevertChanges();
+                appDirector.SwitchGameMode(AppDirector.GameMode.WatchLog);
+                popupDirector.ClosePopup();
+            });
 
         popupUIDirector.SettingButton.onClick.AddListener(
              () =>
@@ -153,6 +165,13 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         
         settingsUIDirector.ProjectSettingApplyButton.onClick.AddListener(
             () => projectSettingsDirector.ApplyProjectChanges());
+        #endregion
+
+        #region log
+        logUIDirector.PreviousButton.onClick.AddListener(
+            () => logDirector.DisplayPrevious());
+        logUIDirector.NextButton.onClick.AddListener(
+            () => logDirector.DisplayNext());
         #endregion
     }
 

@@ -35,10 +35,14 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     [SerializeField]
     GameObject mainContainer;
     [SerializeField]
+    GameObject watchLogContainer;
+    [SerializeField]
     GameObject settingsContainer;
     [SerializeField]
     GameObject buttonContainer;
+
     Button mainButton;
+    Button watchLogButton;
     Button settingsButton;
 
 
@@ -68,8 +72,9 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         UpdateClockElements();
 
         mainButton = buttonContainer.transform.Find("MainButton").GetComponent<Button>();
+        watchLogButton = buttonContainer.transform.Find("WatchLogButton").GetComponent<Button>();
         settingsButton = buttonContainer.transform.Find("SettingsButton").GetComponent<Button>();
-        
+
         SwitchGameMode(GameMode.Main);
     }
 
@@ -84,28 +89,34 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         if (_mode == GameMode.Main)
         {
             mainContainer.transform.localScale = Vector3.one;
+            watchLogContainer.transform.localScale = Vector3.zero;
             settingsContainer.transform.localScale = Vector3.zero;
 
             bool b = true;
             mainButton.interactable = !b;
+            watchLogButton.interactable = b;
             settingsButton.interactable = b;
         }
         else if (_mode == GameMode.Settings)
         {
             mainContainer.transform.localScale = Vector3.zero;
+            watchLogContainer.transform.localScale = Vector3.zero;
             settingsContainer.transform.localScale = Vector3.one;
 
             bool b = true;
             mainButton.interactable = b;
+            watchLogButton.interactable = b;
             settingsButton.interactable = !b;
         }
         else if (_mode == GameMode.WatchLog)
         {
             mainContainer.transform.localScale = Vector3.zero;
+            watchLogContainer.transform.localScale = Vector3.one;
             settingsContainer.transform.localScale = Vector3.zero;
 
             bool b = true;
             mainButton.interactable = b;
+            watchLogButton.interactable = !b;
             settingsButton.interactable = b;
         }
     }

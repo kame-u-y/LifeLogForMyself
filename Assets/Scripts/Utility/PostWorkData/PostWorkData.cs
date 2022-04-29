@@ -44,8 +44,8 @@ public class PostWorkData : MonoBehaviour
         int m = DateTime.Now.Minute;
         int s = DateTime.Now.Second;
         PostWork(2022, 4, 27, 20, 0, s, 20, 30, s, "kintore");
-        PostWork(2022, 4, 27, 8, 30, s, 9, 0, s, "ŠJ”­");
-        PostWork(2022, 4, 28, 3, 15, s, 3, 30, s, "‰pŒê");
+        PostWork(2022, 4, 27, 10, 30, s, 11, 0, s, "ŠJ”­");
+        PostWork(2022, 4, 28, 3, 0, s, 4, 0, s, "‰pŒê");
     }
 
     // Update is called once per frame

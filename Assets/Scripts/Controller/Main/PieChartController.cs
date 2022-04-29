@@ -90,7 +90,8 @@ public class PieChartController : MonoBehaviour
     /// </summary>
     private void ResetCircle()
     {
-        GameObject container = mainUIDirector.LogPieContainer;
+        //GameObject container = mainUIDirector.LogPieContainer;
+        GameObject container = this.transform.Find("LogWorks").gameObject;
         for (int i = 0; i < container.transform.childCount; i++)
         {
             Destroy(container.transform.GetChild(i).gameObject);
@@ -121,7 +122,8 @@ public class PieChartController : MonoBehaviour
             CircleImage,
             Vector3.zero,
             Quaternion.identity,
-            mainUIDirector.LogPieContainer.transform);
+            this.transform.Find("LogWorks"));
+            //mainUIDirector.LogPieContainer.transform);
 
         newPie.transform.localPosition = new Vector3(0, 0, 0);
         newPie.GetComponent<Image>().color = _project.pieColor.GetWithColorFormat();

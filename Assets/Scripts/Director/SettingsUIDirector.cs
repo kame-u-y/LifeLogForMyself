@@ -7,9 +7,9 @@ using UnityEngine.UI;
 
 public class SettingsUIDirector : SingletonMonoBehaviourFast<SettingsUIDirector>
 {
-    [SerializeField]
-    private Button backgroundButton;
-    public Button BackgroundButton => backgroundButton;
+    //[SerializeField]
+    //private Button backgroundButton;
+    //public Button BackgroundButton => backgroundButton;
 
     [SerializeField]
     private GameObject settingsTabContainer;

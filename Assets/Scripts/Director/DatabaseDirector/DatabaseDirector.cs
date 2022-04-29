@@ -18,15 +18,15 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
 
         filePath = Application.persistentDataPath + "/" + ".savedata.json";
         ImportSaveData();
+
+        windowDirector = WindowDirector.Instance;
+        workingDirector = WorkingDirector.Instance;
+        mainUIDirector = MainUIDirector.Instance;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-
-        windowDirector = WindowDirector.Instance;
-        workingDirector = WorkingDirector.Instance;
-        mainUIDirector = MainUIDirector.Instance;
         //SaveSampleWorkData();
         //SaveSampleProjectData();
     }
@@ -300,6 +300,18 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
                 }
             });
             works.AddRange(yesterdayWorks);
+        }
+        return works;
+    }
+
+    public List<WorkData> FetchDayData(int _offset)
+    {
+        List<WorkData> works = new List<WorkData>();
+
+        string day = DateTime.Today.AddDays(_offset).ToString("yyyyMMdd");
+        if (saveData.dailyDictionary.ContainsKey(day))
+        {
+            works.AddRange(saveData.dailyDictionary[day].works);
         }
         return works;
     }

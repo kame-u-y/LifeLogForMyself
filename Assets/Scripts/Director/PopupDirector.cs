@@ -27,25 +27,6 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
         ProjectDelete
     }
 
-    // ƒVƒ“ƒOƒ‹ƒgƒ“
-    //private static PopupDirector instance;
-    //public static PopupDirector Instance => instance;
-
-    //private void Awake()
-    //{
-
-    //    //if (instance == null)
-    //    //{
-    //    //    instance = this;
-    //    //    DontDestroyOnLoad(gameObject);
-    //    //}
-    //    //else
-    //    //{
-    //    //    Destroy(gameObject);
-    //    //    return;
-    //    //}
-
-    //}
 
     // Start is called before the first frame update
     void Start()

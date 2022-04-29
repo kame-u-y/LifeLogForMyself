@@ -21,6 +21,8 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
     private AppDirector appDirector;
     private WorkingDirector workingDirector;
     private MainUIDirector mainUIDirector;
+    private LogUIDirector logUIDirector;
+
 
     //private static ResizingDirector instance;
     //public static ResizingDirector Instance => instance;
@@ -47,6 +49,7 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
         appDirector = AppDirector.Instance;
         workingDirector = WorkingDirector.Instance;
         mainUIDirector = MainUIDirector.Instance;
+        logUIDirector = LogUIDirector.Instance;
 
         InitializePValues();
         SwitchClockImage();
@@ -100,6 +103,8 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
             mainUIDirector.ClockNumberImage.gameObject.SetActive(false);
             mainUIDirector.MeterMaxTMP.gameObject.SetActive(false);
             mainUIDirector.CurrentCountTMP.fontSize = 150;
+
+            logUIDirector.ClockNumberImage.gameObject.SetActive(false);
         }
         else if (IsStateSwitchingToNormal())
         {
@@ -107,6 +112,8 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
             mainUIDirector.ClockNumberImage.gameObject.SetActive(true);
             mainUIDirector.MeterMaxTMP.gameObject.SetActive(true);
             mainUIDirector.CurrentCountTMP.fontSize = 100;
+
+            logUIDirector.ClockNumberImage.gameObject.SetActive(true);
         }
         else
         {
@@ -116,7 +123,7 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
         buttonMode = workingDirector.IsWorking ? "End" : "Play";
         clockMode = appDirector.isClock12h ? "12" : "24";
 
-        // spriteÇÃïœçXèàóù
+        // mainUIÇÃspriteïœçXèàóù
         mainUIDirector.ClockFrameImage.sprite 
             = LoadSprite($"{spriteMode}/Base/Frame");
         mainUIDirector.TodayFuturePlateImage.sprite 
@@ -128,7 +135,7 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
             mainUIDirector.LogPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
                 = LoadSprite($"{spriteMode}/Base/Plate");
         }
-        mainUIDirector.CurrentPieImage.GetComponent<Image>().sprite 
+        mainUIDirector.CurrentPieImage.sprite 
             = LoadSprite($"{spriteMode}/Base/Plate");
         mainUIDirector.WorkMeterPlateImage.sprite 
             = LoadSprite($"{spriteMode}/Base/WorkMeterPlate");
@@ -144,7 +151,26 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
             = LoadSprite($"{spriteMode}/Cover/Label/Label{clockMode}h_Thorn");
         mainUIDirector.ClockNumberImage.sprite 
             = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
-        
+
+        // logUIÇÃspriteïœçXèàóù
+        logUIDirector.ClockFrameImage.sprite
+            = LoadSprite($"{spriteMode}/Base/Frame");
+        logUIDirector.ClockPlateImage.sprite
+            = LoadSprite($"{spriteMode}/Base/Plate");
+        logUIDirector.ClockThornImage.sprite
+            = LoadSprite($"{spriteMode}/Cover/Label/Label24h_Thorn");
+        logUIDirector.ClockNumberImage.sprite
+            = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
+        logUIDirector.InnerFrameImage.sprite
+            = LoadSprite($"{spriteMode}/Base/LogInnerFrame");
+        logUIDirector.InnerPlateImage.sprite
+            = LoadSprite($"{spriteMode}/Base/LogInnerPlate");
+        for (int i=0; i<logUIDirector.LogPieContainer.transform.childCount; i++)
+        {
+            logUIDirector.LogPieContainer.transform.GetChild(i).GetComponent<Image>().sprite
+                = LoadSprite($"{spriteMode}/Base/Plate");
+        }
+
         UpdatePValues(Screen.width, Screen.height);
     }
 
