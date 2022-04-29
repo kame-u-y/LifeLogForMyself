@@ -7,7 +7,7 @@ using UnityEngine;
 public class PieGenerator : MonoBehaviour
 {
     [SerializeField]
-    PieChartController pieChart;
+    ClockLogController pieChart;
 
     //private  mockTodayData;
     

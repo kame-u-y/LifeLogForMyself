@@ -30,8 +30,8 @@ public class MainUIDirector : SingletonMonoBehaviourFast<MainUIDirector>
     public Image WorkMeterPlateImage => workMeterPlateImage;
 
     [SerializeField]
-    private PieChartController pieChartCtrler;
-    public PieChartController PieChartCtrler => pieChartCtrler;
+    private ClockLogController clockLogCtrler;
+    public ClockLogController PieChartCtrler => clockLogCtrler;
 
     private GameObject logPieContainer;
     public GameObject LogPieContainer => logPieContainer;
@@ -105,8 +105,8 @@ public class MainUIDirector : SingletonMonoBehaviourFast<MainUIDirector>
 
         currentWorkMeterCtrler = workMeterImage.GetComponent<CurrentWorkMeterController>();
 
-        logPieContainer = pieChartCtrler.transform.Find("LogWorks").gameObject;
-        currentPieImage = pieChartCtrler.transform.Find("CurrentWork").GetComponent<Image>();
+        logPieContainer = clockLogCtrler.transform.Find("LogWorks").gameObject;
+        currentPieImage = clockLogCtrler.transform.Find("CurrentWork").GetComponent<Image>();
 
         playEndButton = playEndButtonImage.GetComponent<Button>();
         playEndImageCtrler = playEndButtonImage.GetComponent<PlayEndImageController>();

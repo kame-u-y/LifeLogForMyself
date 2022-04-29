@@ -7,8 +7,12 @@ using UnityEngine.UI;
 public class LogUIDirector : SingletonMonoBehaviourFast<LogUIDirector>
 {
     [SerializeField]
-    private PieChartController logPieChartCtrler;
-    public PieChartController LogPieChartCtrler => logPieChartCtrler;
+    private ClockLogController clockLogCtrler;
+    public ClockLogController ClockLogCtrler => clockLogCtrler;
+
+    [SerializeField]
+    private LogPieChartController logPieChartCtrler;
+    public LogPieChartController LogPieChartCtrler => logPieChartCtrler;
 
     [SerializeField]
     private Button previousButton;
@@ -50,6 +54,11 @@ public class LogUIDirector : SingletonMonoBehaviourFast<LogUIDirector>
     [SerializeField]
     private GameObject logPieContainer;
     public GameObject LogPieContainer => logPieContainer;
+
+
+    [SerializeField]
+    private GameObject pieChartContainer;
+    public GameObject PieChartContainer => pieChartContainer;
 
     new void Awake()
     {

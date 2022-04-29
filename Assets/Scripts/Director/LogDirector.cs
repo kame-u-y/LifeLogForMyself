@@ -22,23 +22,42 @@ public class LogDirector : SingletonMonoBehaviourFast<LogDirector>
     // Start is called before the first frame update
     void Start()
     {
-        UpdateLogPieChart();
+        UpdateLog();
+        UpdateLogDateLabel();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    private void UpdateLogPieChart()
+    public void DisplayPrevious()
+    {
+        displayLogOffset--;
+
+        UpdateLog();
+        UpdateLogDateLabel();
+    }
+
+    public void DisplayNext()
+    {
+        displayLogOffset++;
+
+        UpdateLog();
+        UpdateLogDateLabel();
+    }
+
+
+    private void UpdateLog()
     {
         List<WorkData> dayData = databaseDirector.FetchDayData(displayLogOffset);
         appDirector.isClock12h = false;
         if (dayData != null)
         {
-            List<ProjectData> project = databaseDirector.FetchProjectList();
-            logUIDirector.LogPieChartCtrler.CreateLogPieChart(dayData, project);
+            List<ProjectData> projects = databaseDirector.FetchProjectList();
+            logUIDirector.ClockLogCtrler.CreateLogPieChart(dayData, projects);
+            logUIDirector.LogPieChartCtrler.CreateLogPieChart(dayData, projects);
         }
     }
 
@@ -46,20 +65,6 @@ public class LogDirector : SingletonMonoBehaviourFast<LogDirector>
     {
         string d = DateTime.Today.AddDays(displayLogOffset).ToString("yyyy / MM / dd");
         logUIDirector.LogDateTMP.text = d;
-    }
-
-    public void DisplayPrevious()
-    {
-        displayLogOffset--;
-        UpdateLogDateLabel();
-        UpdateLogPieChart();
-    }
-
-    public void DisplayNext()
-    {
-        displayLogOffset++;
-        UpdateLogDateLabel();
-        UpdateLogPieChart();
     }
 
 

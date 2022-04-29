@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PieChartController : MonoBehaviour
+public class ClockLogController : MonoBehaviour
 {
     private AppDirector appDirector;
     private MainUIDirector mainUIDirector;
@@ -40,7 +40,6 @@ public class PieChartController : MonoBehaviour
 
     }
 
-    //private List<
 
     private List<PieStartEndData> timeSequence24h;
     internal class PieStartEndData
@@ -270,6 +269,4 @@ public class PieChartController : MonoBehaviour
         currentPie.GetComponent<Image>().color = _color;
         currentPie.GetComponent<PieController>().ProjectName = _projectName;
     }
-
-
 }
