@@ -143,6 +143,13 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
             projectData = newProject
         });
 
+        // MoveLowerの非アクティブ化処理
+        var preLastMoveLower = SettingsUIDirector.GetProjectMoveLowerButton(
+            projectItems[projectItems.Count - 2].gameObject_);
+        preLastMoveLower.interactable = true;
+
+        var newMoveLower = SettingsUIDirector.GetProjectMoveLowerButton(newItem);
+        newMoveLower.interactable = false;
 
         SetAnySettingsChanged(true);
     }
@@ -384,8 +391,6 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         }
     }
 
-    public bool IsNewProjectItem(int _projectId)
-        => _projectId >= beforeChangeData.Count;
 
     public void ApplyProjectChanges()
     {
@@ -414,6 +419,10 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     /// <returns></returns>
     public List<ProjectData> GetProjectDataList()
         => projectItems.ConvertAll(v => v.projectData);
+
+
+    public bool IsNewProjectItem(int _projectId)
+        => _projectId >= beforeChangeData.Count;
 
     private void SetAnySettingsChanged(bool _b)
     {
