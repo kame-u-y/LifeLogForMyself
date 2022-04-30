@@ -73,17 +73,33 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         popupUIDirector.MainButton.onClick.AddListener(
              () =>
              {
-                 generalSettingsDirector.RevertChanges();
-                 appDirector.SwitchGameMode(AppDirector.GameMode.Main);
-                 popupDirector.ClosePopup();
+                 // settingsから移動時に適用確認
+                 if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
+                 {
+                     popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.Main);
+                 }
+                 else
+                 {
+                     //generalSettingsDirector.RevertChanges();
+                     appDirector.SwitchGameMode(AppDirector.GameMode.Main);
+                     popupDirector.ClosePopup();
+                 }
              });
 
         popupUIDirector.WatchLogButton.onClick.AddListener(
             () =>
             {
-                generalSettingsDirector.RevertChanges();
-                appDirector.SwitchGameMode(AppDirector.GameMode.WatchLog);
-                popupDirector.ClosePopup();
+                // settingsから移動時に適用確認
+                if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
+                {
+                    popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.WatchLog);
+                }
+                else
+                {
+                    //generalSettingsDirector.RevertChanges();
+                    appDirector.SwitchGameMode(AppDirector.GameMode.WatchLog);
+                    popupDirector.ClosePopup();
+                }
             });
 
         popupUIDirector.SettingButton.onClick.AddListener(
@@ -93,7 +109,19 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                  popupDirector.ClosePopup();
              });
 
-        popupUIDirector.QuitButton.onClick.AddListener(appDirector.Quit);
+        popupUIDirector.QuitButton.onClick.AddListener(
+            () =>
+            {
+                // settingsから終了時に適用確認
+                if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
+                {
+                    popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.Quit);
+                }
+                else
+                {
+                    appDirector.Quit();
+                }
+            });
 
         // color picker
         popupUIDirector.ProjectColorPicker.onValueChanged.AddListener(
@@ -138,7 +166,6 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                 if (projectSettingsDirector.IsAnySettingsChanged)
                 {
                     popupDirector.OpenApplySettingsPopup(
-                        PopupDirector.PopupMode.ApplySettings, 
                         AppDirector.GameMode.Settings);
                 }
                 else
@@ -152,7 +179,6 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                 if (generalSettingsDirector.IsAnySettingsChanged)
                 {
                     popupDirector.OpenApplySettingsPopup(
-                        PopupDirector.PopupMode.ApplySettings,
                         AppDirector.GameMode.Settings);
                 }
                 else
@@ -160,7 +186,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                     appDirector.SwitchSettingsMode(AppDirector.SettingsMode.Projects);
                 }
             });
-    
+
         // general settings
         settingsUIDirector.MeterMaxInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateProgressBarMax(float.Parse(_v)));
@@ -194,13 +220,13 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         // apply revert
         settingsUIDirector.GeneralSettingRevertButton.onClick.AddListener(
             () => generalSettingsDirector.RevertChanges());
-        
+
         settingsUIDirector.GeneralSettingApplyButton.onClick.AddListener(
             () => generalSettingsDirector.ApplySettings());
-        
+
         settingsUIDirector.ProjectSettingRevertButton.onClick.AddListener(
             () => projectSettingsDirector.RevertProjectChanges());
-        
+
         settingsUIDirector.ProjectSettingApplyButton.onClick.AddListener(
             () => projectSettingsDirector.ApplyProjectChanges());
         #endregion
@@ -260,7 +286,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
             _v => projectSettingsDirector.UpdateProjectName(_v, _id));
 
         SettingsUIDirector.GetProjectColorButton(_item).onClick.AddListener(
-            () => popupDirector.OpenProjectColorPickerPopup(PopupDirector.PopupMode.ProjectColorPicker, _id));
+            () => popupDirector.OpenProjectColorPickerPopup(_id));
 
         SettingsUIDirector.GetProjectNotifModeDropdown(_item).onValueChanged.AddListener(
             _v => projectSettingsDirector.UpdateNotifMode(_id));
@@ -272,7 +298,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
             () => projectSettingsDirector.MoveLowerItem(_id));
 
         SettingsUIDirector.GetProjectDeleteButton(_item).onClick.AddListener(
-            () => popupDirector.OpenProjectDeletePopup(PopupDirector.PopupMode.ProjectDelete, _id));
+            () => popupDirector.OpenProjectDeletePopup(_id));
     }
 
     #region SwitchMap

@@ -79,11 +79,11 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     /// </summary>
     /// <param name="_mode"></param>
     /// <param name="_projectId"></param>
-    public void OpenProjectColorPickerPopup(PopupMode _mode, int _projectId)
+    public void OpenProjectColorPickerPopup(int _projectId)
     {
         selectedProjectId = _projectId;
         Color color = projectSettingsDirector.FetchProjectColor(_projectId);
-        OpenPopup(_mode);
+        OpenPopup(PopupMode.ProjectColorPicker);
         // OpenPopupより後じゃないとカラーピッカーの適切に初期色が設定できない
         popupUIDirector.ProjectColorPicker.CurrentColor = color;
     }
@@ -93,16 +93,16 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     /// </summary>
     /// <param name="_mode"></param>
     /// <param name="_projectId"></param>
-    public void OpenProjectDeletePopup(PopupMode _mode, int _projectId)
+    public void OpenProjectDeletePopup(int _projectId)
     {
         selectedProjectId = _projectId;
-        OpenPopup(_mode);
+        OpenPopup(PopupMode.ProjectDelete);
     }
 
-    public void OpenApplySettingsPopup(PopupMode _mode, AppDirector.GameMode _dest)
+    public void OpenApplySettingsPopup(AppDirector.GameMode _dest)
     {
         destGameMode = _dest;
-        OpenPopup(_mode);
+        OpenPopup(PopupMode.ApplySettings);
     }
 
     public void ClosePopup()

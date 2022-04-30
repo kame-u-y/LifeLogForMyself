@@ -52,17 +52,21 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     {
         Main,
         Settings,
-        WatchLog
+        WatchLog,
+        Quit,
     }
 
-    private SettingsMode currentSettingsMode;
-    public SettingsMode CurrentSettingsMode => currentSettingsMode;
+    private GameMode currentGameMode;
+    public GameMode CurrentGameMode => currentGameMode;
 
     public enum SettingsMode
     {
         General,
         Projects
     }
+
+    private SettingsMode currentSettingsMode;
+    public SettingsMode CurrentSettingsMode => currentSettingsMode;
 
 
     //private static AppDirector instance;
@@ -100,6 +104,8 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
 
     public void SwitchGameMode(GameMode _mode)
     {
+        currentGameMode = _mode;
+
         if (_mode == GameMode.Main)
         {
             mainContainer.transform.localScale = Vector3.one;
@@ -132,6 +138,10 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
             mainButton.interactable = b;
             watchLogButton.interactable = !b;
             settingsButton.interactable = b;
+        }
+        else if (_mode == GameMode.Quit)
+        {
+            Quit();
         }
     }
 
@@ -185,7 +195,10 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         }
 
         SwitchGameMode(_destMode);
-        SwitchSettingsMode(destSettings);
+        if (_destMode == GameMode.Settings)
+        {
+            SwitchSettingsMode(destSettings);
+        }
     }
 
     public void ChangeClockMode()
