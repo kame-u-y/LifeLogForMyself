@@ -68,33 +68,20 @@ public class WindowDirector : SingletonMonoBehaviourFast<WindowDirector>
     private int mediumScreen = 450;
     private int largeScreen = 800;
 
-    /// <summary>
-    /// ƒVƒ“ƒOƒ‹ƒgƒ“
-    ///// </summary>
-    //private static WindowDirector instance;
-    //public static WindowDirector Instance => instance;
-
-    //private void Awake()
-    //{
-    //    if (instance == null)
-    //    {
-    //        instance = this;
-    //        DontDestroyOnLoad(gameObject);
-    //    }
-    //    else
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //}
-
-    // Start is called before the first frame update
-    void Start()
+    new void Awake()
     {
+        base.Awake();
+        
         appDirector = AppDirector.Instance;
         inputEventDirector = InputEventDirector.Instance;
         databaseDirector = DatabaseDirector.Instance;
         resizingDirector = ResizingDirector.Instance;
         //mainUIDirector = MainUIDirector.Instance;
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
 
         window = FindWindow(null, windowName);
         DeleteWindowTitleBar();
@@ -134,13 +121,13 @@ public class WindowDirector : SingletonMonoBehaviourFast<WindowDirector>
         GetWindowRect(window, out windowRect);
         Debug.Log("initialize windowRect: (" + windowRect.left + ", " + windowRect.right + ", " + windowRect.top + ", " + windowRect.bottom + ") ");
 
-
+        const int DefaultWindowSize = 500;
         int screenW = GetSystemMetrics(SM_CXSCREEN);
         int screenH = GetSystemMetrics(SM_CYSCREEN);
-        int windowX = (screenW - smallScreen) / 2;
-        int windowY = (screenH - smallScreen) / 2;
+        int windowX = (screenW - DefaultWindowSize) / 2;
+        int windowY = (screenH - DefaultWindowSize) / 2;
 
-        SetWindowPos(window, HWND_TOPMOST, windowX, windowY, smallScreen, smallScreen, 0);
+        SetWindowPos(window, HWND_TOPMOST, windowX, windowY, DefaultWindowSize, DefaultWindowSize, 0);
     }
 
 
