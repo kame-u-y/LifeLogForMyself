@@ -128,7 +128,14 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         // add events
         inputEventDirector.AddProjectSettingItemEvents(newItem, projectItems.Count);
 
-        projectOrderDictionary.Add(projectItems.Count, projectItems.Count);
+        if (projectOrderDictionary.ContainsKey(projectItems.Count))
+        {
+            projectOrderDictionary[projectItems.Count] = projectItems.Count;
+        }
+        else
+        {
+            projectOrderDictionary.Add(projectItems.Count, projectItems.Count);
+        }
 
         projectItems.Add(new ProjectItemData()
         {
@@ -366,10 +373,19 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         Destroy(projectItems[_projectId].gameObject_);
 
         // savedata‚Éprojectíœ‚ð”½‰f
-        databaseDirector.ApplyProjectDelete(projectItems[_projectId].projectData.name);
+        if (_projectId < beforeChangeData.Count)
+        {
+            databaseDirector.ApplyProjectDelete(projectItems[_projectId].projectData.name);
+        }
         projectItems.RemoveAt(_projectId);
-        beforeChangeData = GetProjectDataList();
+        if (_projectId < beforeChangeData.Count)
+        {
+            beforeChangeData = GetProjectDataList();
+        }
     }
+
+    public bool IsNewProjectItem(int _projectId)
+        => _projectId >= beforeChangeData.Count;
 
     public void ApplyProjectChanges()
     {
