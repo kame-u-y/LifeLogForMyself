@@ -37,26 +37,12 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     private Dictionary<int, int> projectOrderDictionary;
 
     private bool isAnySettingsChanged = false;
-
-    // シリアライズ
-    //private static ProjectSettingsDirector instance;
-    //public static ProjectSettingsDirector Instance => instance;
+    public bool IsAnySettingsChanged => isAnySettingsChanged;
 
 
     new void Awake()
     {
         base.Awake();
-        //if (instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(gameObject);
-        //}
-        //else
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
-
         projectItems = new List<ProjectItemData>();
     }
 

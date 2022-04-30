@@ -73,6 +73,12 @@ public class LoadedSaveData
         return jsonProjects;
     }
 
+    /// <summary>
+    /// 存在しないプロジェクトに対するデフォルト取得処理
+    /// プロジェクト削除にも利用
+    /// </summary>
+    /// <param name="_name"></param>
+    /// <returns></returns>
     public string SetSelectedOrDefaultProject(string _name)
         => selectedProject = projects.Exists(v => v.name == _name)
             ? _name

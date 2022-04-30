@@ -85,6 +85,7 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
         //jsonSaveData.dailyDictionary.Dictionary()
         string json = JsonUtility.ToJson(jsonSaveData, true);
         Debug.Log(json);
+        Debug.Log("export save");
         StreamWriter streamWriter = new StreamWriter(filePath);
         streamWriter.Write(json);
         streamWriter.Flush();

@@ -114,15 +114,53 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                     popupDirector.SelectedProjectId);
                 popupDirector.ClosePopup();
             });
+
+        popupUIDirector.ApplySettingsCancelButton.onClick.AddListener(
+            () =>
+            {
+                popupDirector.ClosePopup();
+            });
+        popupUIDirector.ApplySettingsButton.onClick.AddListener(
+            () =>
+            {
+                // applyˆ—
+                appDirector.ApplySettingsAndSwitchMode(
+                    popupDirector.DestGameMode);
+                popupDirector.ClosePopup();
+            });
+
         #endregion
 
         #region settings
         settingsUIDirector.GeneralTabButton.onClick.AddListener(
-            () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.General));
-
+            () =>
+            {
+                if (projectSettingsDirector.IsAnySettingsChanged)
+                {
+                    popupDirector.OpenApplySettingsPopup(
+                        PopupDirector.PopupMode.ApplySettings, 
+                        AppDirector.GameMode.Settings);
+                }
+                else
+                {
+                    appDirector.SwitchSettingsMode(AppDirector.SettingsMode.General);
+                }
+            });
         settingsUIDirector.ProjectsTabButton.onClick.AddListener(
-            () => generalSettingsDirector.SwitchSettingsMode(GeneralSettingsDirector.SettingsMode.Projects));
-
+            () =>
+            {
+                if (generalSettingsDirector.IsAnySettingsChanged)
+                {
+                    popupDirector.OpenApplySettingsPopup(
+                        PopupDirector.PopupMode.ApplySettings,
+                        AppDirector.GameMode.Settings);
+                }
+                else
+                {
+                    appDirector.SwitchSettingsMode(AppDirector.SettingsMode.Projects);
+                }
+            });
+    
         // general settings
         settingsUIDirector.MeterMaxInput.onValueChanged.AddListener(
             _v => generalSettingsDirector.UpdateProgressBarMax(float.Parse(_v)));

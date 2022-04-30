@@ -51,6 +51,15 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
     private Button projectDeleteButton;
     public Button ProjectDeleteButton => projectDeleteButton;
 
+    [SerializeField]
+    private GameObject applySettingsContainer;
+    public GameObject ApplySettingsContainer => applySettingsContainer;
+
+    private Button applySettingsCancelButton;
+    public Button ApplySettingsCancelButton => applySettingsCancelButton;
+
+    private Button applySettingsButton;
+    public Button ApplySettingsButton => applySettingsButton;
     
     new void Awake()
     {
@@ -68,6 +77,12 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
             .Find("Buttons/CancelButton").GetComponent<Button>();
         projectDeleteButton = projectDeleteContainer.transform
             .Find("Buttons/DeleteButton").GetComponent<Button>();
+
+        applySettingsCancelButton = applySettingsContainer.transform
+            .Find("Buttons/CancelButton").GetComponent<Button>();
+        applySettingsButton = applySettingsContainer.transform
+            .Find("Buttons/ApplyButton").GetComponent<Button>();
+
     }
 
     // Start is called before the first frame update

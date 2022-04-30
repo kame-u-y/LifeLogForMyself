@@ -282,7 +282,13 @@ public class WorkingDirector : SingletonMonoBehaviourFast<WorkingDirector>
     public void SwitchCurrentProject()
     {
         string selectedProject = mainUIDirector.ProjectDropdown.captionText.text;
-        databaseDirector.SetSelectedProject(selectedProject);
+
+        // óvÇÁÇ»Ç¢ê‡
+        if (selectedProject != databaseDirector.FetchSelectedProject())
+        {
+            databaseDirector.SetSelectedProject(selectedProject);
+        }
+
         currentProject = databaseDirector.FindProject(selectedProject);
         Debug.Log("notif:" + currentProject.notificationMode);
 

@@ -21,6 +21,8 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     public bool isClock12h = false;
 
     private WorkingDirector workingDirector;
+    private SettingsUIDirector settingsUIDirector;
+
     [SerializeField]
     ClockLabelController clockLabelController;
     //[SerializeField]
@@ -53,9 +55,19 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         WatchLog
     }
 
+    private SettingsMode currentSettingsMode;
+    public SettingsMode CurrentSettingsMode => currentSettingsMode;
+
+    public enum SettingsMode
+    {
+        General,
+        Projects
+    }
+
+
     //private static AppDirector instance;
     //public static AppDirector Instance {
-        
+
     //}
 
     new private void Awake()
@@ -63,6 +75,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         base.Awake();
 
         workingDirector = WorkingDirector.Instance;
+        settingsUIDirector = SettingsUIDirector.Instance;
     }
 
     // Start is called before the first frame update
@@ -76,6 +89,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         settingsButton = buttonContainer.transform.Find("SettingsButton").GetComponent<Button>();
 
         SwitchGameMode(GameMode.Main);
+        SwitchSettingsMode(SettingsMode.General);
     }
 
     // Update is called once per frame
@@ -119,6 +133,59 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
             watchLogButton.interactable = !b;
             settingsButton.interactable = b;
         }
+    }
+
+
+    public void SwitchSettingsMode(SettingsMode _mode)
+    {
+        currentSettingsMode = _mode;
+
+        if (_mode == SettingsMode.General)
+        {
+            bool b = true;
+            settingsUIDirector.GeneralSettingContainer.SetActive(b);
+            settingsUIDirector.ProjectsSettingContainer.SetActive(!b);
+
+            settingsUIDirector.GeneralTabButton.interactable = !b;
+            settingsUIDirector.ProjectsTabButton.interactable = b;
+
+            //IsAnySettingsChanged = false;
+        }
+        else if (_mode == SettingsMode.Projects)
+        {
+            bool b = true;
+            settingsUIDirector.GeneralSettingContainer.SetActive(!b);
+            settingsUIDirector.ProjectsSettingContainer.SetActive(b);
+
+            settingsUIDirector.GeneralTabButton.interactable = b;
+            settingsUIDirector.ProjectsTabButton.interactable = !b;
+
+            //SetAnySettingsChanged(false);
+        }
+    }
+
+    /// <summary>
+    /// ApplySettingsのpopupで利用
+    /// settingsに変更がある場合に適用確認
+    /// </summary>
+    /// <param name="_destMode"></param>
+    public void ApplySettingsAndSwitchMode(GameMode _destMode)
+    {
+        SettingsMode destSettings = SettingsMode.General;
+
+        if (currentSettingsMode == SettingsMode.General)
+        {
+            GeneralSettingsDirector.Instance.ApplySettings();
+            destSettings = SettingsMode.Projects;
+        }
+        else if (currentSettingsMode == SettingsMode.Projects)
+        {
+            ProjectSettingsDirector.Instance.ApplyProjectChanges();
+            destSettings = SettingsMode.General;
+        }
+
+        SwitchGameMode(_destMode);
+        SwitchSettingsMode(destSettings);
     }
 
     public void ChangeClockMode()
@@ -165,7 +232,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
     /// </summary>
     /// <returns></returns>
     public int GetSecondOfNow()
-        => (int) DateTime.Now
+        => (int)DateTime.Now
         .Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
     /// <summary>
@@ -176,7 +243,7 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
         => isClock12h
         ? GetSecondOfAddDaysFromNow(-0.5)
         : GetSecondOfAddDaysFromNow(-1);
-        
+
 
 
     public bool IsAm()
@@ -192,10 +259,10 @@ public class AppDirector : SingletonMonoBehaviourFast<AppDirector>
 
     public void Quit()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #elif UNITY_STANDALONE
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_STANDALONE
             UnityEngine.Application.Quit();
-        #endif
+#endif
     }
 }

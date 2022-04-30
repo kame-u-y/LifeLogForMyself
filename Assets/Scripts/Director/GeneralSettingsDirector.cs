@@ -30,12 +30,6 @@ public class GeneralSettingsDirector : MonoBehaviour
         set => isAnySettingsChanged = value;
     }
 
-    public enum SettingsMode
-    {
-        General,
-        Projects
-    }
-
     /// <summary>
     /// ƒVƒ“ƒOƒ‹ƒgƒ“
     /// </summary>
@@ -63,7 +57,6 @@ public class GeneralSettingsDirector : MonoBehaviour
         appDirector = AppDirector.Instance;
         settingsUIDirector = SettingsUIDirector.Instance;
 
-        SwitchSettingsMode(SettingsMode.General);
 
         UpdateResizingMode(true);
         twoResizingStages = new TwoResizingData();
@@ -78,32 +71,6 @@ public class GeneralSettingsDirector : MonoBehaviour
     void Update()
     {
 
-    }
-
-    public void SwitchSettingsMode(SettingsMode _mode)
-    {
-        if (_mode == SettingsMode.General)
-        {
-            bool b = true;
-            settingsUIDirector.GeneralSettingContainer.SetActive(b);
-            settingsUIDirector.ProjectsSettingContainer.SetActive(!b);
-
-            settingsUIDirector.GeneralTabButton.interactable = !b;
-            settingsUIDirector.ProjectsTabButton.interactable = b;
-
-            //IsAnySettingsChanged = false;
-        }
-        else if (_mode == SettingsMode.Projects)
-        {
-            bool b = true;
-            settingsUIDirector.GeneralSettingContainer.SetActive(!b);
-            settingsUIDirector.ProjectsSettingContainer.SetActive(b);
-
-            settingsUIDirector.GeneralTabButton.interactable = b;
-            settingsUIDirector.ProjectsTabButton.interactable = !b;
-
-            SetAnySettingsChanged(false);
-        }
     }
 
     private void InitializeGeneralSettings()

@@ -16,6 +16,11 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     private ProjectSettingsDirector projectSettingsDirector;
     private PopupUIDirector popupUIDirector;
 
+    //private AppDirector.SettingsMode currentSettingsMode;
+    //public AppDirector.SettingsMode CurrentSettingsMode => currentSettingsMode;
+    private AppDirector.GameMode destGameMode;
+    public AppDirector.GameMode DestGameMode => destGameMode;
+
     /// <summary>
     /// ポップアップの種類を定義
     /// 指定された種類によって表示を変更するため
@@ -24,7 +29,8 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     {
         MainMenu,
         ProjectColorPicker,
-        ProjectDelete
+        ProjectDelete,
+        ApplySettings,
     }
 
 
@@ -51,7 +57,7 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     public void OpenPopup(PopupMode _mode)
     {
         popupUIDirector.InnerBackground
-            .SetActive(_mode == PopupMode.MainMenu || _mode == PopupMode.ProjectDelete);
+            .SetActive(_mode == PopupMode.MainMenu || _mode == PopupMode.ProjectDelete || _mode == PopupMode.ApplySettings);
 
         popupUIDirector.MainMenuContainer
             .SetActive(_mode == PopupMode.MainMenu);
@@ -61,6 +67,9 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
 
         popupUIDirector.ProjectDeleteContainer
             .SetActive(_mode == PopupMode.ProjectDelete);
+
+        popupUIDirector.ApplySettingsContainer
+            .SetActive(_mode == PopupMode.ApplySettings);
 
         popupUIDirector.PopupContainer.SetActive(true);
     }
@@ -87,6 +96,12 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     public void OpenProjectDeletePopup(PopupMode _mode, int _projectId)
     {
         selectedProjectId = _projectId;
+        OpenPopup(_mode);
+    }
+
+    public void OpenApplySettingsPopup(PopupMode _mode, AppDirector.GameMode _dest)
+    {
+        destGameMode = _dest;
         OpenPopup(_mode);
     }
 
