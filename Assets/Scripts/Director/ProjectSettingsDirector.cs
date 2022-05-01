@@ -389,6 +389,16 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         {
             beforeChangeData = GetProjectDataList();
         }
+
+        // MoveUpperの非アクティブ化処理
+        var firstMoveLower = SettingsUIDirector.GetProjectMoveUpperButton(
+            projectItems[1].gameObject_);
+        firstMoveLower.interactable = false;
+
+        // MoveLowerの非アクティブ化処理
+        var lastMoveLower = SettingsUIDirector.GetProjectMoveLowerButton(
+            projectItems[projectItems.Count - 1].gameObject_);
+        lastMoveLower.interactable = false;
     }
     
     /// <summary>
