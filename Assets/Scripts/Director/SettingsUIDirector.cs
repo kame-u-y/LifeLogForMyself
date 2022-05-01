@@ -153,6 +153,8 @@ public class SettingsUIDirector : SingletonMonoBehaviourFast<SettingsUIDirector>
 
     public static InputField GetProjectNameInputField(GameObject _item)
         => _item.transform.Find("Values/ProjectName").GetComponent<InputField>();
+    public static Image GetProjectNameImage(GameObject _item)
+        => _item.transform.Find("Values/ProjectName").GetComponent<Image>();
 
     public static Image GetProjectColorImage(GameObject _item)
         => _item.transform.Find("Values/ProjectColor").GetComponent<Image>();

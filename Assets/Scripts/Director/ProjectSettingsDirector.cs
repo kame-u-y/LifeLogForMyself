@@ -10,11 +10,11 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     DatabaseDirector databaseDirector;
     InputEventDirector inputEventDirector;
     SettingsUIDirector settingsUIDirector;
-    
+
     // テンプレートオブジェクト
     [SerializeField]
     GameObject itemTemplate;
- 
+
     // 変更前情報を保持
     List<ProjectData> beforeChangeData;
     // 変更後情報を保持
@@ -320,7 +320,7 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     {
         int targetSibId = projectItems[_projectId].gameObject_.transform.GetSiblingIndex();
 
-        if (targetSibId == 0 || targetSibId >= settingsUIDirector.ProjectItemContainer.childCount - 1) 
+        if (targetSibId == 0 || targetSibId >= settingsUIDirector.ProjectItemContainer.childCount - 1)
             return;
 
         int lowerSibId = targetSibId + 1;
@@ -391,9 +391,37 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         }
     }
 
-
     public void ApplyProjectChanges()
     {
+        // 重複チェック
+        HashSet<string> duplicateList = DetectDuplicateProjectName();
+        if (duplicateList.Count > 0)
+        {
+            // 重複ProjectNameを赤く、他を白く
+            foreach (string s in duplicateList)
+            {
+                projectItems.ForEach(v =>
+                {
+                    SettingsUIDirector.GetProjectNameImage(v.gameObject_)
+                        .color = v.projectData.name == s
+                            ? new Color(255 / 255.0f, 150 / 255.0f, 150 / 255.0f)
+                            : Color.white;
+                });
+            }
+
+            return;
+        }
+        else
+        {
+            // 重複なしならすべて白く
+            projectItems.ForEach(v =>
+            {
+                SettingsUIDirector.GetProjectNameImage(v.gameObject_)
+                    .color = Color.white;
+            });
+        }
+
+        // Apply処理
         Debug.Log("apply project");
         var sortedProjects = new List<ProjectData>();
         for (int i = 0; i < projectItems.Count; i++)
@@ -411,6 +439,26 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         beforeChangeData = GetProjectDataList();
 
         SetAnySettingsChanged(false);
+    }
+
+    public HashSet<string> DetectDuplicateProjectName()
+    {
+        HashSet<string> duplicateList = new HashSet<string>();
+        for (int i = 0; i < projectItems.Count; i++)
+        {
+            string iName = projectItems[i].projectData.name;
+            for (int j = i + 1; j < projectItems.Count; j++)
+            {
+                string jName = projectItems[j].projectData.name;
+                if (jName == iName)
+                {
+                    // 重複
+                    duplicateList.Add(iName);
+                    break;
+                }
+            }
+        };
+        return duplicateList;
     }
 
     /// <summary>
