@@ -52,7 +52,6 @@ public class LogDirector : SingletonMonoBehaviourFast<LogDirector>
     private void UpdateLog()
     {
         List<WorkData> dayData = databaseDirector.FetchDayData(displayLogOffset);
-        appDirector.isClock12h = false;
         if (dayData != null)
         {
             List<ProjectData> projects = databaseDirector.FetchProjectList();

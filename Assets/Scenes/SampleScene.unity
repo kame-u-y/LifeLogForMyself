@@ -5719,7 +5719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cd022e607edd14daf2c483d002d865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 0
+  debugMode: 1
   isClock12h: 1
   clockLabelController: {fileID: 196132105}
   todayFuturePlateController: {fileID: 31709245}
