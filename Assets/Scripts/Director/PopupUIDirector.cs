@@ -52,6 +52,23 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
     public Button ProjectDeleteButton => projectDeleteButton;
 
     [SerializeField]
+    private GameObject alertBeforeDeleteContainer;
+    public GameObject AlertBeforeDeleteContainer => alertBeforeDeleteContainer;
+
+    private Button alertBeforeDeleteCancelButton;
+    public Button AlertBeforeDeleteCancelButton => alertBeforeDeleteCancelButton;
+
+    private Button alertBeforeDeleteProceedButton;
+    public Button AlertBeforeDeleteProceedButton => alertBeforeDeleteProceedButton;
+
+    [SerializeField]
+    private GameObject alertNameDuplicationContainer;
+    public GameObject AlertNameDuplicationContainer => alertNameDuplicationContainer;
+
+    private Button alertNameDuplicationOKButton;
+    public Button AlertNameDuplicationOKButton => alertNameDuplicationOKButton;
+
+    [SerializeField]
     private GameObject applySettingsContainer;
     public GameObject ApplySettingsContainer => applySettingsContainer;
 
@@ -77,6 +94,14 @@ public class PopupUIDirector : SingletonMonoBehaviourFast<PopupUIDirector>
             .Find("Buttons/CancelButton").GetComponent<Button>();
         projectDeleteButton = projectDeleteContainer.transform
             .Find("Buttons/DeleteButton").GetComponent<Button>();
+
+        alertBeforeDeleteCancelButton = alertBeforeDeleteContainer.transform
+            .Find("Buttons/CancelButton").GetComponent<Button>();
+        alertBeforeDeleteProceedButton = alertBeforeDeleteContainer.transform
+            .Find("Buttons/ApplyAndProceedButton").GetComponent<Button>();
+
+        alertNameDuplicationOKButton = alertNameDuplicationContainer.transform
+            .Find("Buttons/OKButton").GetComponent<Button>();
 
         applySettingsCancelButton = applySettingsContainer.transform
             .Find("Buttons/CancelButton").GetComponent<Button>();

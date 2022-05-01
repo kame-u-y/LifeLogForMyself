@@ -390,11 +390,30 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
             beforeChangeData = GetProjectDataList();
         }
     }
-
-    public void ApplyProjectChanges()
+    
+    /// <summary>
+    /// ProjectNameの重複をチェック
+    /// resultとして重複アリならfalse、重複ナシならtrue
+    /// </summary>
+    /// <returns></returns>
+    public bool CheckProjectDuplication()
     {
-        // 重複チェック
-        HashSet<string> duplicateList = DetectDuplicateProjectName();
+        HashSet<string> duplicateList = new HashSet<string>();
+        for (int i = 0; i < projectItems.Count; i++)
+        {
+            string iName = projectItems[i].projectData.name;
+            for (int j = i + 1; j < projectItems.Count; j++)
+            {
+                string jName = projectItems[j].projectData.name;
+                if (jName == iName)
+                {
+                    // 重複
+                    duplicateList.Add(iName);
+                    break;
+                }
+            }
+        };
+
         if (duplicateList.Count > 0)
         {
             // 重複ProjectNameを赤く、他を白く
@@ -408,8 +427,7 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
                             : Color.white;
                 });
             }
-
-            return;
+            return false;
         }
         else
         {
@@ -419,8 +437,12 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
                 SettingsUIDirector.GetProjectNameImage(v.gameObject_)
                     .color = Color.white;
             });
+            return true;
         }
+    }
 
+    public void ApplyProjectChanges()
+    {   
         // Apply処理
         Debug.Log("apply project");
         var sortedProjects = new List<ProjectData>();
@@ -439,26 +461,6 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         beforeChangeData = GetProjectDataList();
 
         SetAnySettingsChanged(false);
-    }
-
-    public HashSet<string> DetectDuplicateProjectName()
-    {
-        HashSet<string> duplicateList = new HashSet<string>();
-        for (int i = 0; i < projectItems.Count; i++)
-        {
-            string iName = projectItems[i].projectData.name;
-            for (int j = i + 1; j < projectItems.Count; j++)
-            {
-                string jName = projectItems[j].projectData.name;
-                if (jName == iName)
-                {
-                    // 重複
-                    duplicateList.Add(iName);
-                    break;
-                }
-            }
-        };
-        return duplicateList;
     }
 
     /// <summary>

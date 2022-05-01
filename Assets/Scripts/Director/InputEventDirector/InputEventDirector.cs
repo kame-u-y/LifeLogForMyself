@@ -70,11 +70,25 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
         popupUIDirector.OuterBackgroundButton.onClick.AddListener(popupDirector.ClosePopup);
 
         // main menu
+
+        // Settingsの何らかの未反映の変更がないかをチェックする
+        Func<bool> IsAnySettingsChanged = () =>
+        {
+            bool isSettingsMode = appDirector.CurrentGameMode == AppDirector.GameMode.Settings;
+            bool isAnyGeneralSettingsChanged
+               = appDirector.CurrentSettingsMode == AppDirector.SettingsMode.General
+               && generalSettingsDirector.IsAnySettingsChanged;
+            bool isAnyProjectSettingsChanged
+               = appDirector.CurrentSettingsMode == AppDirector.SettingsMode.Projects
+               && projectSettingsDirector.IsAnySettingsChanged;
+            return isSettingsMode && (isAnyGeneralSettingsChanged || isAnyProjectSettingsChanged);
+        };
+
         popupUIDirector.MainButton.onClick.AddListener(
              () =>
              {
                  // settingsから移動時に適用確認
-                 if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
+                 if (IsAnySettingsChanged())
                  {
                      popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.Main);
                  }
@@ -90,7 +104,7 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
             () =>
             {
                 // settingsから移動時に適用確認
-                if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
+                if (IsAnySettingsChanged())
                 {
                     popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.WatchLog);
                 }
@@ -113,14 +127,14 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
             () =>
             {
                 // settingsから終了時に適用確認
-                if (appDirector.CurrentGameMode == AppDirector.GameMode.Settings)
-                {
-                    popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.Quit);
-                }
-                else
-                {
+                //if (IsAnySettingsChanged())
+                //{
+                //    popupDirector.OpenApplySettingsPopup(AppDirector.GameMode.Quit);
+                //}
+                //else
+                //{
                     appDirector.Quit();
-                }
+                //}
             });
 
         // color picker
@@ -143,18 +157,49 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
                 popupDirector.ClosePopup();
             });
 
-        popupUIDirector.ApplySettingsCancelButton.onClick.AddListener(
+        // alert before delete
+        popupUIDirector.AlertBeforeDeleteCancelButton.onClick.AddListener(
+            popupDirector.ClosePopup);
+        popupUIDirector.AlertBeforeDeleteProceedButton.onClick.AddListener(
             () =>
             {
-                popupDirector.ClosePopup();
+                bool result = projectSettingsDirector.CheckProjectDuplication();
+                if (result)
+                {
+                    projectSettingsDirector.ApplyProjectChanges();
+                    popupDirector.OpenPopup(PopupDirector.PopupMode.ProjectDelete);
+                }
+                else
+                {
+                    //popupDirector.ClosePopup();
+                    popupDirector.OpenPopup(PopupDirector.PopupMode.AlertNameDuplication);
+                }
             });
+
+        // alert name duplication
+        popupUIDirector.AlertNameDuplicationOKButton.onClick.AddListener(
+            popupDirector.ClosePopup);
+
+        // apply
+        popupUIDirector.ApplySettingsCancelButton.onClick.AddListener(
+            popupDirector.ClosePopup);
+
         popupUIDirector.ApplySettingsButton.onClick.AddListener(
             () =>
             {
                 // apply処理
-                appDirector.ApplySettingsAndSwitchMode(
-                    popupDirector.DestGameMode);
-                popupDirector.ClosePopup();
+                bool isGeneralSettings = appDirector.CurrentSettingsMode == AppDirector.SettingsMode.General;
+                bool result = projectSettingsDirector.CheckProjectDuplication();
+                if (isGeneralSettings || result)
+                {
+                    appDirector.ApplySettingsAndSwitchMode(
+                        popupDirector.DestGameMode);
+                    popupDirector.ClosePopup();
+                }
+                else
+                {
+                    popupDirector.OpenPopup(PopupDirector.PopupMode.AlertNameDuplication);
+                }
             });
 
         #endregion
@@ -228,7 +273,18 @@ public class InputEventDirector : SingletonMonoBehaviourFast<InputEventDirector>
             () => projectSettingsDirector.RevertProjectChanges());
 
         settingsUIDirector.ProjectSettingApplyButton.onClick.AddListener(
-            () => projectSettingsDirector.ApplyProjectChanges());
+            () =>
+            {
+                bool result = projectSettingsDirector.CheckProjectDuplication();
+                if (result)
+                {
+                    projectSettingsDirector.ApplyProjectChanges();
+                }
+                else
+                {
+                    popupDirector.OpenPopup(PopupDirector.PopupMode.AlertNameDuplication);
+                }
+            });
         #endregion
 
         #region log

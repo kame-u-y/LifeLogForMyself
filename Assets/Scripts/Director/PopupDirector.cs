@@ -30,6 +30,8 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
         MainMenu,
         ProjectColorPicker,
         ProjectDelete,
+        AlertBeforeDelete,
+        AlertNameDuplication,
         ApplySettings,
     }
 
@@ -57,7 +59,12 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     public void OpenPopup(PopupMode _mode)
     {
         popupUIDirector.InnerBackground
-            .SetActive(_mode == PopupMode.MainMenu || _mode == PopupMode.ProjectDelete || _mode == PopupMode.ApplySettings);
+            .SetActive(
+                _mode == PopupMode.MainMenu 
+                || _mode == PopupMode.ProjectDelete 
+                || _mode == PopupMode.AlertBeforeDelete
+                || _mode == PopupMode.AlertNameDuplication
+                || _mode == PopupMode.ApplySettings);
 
         popupUIDirector.MainMenuContainer
             .SetActive(_mode == PopupMode.MainMenu);
@@ -67,6 +74,12 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
 
         popupUIDirector.ProjectDeleteContainer
             .SetActive(_mode == PopupMode.ProjectDelete);
+
+        popupUIDirector.AlertBeforeDeleteContainer
+            .SetActive(_mode == PopupMode.AlertBeforeDelete);
+
+        popupUIDirector.AlertNameDuplicationContainer
+            .SetActive(_mode == PopupMode.AlertNameDuplication);
 
         popupUIDirector.ApplySettingsContainer
             .SetActive(_mode == PopupMode.ApplySettings);
@@ -96,7 +109,15 @@ public class PopupDirector : SingletonMonoBehaviourFast<PopupDirector>
     public void OpenProjectDeletePopup(int _projectId)
     {
         selectedProjectId = _projectId;
-        OpenPopup(PopupMode.ProjectDelete);
+
+        if (projectSettingsDirector.IsAnySettingsChanged)
+        {
+            OpenPopup(PopupMode.AlertBeforeDelete);
+        }
+        else
+        {
+            OpenPopup(PopupMode.ProjectDelete);
+        }
     }
 
     public void OpenApplySettingsPopup(AppDirector.GameMode _dest)
