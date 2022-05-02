@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 44115270}
   m_HandleRect: {fileID: 44115269}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5968,7 +5968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cd022e607edd14daf2c483d002d865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
+  debugMode: 0
   isClock12h: 1
   clockLabelController: {fileID: 196132105}
   todayFuturePlateController: {fileID: 31709245}
@@ -17876,7 +17876,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 539246259}
   m_HandleRect: {fileID: 539246258}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

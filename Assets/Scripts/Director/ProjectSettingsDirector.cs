@@ -273,6 +273,7 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     /// <param name="_projectId"></param>
     public void MoveUpperItem(int _projectId)
     {
+        Debug.Log(_projectId);
         // projectsのindexを入れ替えたいね
         int targetSibId = projectItems[_projectId].gameObject_.transform.GetSiblingIndex();
 
@@ -380,15 +381,14 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         Destroy(projectItems[_projectId].gameObject_);
 
         // savedataにproject削除を反映
-        if (_projectId < beforeChangeData.Count)
-        {
-            databaseDirector.ApplyProjectDelete(projectItems[_projectId].projectData.name);
-        }
+
+        databaseDirector.ApplyProjectDelete(projectItems[_projectId].projectData.name);
+
         projectItems.RemoveAt(_projectId);
-        if (_projectId < beforeChangeData.Count)
-        {
-            beforeChangeData = GetProjectDataList();
-        }
+        beforeChangeData = GetProjectDataList();
+
+        // Revertの機能の流用 beforeChangeDataはすでに上で更新されている
+        RevertProjectChanges();
 
         // MoveUpperの非アクティブ化処理
         var firstMoveLower = SettingsUIDirector.GetProjectMoveUpperButton(
@@ -400,7 +400,7 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
             projectItems[projectItems.Count - 1].gameObject_);
         lastMoveLower.interactable = false;
     }
-    
+
     /// <summary>
     /// ProjectNameの重複をチェック
     /// resultとして重複アリならfalse、重複ナシならtrue
@@ -452,7 +452,7 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
     }
 
     public void ApplyProjectChanges()
-    {   
+    {
         // Apply処理
         Debug.Log("apply project");
         var sortedProjects = new List<ProjectData>();
