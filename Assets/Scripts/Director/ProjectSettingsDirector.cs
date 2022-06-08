@@ -390,15 +390,18 @@ public class ProjectSettingsDirector : SingletonMonoBehaviourFast<ProjectSetting
         // Revertの機能の流用 beforeChangeDataはすでに上で更新されている
         RevertProjectChanges();
 
-        // MoveUpperの非アクティブ化処理
-        var firstMoveLower = SettingsUIDirector.GetProjectMoveUpperButton(
-            projectItems[1].gameObject_);
-        firstMoveLower.interactable = false;
+        if (projectItems.Count > 1)
+        {
+            // MoveUpperの非アクティブ化処理
+            var firstMoveLower = SettingsUIDirector.GetProjectMoveUpperButton(
+                projectItems[1].gameObject_);
+            firstMoveLower.interactable = false;
 
-        // MoveLowerの非アクティブ化処理
-        var lastMoveLower = SettingsUIDirector.GetProjectMoveLowerButton(
-            projectItems[projectItems.Count - 1].gameObject_);
-        lastMoveLower.interactable = false;
+            // MoveLowerの非アクティブ化処理
+            var lastMoveLower = SettingsUIDirector.GetProjectMoveLowerButton(
+                projectItems[projectItems.Count - 1].gameObject_);
+            lastMoveLower.interactable = false;
+        }
     }
 
     /// <summary>
