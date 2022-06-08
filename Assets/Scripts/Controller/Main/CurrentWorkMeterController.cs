@@ -138,19 +138,26 @@ public class CurrentWorkMeterController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator UpdateAudioClip(string _path)
     {
-        string ext = Path.GetExtension(_path);
-
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip($"file:///{_path}", extentionDictionary[ext]))
+        if (_path == ProjectConstants.DEFAULT_NOTIF_SOUND_PATH)
         {
-            yield return www.SendWebRequest();
+            audioSource_.clip = Resources.Load<AudioClip>("chime13");
+        }
+        else
+        {
+            string ext = Path.GetExtension(_path);
 
-            if (www.result == UnityWebRequest.Result.ConnectionError)
+            using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip($"file:///{_path}", extentionDictionary[ext]))
             {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                audioSource_.clip = DownloadHandlerAudioClip.GetContent(www);
+                yield return www.SendWebRequest();
+
+                if (www.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    Debug.Log(www.error);
+                }
+                else
+                {
+                    audioSource_.clip = DownloadHandlerAudioClip.GetContent(www);
+                }
             }
         }
     }

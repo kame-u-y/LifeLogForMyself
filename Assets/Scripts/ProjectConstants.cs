@@ -14,4 +14,6 @@ public static class ProjectConstants
 
 
     public static string DefaultProjectName = "No Project";
+
+    public static string DEFAULT_NOTIF_SOUND_PATH = "default sound";
 }

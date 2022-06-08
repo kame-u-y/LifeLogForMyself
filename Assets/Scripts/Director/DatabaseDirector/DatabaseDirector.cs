@@ -378,7 +378,7 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
                     totalSec = 0
                 }
             },
-            notificationSoundPath = "",
+            notificationSoundPath = ProjectConstants.DEFAULT_NOTIF_SOUND_PATH,
             progressMeterMax = 25,
             resizingMode = ResizingMode.ThreeStages,
             twoResizingStages = new TwoResizingData()
@@ -391,7 +391,8 @@ public class DatabaseDirector : SingletonMonoBehaviourFast<DatabaseDirector>
                 large = 800,
                 medium = 450,
                 small = 150
-            }
+            },
+            selectedProject = ProjectConstants.DefaultProjectName
         };
     }
 }
