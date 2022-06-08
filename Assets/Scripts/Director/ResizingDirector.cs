@@ -159,8 +159,8 @@ public class ResizingDirector : SingletonMonoBehaviourFast<ResizingDirector>
             = LoadSprite($"{spriteMode}/Base/Plate");
         logUIDirector.ClockThornImage.sprite
             = LoadSprite($"{spriteMode}/Cover/Label/Label24h_Thorn");
-        logUIDirector.ClockNumberImage.sprite
-            = LoadSprite($"Materials/Cover/Label/Label{clockMode}h_Number");
+        //logUIDirector.ClockNumberImage.sprite
+        //    = LoadSprite($"Materials/Cover/Label/Label24h_Number");
         logUIDirector.InnerFrameImage.sprite
             = LoadSprite($"{spriteMode}/Base/LogInnerFrame");
         logUIDirector.InnerPlateImage.sprite
