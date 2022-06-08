@@ -40,7 +40,7 @@ public class WindowDirector : SingletonMonoBehaviourFast<WindowDirector>
     }
 
     IntPtr window;
-    private string windowName = "LifeLogForMyself";
+    private string windowName;
     private const int WS_DLGFRAME = 0x00400000;
     private const int SM_CXSCREEN = 0;
     private const int SM_CYSCREEN = 1;
@@ -71,6 +71,8 @@ public class WindowDirector : SingletonMonoBehaviourFast<WindowDirector>
     new void Awake()
     {
         base.Awake();
+
+        windowName = Application.productName;
         
         appDirector = AppDirector.Instance;
         inputEventDirector = InputEventDirector.Instance;
